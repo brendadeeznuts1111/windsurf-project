@@ -424,7 +424,7 @@ class ContinuousTestingPipeline extends EventEmitter {
   private extractTestName(line: string): string {
     // Extract test name from output line
     const match = line.match(/(?:✓|✗|PASS|FAIL)\s+(.+)/);
-    return match ? match[1].trim() : "unknown-test";
+    return match?.[1]?.trim() || "unknown-test";
   }
 
   private async getPerformanceMetrics(): Promise<{
@@ -623,7 +623,10 @@ if (import.meta.main) {
     if (arg === "--no-performance") options.performance = false;
     if (arg === "--no-concurrent") options.concurrent = false;
     if (arg.startsWith("--interval=")) {
-      options.interval = parseInt(arg.split("=")[1]);
+      const intervalValue = arg.split("=")[1];
+      if (intervalValue) {
+        options.interval = parseInt(intervalValue);
+      }
     }
     if (arg === "--help") {
       console.log(`

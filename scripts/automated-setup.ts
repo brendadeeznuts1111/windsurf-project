@@ -564,12 +564,12 @@ async function createProject(options: SetupOptions): Promise<void> {
   };
 
   // Add dependencies based on template
-  template.dependencies.forEach(dep => {
-    packageJson.dependencies[dep] = "latest";
+  template.dependencies.forEach((dep: string) => {
+    (packageJson.dependencies as Record<string, string>)[dep] = "latest";
   });
 
-  template.devDependencies.forEach(dep => {
-    packageJson.devDependencies[dep] = "latest";
+  template.devDependencies.forEach((dep: string) => {
+    (packageJson.devDependencies as Record<string, string>)[dep] = "latest";
   });
 
   // Write package.json
@@ -745,6 +745,10 @@ Options:
       process.exit(0);
     } else if (arg.startsWith("--template=")) {
       const templateValue = arg.split("=")[1];
+      if (!templateValue) {
+        console.error("❌ Template value is required");
+        process.exit(1);
+      }
       const template = templateValue as SetupOptions["template"];
       if (!TEMPLATES[template]) {
         console.error(`❌ Invalid template: ${template}`);

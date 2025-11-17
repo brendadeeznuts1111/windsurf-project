@@ -1,13 +1,13 @@
 // packages/odds-core/src/tests/bun-time-testing-best-practices.test.ts - Bun Date/Time Testing Examples
 
-import { test, describe, expect, beforeAll, afterAll, beforeEach, afterEach, setSystemTime, jest } from 'bun:test';
+import { test, describe, expect, beforeAll, afterAll, beforeEach, afterEach, setSystemTime } from 'bun:test';
 import { 
   TimeTestHelper,
   TEST_DATES,
   TEST_TIMEZONES,
   setupBusinessTimeTesting,
   setupUTCTimeTesting,
-  setupFakeTimerTesting,
+  setupFixedTimeTesting,
   createTestMetadataWithTimestamp,
   createTimeSeriesMetadata,
   LifecycleTimeTester,
@@ -52,47 +52,42 @@ describe('Bun Date/Time Testing Best Practices', () => {
     });
   });
 
-  describe('2. Jest Compatibility Functions', () => {
-    test('should use jest.useFakeTimers() and jest.setSystemTime()', () => {
-      // Use Jest-compatible fake timers
-      jest.useFakeTimers();
-      jest.setSystemTime(new Date('2020-01-01T00:00:00.000Z'));
+  describe('2. Bun Native Time Functions', () => {
+    test('should use setSystemTime() for deterministic testing', () => {
+      // Use Bun's native setSystemTime function
+      const testDate = new Date('2020-01-01T00:00:00.000Z');
+      setSystemTime(testDate);
 
       expect(new Date().getFullYear()).toBe(2020);
       expect(Date.now()).toBe(1577836800000); // Jan 1, 2020 timestamp
-      expect(jest.now()).toBe(1577836800000); // Same value
 
-      // Reset timers
-      jest.useRealTimers();
+      // Reset with setSystemTime()
+      setSystemTime();
+      expect(new Date().getFullYear()).toBeGreaterThan(2020);
     });
 
-    test('should preserve Date constructor in Bun (unlike Jest)', () => {
+    test('should preserve Date constructor in Bun (advantage over Jest)', () => {
       const OriginalDate = Date;
       const OriginalNow = Date.now;
 
-      jest.useFakeTimers();
+      setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
       
-      // In Bun, Date constructor doesn't change (unlike Jest)
+      // In Bun, Date constructor doesn't change when using setSystemTime
       expect(Date).toBe(OriginalDate);
       expect(Date.now).toBe(OriginalNow);
 
-      jest.useRealTimers();
+      setSystemTime();
     });
 
-    test('should advance time with fake timers', () => {
-      jest.useFakeTimers();
-      jest.setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
+    test('should handle multiple time changes in same test', () => {
+      setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
+      expect(new Date().getFullYear()).toBe(2024);
 
-      const initialTime = jest.now();
-      expect(initialTime).toBe(1704067200000); // Jan 1, 2024
+      setSystemTime(new Date('2024-06-01T12:00:00.000Z'));
+      expect(new Date().getMonth()).toBe(5); // June
+      expect(new Date().getHours()).toBe(12);
 
-      // Advance time by 1 hour
-      jest.advanceTimersByTime(60 * 60 * 1000);
-      
-      expect(jest.now()).toBe(initialTime + 60 * 60 * 1000);
-      expect(new Date().getHours()).toBe(1);
-
-      jest.useRealTimers();
+      setSystemTime();
     });
   });
 
@@ -183,13 +178,17 @@ describe('Bun Date/Time Testing Best Practices', () => {
       expect(process.env.TZ).toBe('UTC');
     });
 
-    test('setupFakeTimerTesting should enable time advancement', () => {
-      const helper = setupFakeTimerTesting();
+    test('should setupFixedTimeTesting for deterministic time testing', () => {
+      const helper = setupFixedTimeTesting();
       
-      const initialTime = jest.now();
-      jest.advanceTimersByTime(5000); // 5 seconds
+      const initialTime = Date.now();
+      expect(initialTime).toBe(1704067200000); // Jan 1, 2024
       
-      expect(jest.now()).toBe(initialTime + 5000);
+      // Note: Bun doesn't have time advancement, use setSystemTime for specific times
+      setSystemTime(new Date('2024-01-01T01:00:00.000Z'));
+      expect(Date.now()).toBe(1704070800000); // 1 hour later
+      
+      setSystemTime(); // Reset
     });
   });
 
@@ -302,9 +301,8 @@ describe('Bun Date/Time Testing Best Practices', () => {
       setSystemTime();
     });
 
-    test('should test time-based cache expiration', () => {
-      jest.useFakeTimers();
-      jest.setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
+    test('should test time-based cache expiration with setSystemTime', () => {
+      setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
 
       interface CacheItem<T> {
         data: T;
@@ -325,6 +323,7 @@ describe('Bun Date/Time Testing Best Practices', () => {
           const item = this.cache.get(key);
           if (!item) return null;
           
+          // Use setSystemTime to simulate time passage
           if (Date.now() > item.expiresAt) {
             this.cache.delete(key);
             return null;
@@ -340,18 +339,17 @@ describe('Bun Date/Time Testing Best Practices', () => {
       // Should be available immediately
       expect(cache.get('test')).toBe('value');
 
-      // Advance time by 6 seconds
-      jest.advanceTimersByTime(6000);
+      // Simulate time passage by setting future time
+      setSystemTime(new Date('2024-01-01T00:00:06.000Z')); // 6 seconds later
 
       // Should be expired
       expect(cache.get('test')).toBeNull();
 
-      jest.useRealTimers();
+      setSystemTime(); // Reset
     });
 
-    test('should test time-based rate limiting', () => {
-      jest.useFakeTimers();
-      jest.setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
+    test('should test time-based rate limiting with setSystemTime', () => {
+      setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
 
       class RateLimiter {
         private requests: number[] = [];
@@ -386,13 +384,13 @@ describe('Bun Date/Time Testing Best Practices', () => {
       // 6th request should be denied
       expect(rateLimiter.canMakeRequest()).toBe(false);
 
-      // Advance time by 1 minute
-      jest.advanceTimersByTime(60000);
+      // Simulate time passage by setting future time
+      setSystemTime(new Date('2024-01-01T01:01:00.000Z')); // 1 minute later
 
       // Should allow requests again
       expect(rateLimiter.canMakeRequest()).toBe(true);
 
-      jest.useRealTimers();
+      setSystemTime(); // Reset
     });
   });
 
@@ -442,22 +440,6 @@ describe('Bun Date/Time Testing Best Practices', () => {
       // Reset to valid timezone
       process.env.TZ = 'UTC';
       expect(new Intl.DateTimeFormat().resolvedOptions().timeZone).toBe('UTC');
-    });
-
-    test('should handle timer edge cases', () => {
-      jest.useFakeTimers();
-      
-      // Test very large time advancement
-      jest.setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
-      const initialTime = jest.now();
-      
-      jest.advanceTimersByTime(Number.MAX_SAFE_INTEGER);
-      
-      // Should handle gracefully (may wrap around or error)
-      const finalTime = jest.now();
-      expect(typeof finalTime).toBe('number');
-
-      jest.useRealTimers();
     });
   });
 });

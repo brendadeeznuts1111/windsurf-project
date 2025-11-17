@@ -92,7 +92,7 @@ export {
   TEST_TIMEZONES,
   setupBusinessTimeTesting,
   setupUTCTimeTesting,
-  setupFakeTimerTesting,
+  setupFixedTimeTesting,
   createTestMetadataWithTimestamp,
   createTimeSeriesMetadata
 } from './test-time-helpers';

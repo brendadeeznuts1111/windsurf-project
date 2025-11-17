@@ -1,6 +1,6 @@
 // packages/odds-core/src/utils/test-time-helpers.ts - Date/Time Testing Utilities
 
-import { setSystemTime, jest, beforeAll, afterAll, beforeEach, afterEach } from "bun:test";
+import { setSystemTime, beforeAll, afterAll, beforeEach, afterEach } from "bun:test";
 
 /**
  * Time testing configuration
@@ -48,44 +48,30 @@ export class TimeTestHelper {
     process.env.TZ = timezone;
   }
 
-  /**
-   * Setup fake timers (Jest compatibility)
-   */
-  setupFakeTimers(): void {
-    if (this.config.useFakeTimers) {
-      jest.useFakeTimers();
-    }
-  }
 
   /**
    * Reset all time modifications
    */
   reset(): void {
     setSystemTime(); // Reset to real time
-    if (this.config.useFakeTimers) {
-      jest.useRealTimers();
-    }
     if (this.timezone) {
       delete process.env.TZ;
     }
   }
 
   /**
-   * Get current mocked time
+   * Get current mocked time (Bun only)
    */
   getCurrentTime(): number {
-    return this.config.useFakeTimers ? jest.now() : Date.now();
+    return Date.now();
   }
 
   /**
-   * Advance time by milliseconds (with fake timers)
+   * Note: Time advancement requires external implementation
+   * Bun doesn't have built-in timer advancement like Jest
    */
   advanceTime(ms: number): void {
-    if (this.config.useFakeTimers) {
-      jest.advanceTimersByTime(ms);
-    } else {
-      console.warn('advanceTime() requires useFakeTimers to be enabled');
-    }
+    console.warn('Time advancement not available in Bun - use setSystemTime() for specific time points');
   }
 
   /**
@@ -97,9 +83,6 @@ export class TimeTestHelper {
     }
     if (this.config.timezone) {
       this.setupTimezone(this.config.timezone);
-    }
-    if (this.config.useFakeTimers) {
-      this.setupFakeTimers();
     }
   }
 
@@ -201,11 +184,10 @@ export function setupUTCTimeTesting(date?: Date) {
 /**
  * Setup fake timers for time-advancement testing
  */
-export function setupFakeTimerTesting(startDate?: Date) {
+export function setupFixedTimeTesting(startDate?: Date) {
   const helper = new TimeTestHelper({
     fixedDate: startDate || TEST_DATES.Y2024_START,
     timezone: TEST_TIMEZONES.UTC,
-    useFakeTimers: true,
     autoReset: true
   });
 

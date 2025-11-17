@@ -1,6 +1,6 @@
 // packages/odds-core/src/tests/lifecycle-time-enhanced.test.ts - Enhanced Lifecycle Tests with Proper Time Handling
 
-import { test, describe, expect, beforeAll, afterAll, beforeEach, afterEach, setSystemTime, jest } from 'bun:test';
+import { test, describe, expect, beforeAll, afterAll, beforeEach, afterEach, setSystemTime } from 'bun:test';
 import { MetadataLifecycleManager } from '../utils/lifecycle-manager';
 import { InMemoryLifecycleStorage } from '../utils/lifecycle-storage';
 import {
@@ -14,7 +14,7 @@ import {
   TEST_DATES,
   TEST_TIMEZONES,
   setupUTCTimeTesting,
-  setupFakeTimerTesting,
+  setupFixedTimeTesting,
   createTestMetadataWithTimestamp,
   createTimeSeriesMetadata,
   TimeAssertions
@@ -158,8 +158,8 @@ describe('Enhanced Lifecycle Management with Time Testing', () => {
       await lifecycleManager.stop();
     });
 
-    test('should handle time-based transitions with fake timers', async () => {
-      const fakeTimerHelper = setupFakeTimerTesting(TEST_DATES.Y2024_START);
+    test('should handle time-based transitions with specific time points', async () => {
+      const fixedTimeHelper = setupFixedTimeTesting(TEST_DATES.Y2024_START);
       
       await lifecycleManager.start();
 
@@ -168,9 +168,9 @@ describe('Enhanced Lifecycle Management with Time Testing', () => {
 
       expect(lifecycle.currentState).toBe(MetadataLifecycleState.ACTIVE);
 
-      // Simulate time passage for expiration
-      const expirationTime = 35 * 24 * 60 * 60 * 1000; // 35 days
-      jest.advanceTimersByTime(expirationTime);
+      // Simulate time passage by setting specific future time
+      const futureDate = new Date(TEST_DATES.Y2024_START.getTime() + (35 * 24 * 60 * 60 * 1000));
+      setSystemTime(futureDate);
 
       // Force check for automatic transitions
       const stats = await lifecycleManager.getStats();

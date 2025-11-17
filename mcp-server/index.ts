@@ -985,7 +985,7 @@ server.prompt(
   "Generate performance optimization recommendations for the Odds Protocol using Bun-specific features",
   {
     component: z.optional(z.string()),
-    metrics: z.boolean().default(true),
+    metrics: z.string().default("true"),
   },
   async (args) => {
     return {
@@ -1016,10 +1016,11 @@ server.prompt(
   "setup-development-environment",
   "Provide comprehensive development environment setup instructions with Bun runtime",
   {
-    platform: z.enum(["macos", "linux", "windows"]).default("macos"),
-    features: z.array(z.string()).default(["all"]),
+    platform: z.string().default("macos"),
+    features: z.string().default("all"),
   },
   async (args) => {
+    const featuresList = args.features === "all" ? ["all"] : args.features.split(",").map(f => f.trim());
     return {
       messages: [
         {
@@ -1029,7 +1030,7 @@ server.prompt(
             text: `Provide comprehensive development environment setup instructions with Bun runtime.
 
 Platform: ${args.platform}
-Features: ${(args.features || ["all"]).join(", ")}
+Features: ${featuresList.join(", ")}
 
 Include:
 - Bun installation and setup
@@ -1048,8 +1049,8 @@ server.prompt(
   "bun-migration-guide",
   "Guide for migrating existing Node.js projects to Bun runtime",
   {
-    projectType: z.optional(z.enum(["express", "react", "vue", "cli", "library"])),
-    compatibility: z.boolean().default(true),
+    projectType: z.string().optional(),
+    compatibility: z.string().default("true"),
   },
   async (args) => {
     return {
@@ -1080,9 +1081,9 @@ server.prompt(
   "bun-testing-strategy",
   "Comprehensive testing strategy using Bun's built-in test runner",
   {
-    framework: z.enum(["vitest", "bun-test", "jest"]).default("bun-test"),
-    coverage: z.boolean().default(true),
-    e2e: z.boolean().default(false),
+    framework: z.string().default("bun-test"),
+    coverage: z.string().default("true"),
+    e2e: z.string().default("false"),
   },
   async (args) => {
     return {
@@ -1114,9 +1115,9 @@ server.prompt(
   "bun-deployment-optimization",
   "Optimize deployment pipeline using Bun's build and runtime features",
   {
-    target: z.enum(["docker", "vercel", "railway", "aws"]).default("docker"),
-    minification: z.boolean().default(true),
-    splitting: z.boolean().default(true),
+    target: z.string().default("docker"),
+    minification: z.string().default("true"),
+    splitting: z.string().default("true"),
   },
   async (args) => {
     return {

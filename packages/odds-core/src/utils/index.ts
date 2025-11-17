@@ -12,3 +12,19 @@ export {
   MetadataValidator,
   MetadataUtils 
 } from './metadata';
+
+// Performance and single responsibility utilities
+export {
+  LazyQualityAssessor,
+  QuickQualityAssessor,
+  QualityAssessorFactory,
+  LazyQualityUtils
+} from './lazy-quality';
+
+export {
+  TopicMapper,
+  TopicValidator,
+  TopicAnalysisService,
+  TopicServiceFactory,
+  TopicServiceUtils
+} from './topic-services';

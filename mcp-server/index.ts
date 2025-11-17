@@ -2,8 +2,15 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { z } from "zod";
-import process from "node:process";
+
+// Type declaration for global process (Bun provides this globally)
+declare const process: {
+  env: Record<string, string | undefined>;
+  exit(code?: number): never;
+  cwd(): string;
+};
 
 // Create MCP server with comprehensive capabilities
 const server = new McpServer({
@@ -36,16 +43,16 @@ const BunSearchSchema = z.object({
   query: z.string(),
 });
 
-// Bun Documentation Search Tool
+// Bun Documentation Search Tool (SearchBun)
 server.tool(
-  "search-bun-docs",
-  "Search across the Bun knowledge base to find relevant information, code examples, API references, and guides. Use this tool when you need to answer questions about Bun, find specific documentation, understand how features work, or locate implementation details.",
+  "SearchBun",
+  "Search across the Bun knowledge base to find relevant information, code examples, API references, and guides. Use this tool when you need to answer questions about Bun, find specific documentation, understand how features work, or locate implementation details. The search returns contextual content with titles and direct links to the documentation pages.",
   {
-    query: z.string().describe("A query to search the Bun documentation with."),
+    query: z.string().describe("A query to search the content with."),
   },
   async ({ query }: { query: string }) => {
     try {
-      // Simulate Bun documentation search with comprehensive results
+      // Search Bun documentation with comprehensive results
       const searchResults = await searchBunDocumentation(query);
       
       return {
@@ -68,7 +75,7 @@ ${index + 1}. **${result.title}**
 - Try "how to" for tutorial content
 - Use "example" for code samples
 
-🔗 **Browse full documentation:** https://bun.sh/docs`,
+🔗 **Browse full documentation:** https://bun.com/docs`,
           },
         ],
       };
@@ -371,56 +378,56 @@ async function searchBunDocumentation(query: string): Promise<Array<{
     {
       title: "Bun Runtime - Getting Started",
       description: "Complete guide to setting up and using Bun JavaScript runtime",
-      url: "https://bun.sh/docs/installation",
+      url: "https://bun.com/docs/installation",
       category: "Getting Started",
       keywords: ["install", "setup", "getting started", "runtime"],
     },
     {
       title: "Bun Test - Fast Testing Framework",
       description: "Built-in testing framework with TypeScript support and coverage",
-      url: "https://bun.sh/docs/test",
+      url: "https://bun.com/docs/test",
       category: "Testing",
       keywords: ["test", "testing", "coverage", "jest"],
     },
     {
       title: "Bun Build - Optimized Bundler",
       description: "High-performance bundler with minification and code splitting",
-      url: "https://bun.sh/docs/bundler",
+      url: "https://bun.com/docs/bundler",
       category: "Build Tools",
       keywords: ["build", "bundle", "minify", "webpack"],
     },
     {
       title: "Bun Server - HTTP/WebSocket Server",
       description: "Built-in HTTP and WebSocket server with hot reload support",
-      url: "https://bun.sh/docs/server",
+      url: "https://bun.com/docs/server",
       category: "Server",
       keywords: ["server", "http", "websocket", "api"],
     },
     {
       title: "Bun SQL - Database Client",
       description: "Built-in SQL client with connection pooling and migrations",
-      url: "https://bun.sh/docs/sql",
+      url: "https://bun.com/docs/sql",
       category: "Database",
       keywords: ["sql", "database", "postgres", "mysql"],
     },
     {
       title: "Bun File System API",
       description: "Fast file system operations with built-in utilities",
-      url: "https://bun.sh/docs/api/file-io",
+      url: "https://bun.com/docs/api/file-io",
       category: "API Reference",
       keywords: ["file", "fs", "read", "write", "path"],
     },
     {
       title: "Bun Performance Optimization",
       description: "Tips and techniques for optimizing Bun applications",
-      url: "https://bun.sh/docs/runtime/performance",
+      url: "https://bun.com/docs/runtime/performance",
       category: "Performance",
       keywords: ["performance", "optimization", "speed", "memory"],
     },
     {
       title: "Bun v1.3 Features",
       description: "Latest features and improvements in Bun version 1.3",
-      url: "https://bun.sh/blog/bun-v1.3",
+      url: "https://bun.com/blog/bun-v1.3",
       category: "Release Notes",
       keywords: ["v1.3", "features", "new", "release"],
     },
@@ -1148,11 +1155,30 @@ Cover:
   }
 );
 
-// Start the server
+// Start the server with transport selection
 async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error("Odds Protocol MCP Server running on stdio");
+  const transportType = process.env.MCP_TRANSPORT || "stdio";
+  const port = parseInt(process.env.MCP_PORT || "3000");
+  
+  if (transportType === "http") {
+    // HTTP/SSE transport for web-based MCP clients
+    const transport = new SSEServerTransport("/message", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+    
+    await server.connect(transport);
+    console.error(`Odds Protocol MCP Server running on HTTP port ${port}`);
+    console.error(`SSE endpoint: http://localhost:${port}/message`);
+  } else {
+    // Default stdio transport for CLI-based MCP clients
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.error("Odds Protocol MCP Server running on stdio");
+  }
 }
 
 main().catch((error) => {

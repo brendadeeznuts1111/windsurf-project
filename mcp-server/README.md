@@ -307,7 +307,7 @@ MIT License - see LICENSE file for details
 
 ## 🔗 Related Resources
 
-- [Bun Documentation](https://bun.sh/docs)
+- [Bun Documentation](https://bun.com/docs)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Odds Protocol Monorepo](https://github.com/brendadeeznuts1111/windsurf-project)
 - [Bun MCP Community](https://github.com/carlosedp/mcp-bun)
@@ -316,5 +316,5 @@ MIT License - see LICENSE file for details
 
 For issues and questions:
 - Create an issue in the repository
-- Check the [Bun documentation](https://bun.sh/docs)
+- Check the [Bun documentation](https://bun.com/docs)
 - Review the [MCP specification](https://modelcontextprotocol.io/)

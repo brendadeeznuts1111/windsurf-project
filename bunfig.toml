@@ -49,6 +49,12 @@ timeout = 30000
 concurrent = true
 # Enable coverage
 coverage = true
+# Bun v1.3+: Only show failures in CI to reduce noise
+onlyFailures = false
+# Maximum number of concurrent tests
+maxConcurrency = 20
+# Pass with no tests for monorepo compatibility
+passWithNoTests = true
 
 [run]
 # Hot reload for development
@@ -111,7 +117,21 @@ production = {
 # Test environment
 test = {
   NODE_ENV = "test",
-  BUN_DEBUG = "0"
+  BUN_DEBUG = "0",
+  # Use only failures in test environment for cleaner output
+  TEST_ONLY_FAILURES = "false"
+}
+
+# CI environment (GitHub Actions, GitLab CI, etc.)
+ci = {
+  NODE_ENV = "ci",
+  BUN_DEBUG = "0",
+  # Only show failures in CI to reduce log noise
+  TEST_ONLY_FAILURES = "true",
+  # Pass with no tests for monorepo packages without tests
+  TEST_PASS_WITH_NO_TESTS = "true",
+  # Longer timeout for CI environments
+  TEST_TIMEOUT = "10000"
 }
 
 # Define environment variables

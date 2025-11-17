@@ -2,13 +2,16 @@
 
 import type { 
   EnhancedMetadata, 
-  MarketTopic, 
   DataCategory, 
   DataSource,
   MarketContext,
   DataQuality,
   ProcessingMetadata,
   TopicAnalysis
+} from '../types/topics';
+
+import { 
+  MarketTopic
 } from '../types/topics';
 
 /**

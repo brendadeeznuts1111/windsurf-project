@@ -3,7 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { process } from "process";
+import process from "node:process";
 
 // Create MCP server with comprehensive capabilities
 const server = new McpServer({

@@ -56,3 +56,4 @@ export * from './topics';
 export * from './enhanced';
 export * from './lightweight';
 export * from './strict';
+export * from './realtime';

@@ -54,3 +54,13 @@ export {
   PerformanceUtils,
   performanceMonitor
 } from './performance';
+
+// Real-time processing utilities (Phase 2.1)
+export {
+  RealtimeMetadataStream,
+  RealtimeEventEmitter
+} from './realtime-stream';
+
+export {
+  RealtimeMetadataProcessor
+} from './realtime-processor';

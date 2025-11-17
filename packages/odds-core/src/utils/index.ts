@@ -73,3 +73,12 @@ export {
 export {
   SmartNotificationsEngine
 } from './smart-notifications';
+
+// Lifecycle management utilities (Phase 2.2)
+export {
+  MetadataLifecycleManager
+} from './lifecycle-manager';
+
+export {
+  InMemoryLifecycleStorage
+} from './lifecycle-storage';

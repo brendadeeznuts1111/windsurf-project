@@ -50,3 +50,7 @@ export interface MarketHours {
   timezone: string;
   days: number[];
 }
+
+// Export new topics and enhanced types
+export * from './topics';
+export * from './enhanced';

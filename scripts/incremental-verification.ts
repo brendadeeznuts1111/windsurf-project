@@ -185,7 +185,7 @@ class IncrementalVerifier {
         category: "Dependencies",
         message: "Dependencies are properly configured",
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: "fail",
         category: "Dependencies",
@@ -229,7 +229,7 @@ class IncrementalVerifier {
           };
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: "fail",
         category: "Configuration",
@@ -271,7 +271,7 @@ class IncrementalVerifier {
         details: { errors: output },
         suggestions: ["Fix type errors", "Check tsconfig.json configuration"],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: "fail",
         category: "TypeScript",
@@ -309,7 +309,7 @@ class IncrementalVerifier {
         details: { audit: output },
         suggestions: ["Update vulnerable dependencies", "Review security advisories"],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: "fail",
         category: "Security",
@@ -360,7 +360,7 @@ class IncrementalVerifier {
           "Enable threadpool for parallel processing",
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: "fail",
         category: "Performance",
@@ -434,7 +434,7 @@ class IncrementalVerifier {
         message: "Tests configured but some are failing",
         suggestions: ["Fix failing tests", "Check test configuration"],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: "fail",
         category: "Testing",
@@ -484,7 +484,7 @@ class IncrementalVerifier {
         details: { lint: output },
         suggestions: ["Fix linting errors", "Review code style guidelines"],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         status: "fail",
         category: "Code Quality",
@@ -618,7 +618,7 @@ Examples:
     
     // Exit with appropriate code
     process.exit(report.overall === "unhealthy" ? 1 : 0);
-  } catch (error) {
+  } catch (error: any) {
     console.error(`❌ Verification failed: ${error.message}`);
     process.exit(1);
   }

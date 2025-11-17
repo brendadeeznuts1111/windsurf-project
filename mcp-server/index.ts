@@ -46,7 +46,17 @@ server.tool(
     includeTests: z.boolean().default(true),
     includeCI: z.boolean().default(true),
   },
-  async ({ projectName, template, includeTests, includeCI }) => {
+  async ({
+    projectName,
+    template,
+    includeTests,
+    includeCI,
+  }: {
+    projectName: string;
+    template: "minimal" | "full" | "websocket" | "ml";
+    includeTests: boolean;
+    includeCI: boolean;
+  }) => {
     try {
       const validation = ProjectSetupSchema.parse({
         projectName,
@@ -95,7 +105,7 @@ Run these commands sequentially to set up your project.`,
           },
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
@@ -119,7 +129,17 @@ server.tool(
     performance: z.boolean().default(false),
     integration: z.boolean().default(true),
   },
-  async ({ coverage, concurrent, performance, integration }) => {
+  async ({
+    coverage,
+    concurrent,
+    performance,
+    integration,
+  }: {
+    coverage: boolean;
+    concurrent: boolean;
+    performance: boolean;
+    integration: boolean;
+  }) => {
     try {
       const validation = TestConfigSchema.parse({
         coverage,
@@ -179,7 +199,7 @@ ${testCommands.map((cmd, i) => `${i + 1}. ${cmd}`).join("\\n")}
           },
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
@@ -202,7 +222,15 @@ server.tool(
     security: z.boolean().default(true),
     performance: z.boolean().default(true),
   },
-  async ({ deepScan, security, performance }) => {
+  async ({
+    deepScan,
+    security,
+    performance,
+  }: {
+    deepScan: boolean;
+    security: boolean;
+    performance: boolean;
+  }) => {
     const verificationSteps = [
       "🔍 Checking project structure...",
       "📦 Verifying dependencies...",
@@ -270,7 +298,15 @@ server.tool(
     region: z.string().default("us-east-1"),
     force: z.boolean().default(false),
   },
-  async ({ environment, region, force }) => {
+  async ({
+    environment,
+    region,
+    force,
+  }: {
+    environment: "development" | "staging" | "production";
+    region: string;
+    force: boolean;
+  }) => {
     try {
       const validation = DeployConfigSchema.parse({
         environment,
@@ -330,7 +366,7 @@ ${deploymentCommands.join("\\n")}
           },
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
@@ -348,7 +384,7 @@ ${deploymentCommands.join("\\n")}
 server.resource(
   "project-structure",
   "text/plain",
-  async (uri) => {
+  async (uri: any) => {
     const structure = {
       name: "odds-protocol-monorepo",
       type: "monorepo",
@@ -388,7 +424,7 @@ server.resource(
 server.resource(
   "test-configuration",
   "text/plain",
-  async (uri) => {
+  async (uri: any) => {
     const config = {
       framework: "bun test",
       concurrency: true,

@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 
 import { spawn } from "bun";
-import { existsSync } from "fs";
-import { join } from "path";
+import { existsSync, readFileSync, writeFileSync } from "fs";
+import { join, dirname } from "path";
 
 interface SetupOptions {
   projectName: string;
@@ -520,31 +520,31 @@ async function executeCommand(cmd: string, cwd: string): Promise<string> {
   await proc.exited;
 
   if (proc.exitCode !== 0) {
-    throw new Error(\`Command failed: \${cmd}\`);
+    throw new Error(`Command failed: ${cmd}`);
   }
 
   return output;
 }
 
 async function createProject(options: SetupOptions): Promise<void> {
-  console.log(\`🚀 Setting up \${options.projectName}...\`);
+  console.log(`🚀 Setting up ${options.projectName}...`);
 
   // Create project directory
   const projectPath = join(process.cwd(), options.projectName);
   
   if (existsSync(projectPath)) {
-    throw new Error(\`Project directory \${options.projectName} already exists\`);
+    throw new Error(`Project directory ${options.projectName} already exists`);
   }
 
-  await executeCommand(\`mkdir -p \${options.projectName}\`, process.cwd());
-  console.log(\`📁 Created directory: \${options.projectName}\`);
+  await executeCommand(`mkdir -p ${options.projectName}`, process.cwd());
+  console.log(`📁 Created directory: ${options.projectName}`);
 
   // Initialize package.json
   const template = TEMPLATES[options.template];
   const packageJson = {
     name: options.projectName,
     version: "1.0.0",
-    description: \`Odds Protocol \${options.template} template\`,
+    description: `Odds Protocol ${options.template} template`,
     type: "module",
     main: "src/index.ts",
     scripts: {
@@ -582,20 +582,20 @@ async function createProject(options: SetupOptions): Promise<void> {
   await executeCommand("mkdir -p src __tests__", projectPath);
 
   // Write template files
-  for (const [filePath, content] of Object.entries(template.files)) {
+  for (const [filePath, content] of Object.entries(template.files as Record<string, string>)) {
     const fullPath = join(projectPath, filePath);
     const dir = dirname(fullPath);
     
     if (!existsSync(dir)) {
-      await executeCommand(\`mkdir -p \${dir}\`, projectPath);
+      await executeCommand(`mkdir -p ${dir}`, projectPath);
     }
     
     await Bun.write(fullPath, content);
-    console.log(\`📄 Created: \${filePath}\`);
+    console.log(`📄 Created: ${filePath}`);
   }
 
   // Create .gitignore
-  const gitignore = \`# Dependencies
+  const gitignore = `# Dependencies
 node_modules/
 bun.lockb
 
@@ -621,7 +621,7 @@ coverage/
 
 # OS
 .DS_Store
-\`;
+`;
 
   await Bun.write(join(projectPath, ".gitignore"), gitignore);
 
@@ -636,17 +636,17 @@ coverage/
     await createCIConfig(projectPath);
   }
 
-  console.log(\`✅ Project \${options.projectName} created successfully!\`);
-  console.log(\`🎯 Template: \${options.template}\`);
-  console.log(\`🧪 Tests: \${options.includeTests ? "Enabled" : "Disabled"}\`);
-  console.log(\`🔄 CI/CD: \${options.includeCI ? "Enabled" : "Disabled"}\`);
-  console.log(\`\n📋 Next steps:\`);
-  console.log(\`   cd \${options.projectName}\`);
-  console.log(\`   bun run dev\`);
+  console.log(`✅ Project ${options.projectName} created successfully!`);
+  console.log(`🎯 Template: ${options.template}`);
+  console.log(`🧪 Tests: ${options.includeTests ? "Enabled" : "Disabled"}`);
+  console.log(`🔄 CI/CD: ${options.includeCI ? "Enabled" : "Disabled"}`);
+  console.log(`\n📋 Next steps:`);
+  console.log(`   cd ${options.projectName}`);
+  console.log(`   bun run dev`);
 }
 
 async function createCIConfig(projectPath: string): Promise<void> {
-  const ciConfig = \`name: CI
+  const ciConfig = `name: CI
 
 on:
   push:
@@ -700,7 +700,7 @@ jobs:
       
     - name: Security audit
       run: bun audit
-\`;
+`;
 
   await executeCommand("mkdir -p .github/workflows", projectPath);
   await Bun.write(join(projectPath, ".github/workflows/ci.yml"), ciConfig);
@@ -744,9 +744,10 @@ Options:
       // Show help and exit
       process.exit(0);
     } else if (arg.startsWith("--template=")) {
-      const template = arg.split("=")[1] as SetupOptions["template"];
+      const templateValue = arg.split("=")[1];
+      const template = templateValue as SetupOptions["template"];
       if (!TEMPLATES[template]) {
-        console.error(\`❌ Invalid template: \${template}\`);
+        console.error(`❌ Invalid template: ${template}`);
         process.exit(1);
       }
       options.template = template;
@@ -761,8 +762,8 @@ Options:
 
   try {
     await createProject(options);
-  } catch (error) {
-    console.error(\`❌ Setup failed: \${error.message}\`);
+  } catch (error: any) {
+    console.error(`❌ Setup failed: ${error.message}`);
     process.exit(1);
   }
 }

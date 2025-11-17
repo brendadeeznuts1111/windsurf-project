@@ -242,7 +242,7 @@ class ContinuousTestingPipeline extends EventEmitter {
       console.log(`📈 Coverage: ${report.summary.coverage}%`);
 
       return report;
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Test execution failed:", error);
       
       const errorReport: TestReport = {
@@ -315,7 +315,7 @@ class ContinuousTestingPipeline extends EventEmitter {
 
       suite.duration = Date.now() - startTime;
       return suite;
-    } catch (error) {
+    } catch (error: any) {
       suite.tests.push({
         name: "suite-error",
         status: "failed",
@@ -411,7 +411,7 @@ class ContinuousTestingPipeline extends EventEmitter {
       }
 
       return results;
-    } catch (error) {
+    } catch (error: any) {
       return [{
         name: pattern,
         status: "failed",
@@ -423,7 +423,7 @@ class ContinuousTestingPipeline extends EventEmitter {
 
   private extractTestName(line: string): string {
     // Extract test name from output line
-    const match = line.match(/(?:✓|✗|PASS|FAIL)\\s+(.+)/);
+    const match = line.match(/(?:✓|✗|PASS|FAIL)\s+(.+)/);
     return match ? match[1].trim() : "unknown-test";
   }
 
@@ -607,7 +607,7 @@ ${this.lastReport ? `
     return this.lastReport;
   }
 
-  isRunning(): boolean {
+  isTestRunning(): boolean {
     return this.isRunning;
   }
 }
@@ -662,7 +662,7 @@ Examples:
   });
 
   // Start pipeline
-  pipeline.start(options).catch((error) => {
+  pipeline.start(options).catch((error: any) => {
     console.error("❌ Failed to start pipeline:", error);
     process.exit(1);
   });

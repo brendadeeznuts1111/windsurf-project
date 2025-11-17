@@ -55,7 +55,13 @@ class MonitoringDashboard extends EventEmitter {
     this.server = serve({
       port: this.port,
       fetch: this.handleRequest.bind(this),
-      websocket: this.handleWebSocket.bind(this),
+      websocket: {
+        message: (ws, message) => this.handleWebSocketMessage(ws, message),
+        open: (ws) => this.handleWebSocket(ws),
+        close: (ws) => {
+          console.log("📡 WebSocket client disconnected");
+        },
+      },
     });
 
     console.log(`✅ Monitoring dashboard started at http://localhost:${this.port}`);
@@ -127,20 +133,6 @@ class MonitoringDashboard extends EventEmitter {
       },
     }));
 
-    // Handle incoming messages
-    ws.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data as string);
-        this.handleWebSocketMessage(ws, message);
-      } catch (error) {
-        console.error("WebSocket message error:", error);
-      }
-    };
-
-    ws.onclose = () => {
-      console.log("📡 WebSocket client disconnected");
-    };
-
     // Subscribe to updates
     this.on("update", (data) => {
       if (ws.readyState === WebSocket.OPEN) {
@@ -153,17 +145,23 @@ class MonitoringDashboard extends EventEmitter {
     });
   }
 
-  private handleWebSocketMessage(ws: WebSocket, message: any): void {
-    switch (message.type) {
-      case "subscribe":
-        console.log(`Client subscribed to: ${message.channel}`);
-        break;
-      case "get-metrics":
-        ws.send(JSON.stringify({
-          type: "metrics-response",
-          data: this.getMetricHistory(message.metric),
-        }));
-        break;
+  private handleWebSocketMessage(ws: WebSocket, message: string | Buffer): void {
+    try {
+      const data = JSON.parse(message as string);
+      
+      switch (data.type) {
+        case "subscribe":
+          console.log(`Client subscribed to: ${data.channel}`);
+          break;
+        case "get-metrics":
+          ws.send(JSON.stringify({
+            type: "metrics-response",
+            data: this.getMetricHistory(data.metric),
+          }));
+          break;
+      }
+    } catch (error: any) {
+      console.error("WebSocket message error:", error);
     }
   }
 
@@ -706,7 +704,7 @@ console.log("Dashboard loaded");
       for (const [key, values] of Object.entries(data)) {
         this.metrics.set(key, values as MetricData[]);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("No stored metrics found, starting fresh");
     }
   }
@@ -715,10 +713,10 @@ console.log("Dashboard loaded");
     try {
       const data = Object.fromEntries(this.metrics);
       writeFileSync(
-        join(process.cwd(), "monitoring-metrics.json"),
+        join(process.cwd() as string, "monitoring-metrics.json"),
         JSON.stringify(data, null, 2)
       );
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to save metrics:", error);
     }
   }
@@ -765,7 +763,7 @@ Examples:
   });
 
   // Start dashboard
-  dashboard.start().catch((error) => {
+  dashboard.start().catch((error: any) => {
     console.error("❌ Failed to start dashboard:", error);
     process.exit(1);
   });

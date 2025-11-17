@@ -3,6 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import { process } from "process";
 
 // Create MCP server with comprehensive capabilities
 const server = new McpServer({
@@ -985,7 +986,7 @@ server.prompt(
   "Generate performance optimization recommendations for the Odds Protocol using Bun-specific features",
   {
     component: z.optional(z.string()),
-    metrics: z.string().default("true"),
+    metrics: z.optional(z.string()),
   },
   async (args) => {
     return {
@@ -997,7 +998,7 @@ server.prompt(
             text: `Generate performance optimization recommendations for the Odds Protocol using Bun-specific features.
 
 Component: ${args.component || "all"}
-Include metrics: ${args.metrics}
+Include metrics: ${args.metrics || "true"}
 
 Focus on:
 - Bun runtime optimizations
@@ -1016,11 +1017,13 @@ server.prompt(
   "setup-development-environment",
   "Provide comprehensive development environment setup instructions with Bun runtime",
   {
-    platform: z.string().default("macos"),
-    features: z.string().default("all"),
+    platform: z.optional(z.string()),
+    features: z.optional(z.string()),
   },
   async (args) => {
-    const featuresList = args.features === "all" ? ["all"] : args.features.split(",").map(f => f.trim());
+    const featuresList = (!args.features || args.features === "all") 
+      ? ["all"] 
+      : args.features.split(",").map(f => f.trim());
     return {
       messages: [
         {
@@ -1029,7 +1032,7 @@ server.prompt(
             type: "text",
             text: `Provide comprehensive development environment setup instructions with Bun runtime.
 
-Platform: ${args.platform}
+Platform: ${args.platform || "macos"}
 Features: ${featuresList.join(", ")}
 
 Include:
@@ -1049,8 +1052,8 @@ server.prompt(
   "bun-migration-guide",
   "Guide for migrating existing Node.js projects to Bun runtime",
   {
-    projectType: z.string().optional(),
-    compatibility: z.string().default("true"),
+    projectType: z.optional(z.string()),
+    compatibility: z.optional(z.string()),
   },
   async (args) => {
     return {
@@ -1062,7 +1065,7 @@ server.prompt(
             text: `Guide for migrating existing Node.js projects to Bun runtime.
 
 Project type: ${args.projectType || "general"}
-Compatibility checks: ${args.compatibility}
+Compatibility checks: ${args.compatibility || "true"}
 
 Cover:
 - Dependency compatibility
@@ -1081,9 +1084,9 @@ server.prompt(
   "bun-testing-strategy",
   "Comprehensive testing strategy using Bun's built-in test runner",
   {
-    framework: z.string().default("bun-test"),
-    coverage: z.string().default("true"),
-    e2e: z.string().default("false"),
+    framework: z.optional(z.string()),
+    coverage: z.optional(z.string()),
+    e2e: z.optional(z.string()),
   },
   async (args) => {
     return {
@@ -1094,9 +1097,9 @@ server.prompt(
             type: "text",
             text: `Comprehensive testing strategy using Bun's built-in test runner.
 
-Framework: ${args.framework}
-Coverage reporting: ${args.coverage}
-End-to-end testing: ${args.e2e}
+Framework: ${args.framework || "bun-test"}
+Coverage reporting: ${args.coverage || "true"}
+End-to-end testing: ${args.e2e || "false"}
 
 Include:
 - Test configuration and setup
@@ -1115,9 +1118,9 @@ server.prompt(
   "bun-deployment-optimization",
   "Optimize deployment pipeline using Bun's build and runtime features",
   {
-    target: z.string().default("docker"),
-    minification: z.string().default("true"),
-    splitting: z.string().default("true"),
+    target: z.optional(z.string()),
+    minification: z.optional(z.string()),
+    splitting: z.optional(z.string()),
   },
   async (args) => {
     return {
@@ -1128,9 +1131,9 @@ server.prompt(
             type: "text",
             text: `Optimize deployment pipeline using Bun's build and runtime features.
 
-Target platform: ${args.target}
-Minification: ${args.minification}
-Code splitting: ${args.splitting}
+Target platform: ${args.target || "docker"}
+Minification: ${args.minification || "true"}
+Code splitting: ${args.splitting || "true"}
 
 Cover:
 - Build optimization strategies

@@ -3,7 +3,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { process } from "node:process";
 
 // Create MCP server with comprehensive capabilities
 const server = new McpServer({
@@ -985,7 +984,7 @@ server.prompt(
   "optimize-performance",
   "Generate performance optimization recommendations for the Odds Protocol using Bun-specific features",
   {
-    component: z.string().optional(),
+    component: z.optional(z.string()),
     metrics: z.boolean().default(true),
   },
   async (args) => {
@@ -1030,7 +1029,7 @@ server.prompt(
             text: `Provide comprehensive development environment setup instructions with Bun runtime.
 
 Platform: ${args.platform}
-Features: ${args.features.join(", ")}
+Features: ${(args.features || ["all"]).join(", ")}
 
 Include:
 - Bun installation and setup
@@ -1049,7 +1048,7 @@ server.prompt(
   "bun-migration-guide",
   "Guide for migrating existing Node.js projects to Bun runtime",
   {
-    projectType: z.enum(["express", "react", "vue", "cli", "library"]).optional(),
+    projectType: z.optional(z.enum(["express", "react", "vue", "cli", "library"])),
     compatibility: z.boolean().default(true),
   },
   async (args) => {

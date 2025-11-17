@@ -3,16 +3,12 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import { process } from "node:process";
 
 // Create MCP server with comprehensive capabilities
 const server = new McpServer({
   name: "odds-protocol-mcp",
   version: "1.0.0",
-  capabilities: {
-    tools: {},
-    resources: {},
-    prompts: {},
-  },
 });
 
 // Validation schemas
@@ -991,6 +987,29 @@ server.prompt(
   {
     component: z.string().optional(),
     metrics: z.boolean().default(true),
+  },
+  async (args) => {
+    return {
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: `Generate performance optimization recommendations for the Odds Protocol using Bun-specific features.
+
+Component: ${args.component || "all"}
+Include metrics: ${args.metrics}
+
+Focus on:
+- Bun runtime optimizations
+- Memory management with --smol flag
+- Hot reload development
+- Fast package management
+- Build optimization techniques`,
+          },
+        },
+      ],
+    };
   }
 );
 
@@ -1000,6 +1019,29 @@ server.prompt(
   {
     platform: z.enum(["macos", "linux", "windows"]).default("macos"),
     features: z.array(z.string()).default(["all"]),
+  },
+  async (args) => {
+    return {
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: `Provide comprehensive development environment setup instructions with Bun runtime.
+
+Platform: ${args.platform}
+Features: ${args.features.join(", ")}
+
+Include:
+- Bun installation and setup
+- Development tools configuration
+- IDE integration
+- Testing framework setup
+- Build pipeline configuration`,
+          },
+        },
+      ],
+    };
   }
 );
 
@@ -1009,6 +1051,29 @@ server.prompt(
   {
     projectType: z.enum(["express", "react", "vue", "cli", "library"]).optional(),
     compatibility: z.boolean().default(true),
+  },
+  async (args) => {
+    return {
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: `Guide for migrating existing Node.js projects to Bun runtime.
+
+Project type: ${args.projectType || "general"}
+Compatibility checks: ${args.compatibility}
+
+Cover:
+- Dependency compatibility
+- API changes and replacements
+- Build script updates
+- Testing framework migration
+- Performance optimizations`,
+          },
+        },
+      ],
+    };
   }
 );
 
@@ -1019,6 +1084,30 @@ server.prompt(
     framework: z.enum(["vitest", "bun-test", "jest"]).default("bun-test"),
     coverage: z.boolean().default(true),
     e2e: z.boolean().default(false),
+  },
+  async (args) => {
+    return {
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: `Comprehensive testing strategy using Bun's built-in test runner.
+
+Framework: ${args.framework}
+Coverage reporting: ${args.coverage}
+End-to-end testing: ${args.e2e}
+
+Include:
+- Test configuration and setup
+- Mock and stub strategies
+- Performance testing
+- Integration testing
+- CI/CD pipeline integration`,
+          },
+        },
+      ],
+    };
   }
 );
 
@@ -1029,6 +1118,30 @@ server.prompt(
     target: z.enum(["docker", "vercel", "railway", "aws"]).default("docker"),
     minification: z.boolean().default(true),
     splitting: z.boolean().default(true),
+  },
+  async (args) => {
+    return {
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: `Optimize deployment pipeline using Bun's build and runtime features.
+
+Target platform: ${args.target}
+Minification: ${args.minification}
+Code splitting: ${args.splitting}
+
+Cover:
+- Build optimization strategies
+- Docker containerization
+- Platform-specific deployments
+- Performance monitoring
+- CI/CD pipeline optimization`,
+          },
+        },
+      ],
+    };
   }
 );
 

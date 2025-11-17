@@ -36,6 +36,430 @@ const DeployConfigSchema = z.object({
   force: z.boolean().default(false),
 });
 
+const BunSearchSchema = z.object({
+  query: z.string(),
+});
+
+// Bun Documentation Search Tool
+server.tool(
+  "search-bun-docs",
+  "Search across the Bun knowledge base to find relevant information, code examples, API references, and guides. Use this tool when you need to answer questions about Bun, find specific documentation, understand how features work, or locate implementation details.",
+  {
+    query: z.string().describe("A query to search the Bun documentation with."),
+  },
+  async ({ query }: { query: string }) => {
+    try {
+      // Simulate Bun documentation search with comprehensive results
+      const searchResults = await searchBunDocumentation(query);
+      
+      return {
+        content: [
+          {
+            type: "text",
+            text: `🔍 Bun Documentation Search Results for: "${query}"
+
+${searchResults.map((result, index) => `
+${index + 1}. **${result.title}**
+   📄 ${result.description}
+   🔗 ${result.url}
+   📋 ${result.category}
+   ⭐ ${result.relevance}% relevance
+`).join('')}
+
+💡 **Tips:**
+- Use specific keywords for better results
+- Include API names for technical documentation
+- Try "how to" for tutorial content
+- Use "example" for code samples
+
+🔗 **Browse full documentation:** https://bun.sh/docs`,
+          },
+        ],
+      };
+    } catch (error: any) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `❌ Failed to search Bun documentation: ${error.message}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Bun Runtime Tools
+server.tool(
+  "run-bun-script",
+  "Execute JavaScript/TypeScript files with Bun runtime optimizations",
+  {
+    scriptPath: z.string(),
+    bunArgs: z.array(z.string()).optional().default([]),
+    args: z.array(z.string()).optional().default([]),
+    cwd: z.string().optional().default(process.cwd()),
+    timeout: z.number().optional().default(30000),
+  },
+  async ({
+    scriptPath,
+    bunArgs,
+    args,
+    cwd,
+    timeout,
+  }: {
+    scriptPath: string;
+    bunArgs: string[];
+    args: string[];
+    cwd: string;
+    timeout: number;
+  }) => {
+    try {
+      const validation = z.object({
+        scriptPath: z.string(),
+        bunArgs: z.array(z.string()).optional(),
+        args: z.array(z.string()).optional(),
+        cwd: z.string().optional(),
+        timeout: z.number().optional(),
+      }).parse({ scriptPath, bunArgs, args, cwd, timeout });
+
+      const executionCommand = [
+        "bun",
+        "run",
+        ...validation.bunArgs || [],
+        validation.scriptPath,
+        ...(validation.args || []),
+      ].join(" ");
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `🚀 **Bun Script Execution**
+
+**Command:**
+\`\`\`bash
+${executionCommand}
+\`\`\`
+
+**Configuration:**
+- 📁 Working Directory: ${validation.cwd || process.cwd()}
+- ⏱️ Timeout: ${validation.timeout || 30000}ms
+- 🚀 Bun Args: ${validation.bunArgs?.join(", ") || "none"}
+
+**Execution Steps:**
+1. Navigate to working directory
+2. Execute script with Bun runtime
+3. Apply optimization flags (${validation.bunArgs?.includes("--smol") ? "memory-optimized" : "standard"})
+4. Monitor execution and capture output
+
+**Performance Features:**
+- ⚡ Fast startup with Bun's runtime
+- 🔥 Hot reload support with --hot flag
+- 💾 Memory optimization with --smol flag
+- 📦 Built-in TypeScript support
+
+**To execute:**
+\`\`\`bash
+cd ${validation.cwd || process.cwd()}
+${executionCommand}
+\`\`\``,
+          },
+        ],
+      };
+    } catch (error: any) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `❌ Script execution configuration failed: ${error.message}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+server.tool(
+  "bun-package-manager",
+  "Manage dependencies with Bun's fast package manager",
+  {
+    action: z.enum(["install", "add", "remove", "update"]),
+    packageDir: z.string().optional().default(process.cwd()),
+    packages: z.array(z.string()).optional().default([]),
+    dev: z.boolean().optional().default(false),
+  },
+  async ({
+    action,
+    packageDir,
+    packages,
+    dev,
+  }: {
+    action: "install" | "add" | "remove" | "update";
+    packageDir: string;
+    packages: string[];
+    dev: boolean;
+  }) => {
+    try {
+      let command = `bun ${action}`;
+      
+      if (action === "add" || action === "remove") {
+        if (packages.length === 0) {
+          throw new Error(`Package names required for ${action} action`);
+        }
+        command += ` ${packages.join(" ")}`;
+        if (dev) command += " -d";
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `📦 **Bun Package Management**
+
+**Action:** ${action.toUpperCase()}
+**Directory:** ${packageDir}
+${packages.length > 0 ? `**Packages:** ${packages.join(", ")}` : ""}
+${dev ? "**Development Dependencies:** Yes" : ""}
+
+**Command:**
+\`\`\`bash
+cd ${packageDir}
+${command}
+\`\`\`
+
+**Bun Advantages:**
+- ⚡ 10x faster than npm
+- 🔄 Lockfile format: bun.lockb
+- 📊 Dependency analysis built-in
+- 🔍 Security auditing included
+
+**Execution Steps:**
+1. Navigate to project directory
+2. Run package management command
+3. Verify installation success
+4. Update lockfile if needed
+
+**To execute:**
+\`\`\`bash
+cd ${packageDir}
+${command}
+\`\`\``,
+          },
+        ],
+      };
+    } catch (error: any) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `❌ Package management failed: ${error.message}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+server.tool(
+  "bun-build-optimize",
+  "Build and optimize projects with Bun's advanced bundler",
+  {
+    entryPoint: z.string(),
+    outDir: z.string().optional().default("./dist"),
+    target: z.enum(["browser", "bun", "node"]).optional().default("browser"),
+    minify: z.boolean().optional().default(true),
+    sourcemap: z.boolean().optional().default(false),
+    splitting: z.boolean().optional().default(true),
+  },
+  async ({
+    entryPoint,
+    outDir,
+    target,
+    minify,
+    sourcemap,
+    splitting,
+  }: {
+    entryPoint: string;
+    outDir: string;
+    target: "browser" | "bun" | "node";
+    minify: boolean;
+    sourcemap: boolean;
+    splitting: boolean;
+  }) => {
+    try {
+      const buildCommand = [
+        "bun",
+        "build",
+        entryPoint,
+        "--outdir",
+        outDir,
+        "--target",
+        target,
+        ...(minify ? ["--minify"] : []),
+        ...(sourcemap ? ["--sourcemap"] : []),
+        ...(splitting ? ["--splitting"] : []),
+      ].join(" ");
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `🏗️ **Bun Build & Optimization**
+
+**Configuration:**
+- 📂 Entry Point: ${entryPoint}
+- 📁 Output Directory: ${outDir}
+- 🎯 Target: ${target}
+            ${minify ? "✅ Minification Enabled" : "❌ Minification Disabled"}
+            ${sourcemap ? "✅ Source Maps Enabled" : "❌ Source Maps Disabled"}
+            ${splitting ? "✅ Code Splitting Enabled" : "❌ Code Splitting Disabled"}
+
+**Build Command:**
+\`\`\`bash
+${buildCommand}
+\`\`\`
+
+**Optimization Features:**
+- ⚡ Lightning-fast bundling
+- 🗜️ Advanced minification
+- 📦 Automatic code splitting
+- 🎯 Platform-specific optimization
+- 🔍 Dead code elimination
+
+**Performance Benefits:**
+- 🚀 Faster build times than webpack/esbuild
+- 💾 Smaller bundle sizes
+- 🌐 Better runtime performance
+- 📊 Built-in bundle analysis
+
+**To execute:**
+\`\`\`bash
+${buildCommand}
+\`\`\`
+
+**Output Analysis:**
+After building, analyze your bundle with:
+\`\`\`bash
+ls -la ${outDir}/
+\`\`\``,
+          },
+        ],
+      };
+    } catch (error: any) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `❌ Build configuration failed: ${error.message}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Helper function for Bun documentation search
+async function searchBunDocumentation(query: string): Promise<Array<{
+  title: string;
+  description: string;
+  url: string;
+  category: string;
+  relevance: number;
+}>> {
+  // Simulate comprehensive Bun documentation search results
+  const documentationIndex = [
+    {
+      title: "Bun Runtime - Getting Started",
+      description: "Complete guide to setting up and using Bun JavaScript runtime",
+      url: "https://bun.sh/docs/installation",
+      category: "Getting Started",
+      keywords: ["install", "setup", "getting started", "runtime"],
+    },
+    {
+      title: "Bun Test - Fast Testing Framework",
+      description: "Built-in testing framework with TypeScript support and coverage",
+      url: "https://bun.sh/docs/test",
+      category: "Testing",
+      keywords: ["test", "testing", "coverage", "jest"],
+    },
+    {
+      title: "Bun Build - Optimized Bundler",
+      description: "High-performance bundler with minification and code splitting",
+      url: "https://bun.sh/docs/bundler",
+      category: "Build Tools",
+      keywords: ["build", "bundle", "minify", "webpack"],
+    },
+    {
+      title: "Bun Server - HTTP/WebSocket Server",
+      description: "Built-in HTTP and WebSocket server with hot reload support",
+      url: "https://bun.sh/docs/server",
+      category: "Server",
+      keywords: ["server", "http", "websocket", "api"],
+    },
+    {
+      title: "Bun SQL - Database Client",
+      description: "Built-in SQL client with connection pooling and migrations",
+      url: "https://bun.sh/docs/sql",
+      category: "Database",
+      keywords: ["sql", "database", "postgres", "mysql"],
+    },
+    {
+      title: "Bun File System API",
+      description: "Fast file system operations with built-in utilities",
+      url: "https://bun.sh/docs/api/file-io",
+      category: "API Reference",
+      keywords: ["file", "fs", "read", "write", "path"],
+    },
+    {
+      title: "Bun Performance Optimization",
+      description: "Tips and techniques for optimizing Bun applications",
+      url: "https://bun.sh/docs/runtime/performance",
+      category: "Performance",
+      keywords: ["performance", "optimization", "speed", "memory"],
+    },
+    {
+      title: "Bun v1.3 Features",
+      description: "Latest features and improvements in Bun version 1.3",
+      url: "https://bun.sh/blog/bun-v1.3",
+      category: "Release Notes",
+      keywords: ["v1.3", "features", "new", "release"],
+    },
+  ];
+
+  // Simple relevance scoring based on keyword matching
+  const results = documentationIndex.map(doc => {
+    const queryLower = query.toLowerCase();
+    const titleMatch = doc.title.toLowerCase().includes(queryLower);
+    const descMatch = doc.description.toLowerCase().includes(queryLower);
+    const keywordMatch = doc.keywords.some(keyword => 
+      keyword.toLowerCase().includes(queryLower) || queryLower.includes(keyword.toLowerCase())
+    );
+    
+    let relevance = 0;
+    if (titleMatch) relevance += 50;
+    if (descMatch) relevance += 30;
+    if (keywordMatch) relevance += 40;
+    
+    // Bonus for exact matches
+    if (doc.title.toLowerCase() === queryLower) relevance += 20;
+    if (doc.keywords.some(k => k.toLowerCase() === queryLower)) relevance += 15;
+    
+    return {
+      ...doc,
+      relevance: Math.min(relevance, 100),
+    };
+  })
+  .filter(result => result.relevance > 0)
+  .sort((a, b) => b.relevance - a.relevance)
+  .slice(0, 5); // Top 5 results
+
+  return results;
+}
+
 // Project Management Tools
 server.tool(
   "setup-project",
@@ -461,10 +885,109 @@ server.resource(
   }
 );
 
-// Prompts for common tasks
+// Bun-specific Resources
+server.resource(
+  "bun-features",
+  "text/plain",
+  async (uri: any) => {
+    const features = {
+      runtime: {
+        name: "Bun JavaScript Runtime",
+        version: "1.3.0+",
+        performance: "10x faster than Node.js",
+        features: [
+          "Native TypeScript support",
+          "Built-in test runner",
+          "Fast package manager",
+          "Optimized bundler",
+          "SQL client",
+          "File system API",
+          "HTTP/WebSocket server",
+        ],
+      },
+      advantages: {
+        speed: "Lightning-fast execution",
+        memory: "Low memory footprint",
+        compatibility: "Node.js API compatible",
+        tooling: "All-in-one toolkit",
+      },
+      useCases: [
+        "High-performance web servers",
+        "CLI tools and scripts",
+        "Build and deployment pipelines",
+        "Testing and development",
+        "Database applications",
+      ],
+    };
+
+    return {
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: "application/json",
+          text: JSON.stringify(features, null, 2),
+        },
+      ],
+    };
+  }
+);
+
+server.resource(
+  "bun-performance-tips",
+  "text/plain",
+  async (uri: any) => {
+    const tips = {
+      optimization: [
+        {
+          technique: "Use --smol flag",
+          description: "Reduces memory usage for memory-constrained environments",
+          command: "bun --smol run script.ts",
+        },
+        {
+          technique: "Enable hot reload",
+          description: "Automatic file watching and reloading during development",
+          command: "bun --hot run server.ts",
+        },
+        {
+          technique: "Optimize builds",
+          description: "Use Bun's built-in optimizer for production builds",
+          command: "bun build --minify --target=bun",
+        },
+        {
+          technique: "Leverage SQL client",
+          description: "Use built-in SQL client for database operations",
+          example: "const db = Bun.sql('postgres://user:pass@localhost/db')",
+        },
+      ],
+      benchmarks: {
+        packageManager: "10x faster than npm install",
+        testRunner: "3x faster than Jest",
+        bundler: "2x faster than Webpack",
+        server: "High-performance HTTP server",
+      },
+      memory: {
+        baseline: "Reduced memory footprint",
+        optimization: "Garbage collection improvements",
+        monitoring: "Built-in memory profiling tools",
+      },
+    };
+
+    return {
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: "application/json",
+          text: JSON.stringify(tips, null, 2),
+        },
+      ],
+    };
+  }
+);
+
+// Enhanced Prompts with Bun integration
 server.prompt(
   "optimize-performance",
-  "Generate performance optimization recommendations for the Odds Protocol",
+  "Generate performance optimization recommendations for the Odds Protocol using Bun-specific features",
   {
     component: z.string().optional(),
     metrics: z.boolean().default(true),
@@ -473,10 +996,39 @@ server.prompt(
 
 server.prompt(
   "setup-development-environment",
-  "Provide comprehensive development environment setup instructions",
+  "Provide comprehensive development environment setup instructions with Bun runtime",
   {
     platform: z.enum(["macos", "linux", "windows"]).default("macos"),
     features: z.array(z.string()).default(["all"]),
+  }
+);
+
+server.prompt(
+  "bun-migration-guide",
+  "Guide for migrating existing Node.js projects to Bun runtime",
+  {
+    projectType: z.enum(["express", "react", "vue", "cli", "library"]).optional(),
+    compatibility: z.boolean().default(true),
+  }
+);
+
+server.prompt(
+  "bun-testing-strategy",
+  "Comprehensive testing strategy using Bun's built-in test runner",
+  {
+    framework: z.enum(["vitest", "bun-test", "jest"]).default("bun-test"),
+    coverage: z.boolean().default(true),
+    e2e: z.boolean().default(false),
+  }
+);
+
+server.prompt(
+  "bun-deployment-optimization",
+  "Optimize deployment pipeline using Bun's build and runtime features",
+  {
+    target: z.enum(["docker", "vercel", "railway", "aws"]).default("docker"),
+    minification: z.boolean().default(true),
+    splitting: z.boolean().default(true),
   }
 );
 

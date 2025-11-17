@@ -57,3 +57,4 @@ export * from './enhanced';
 export * from './lightweight';
 export * from './strict';
 export * from './realtime';
+export * from './analytics';

@@ -64,3 +64,12 @@ export {
 export {
   RealtimeMetadataProcessor
 } from './realtime-processor';
+
+// Advanced analytics utilities (Phase 2.11)
+export {
+  PredictiveAnalyticsEngine
+} from './predictive-analytics';
+
+export {
+  SmartNotificationsEngine
+} from './smart-notifications';

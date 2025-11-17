@@ -82,3 +82,17 @@ export {
 export {
   InMemoryLifecycleStorage
 } from './lifecycle-storage';
+
+// Testing utilities (Time handling)
+export {
+  TimeTestHelper,
+  LifecycleTimeTester,
+  TimeAssertions,
+  TEST_DATES,
+  TEST_TIMEZONES,
+  setupBusinessTimeTesting,
+  setupUTCTimeTesting,
+  setupFakeTimerTesting,
+  createTestMetadataWithTimestamp,
+  createTimeSeriesMetadata
+} from './test-time-helpers';

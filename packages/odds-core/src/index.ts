@@ -3,6 +3,7 @@ export * from './types';
 export * from './constants';
 export * from './utils';
 export * from './validation';
+export * from './errors';
 
 // Bun v1.3 Enhanced APIs
 export * from './config/yaml-loader';

@@ -55,3 +55,4 @@ export interface MarketHours {
 export * from './topics';
 export * from './enhanced';
 export * from './lightweight';
+export * from './strict';

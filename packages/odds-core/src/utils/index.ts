@@ -28,3 +28,29 @@ export {
   TopicServiceFactory,
   TopicServiceUtils
 } from './topic-services';
+
+// Polished utilities with comprehensive documentation
+export {
+  MetadataBuilder as DocumentedMetadataBuilder,
+  TopicAnalyzer as DocumentedTopicAnalyzer
+} from './documented-metadata';
+
+// Defensive programming utilities
+export {
+  SafeTypeChecker,
+  SafePropertyAccess,
+  SafeArrayOperations,
+  SafeStringOperations,
+  SafeMathOperations,
+  SafeObjectOperations,
+  DefensiveMetadataWrapper
+} from './defensive';
+
+// Performance monitoring and benchmarking
+export {
+  PerformanceMonitor,
+  PerformanceBenchmark,
+  PerformanceCache,
+  PerformanceUtils,
+  performanceMonitor
+} from './performance';

@@ -160,6 +160,58 @@ bun run clean               # Clean build artifacts
 bun run typecheck           # TypeScript type checking
 ```
 
+### Running in Development Mode
+
+```bash
+bun run dev
+```
+
+### Building for Production
+
+```bash
+bun run build
+```
+
+### Running Tests
+
+```bash
+bun run test
+```
+
+### Linting
+
+```bash
+bun run lint
+```
+
+### Type Checking
+
+```bash
+bun run typecheck
+```
+
+### 🐛 Debugging
+
+For comprehensive debugging setup and configuration, see the **[MCP Debugging Guide](docs/MCP_DEBUGGING.md)**.
+
+#### VS Code Debugging
+The project includes pre-configured VS Code debugging configurations:
+
+- **Debug MCP Server (Development)** - Full debug logging and hot reload
+- **Debug MCP Server (Production)** - Optimized production debugging
+- **Debug Automation Scripts** - Debug individual automation components
+- **Debug Bun Script Execution** - Custom script debugging with input parameters
+
+#### Quick Debug Setup
+```bash
+# Install VS Code Bun extension
+code --install-extension oven.bun
+
+# Start debugging server
+cd mcp-server
+bun run index.ts
+```
+
 ### 🧪 Testing
 ```bash
 bun run test                # Run all tests with Bun test runner

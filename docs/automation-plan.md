@@ -8,10 +8,10 @@ This document outlines a complete automation strategy for the Odds Protocol mono
 
 ### Core Components
 1. **MCP Server** (`mcp-server/`) - Model Context Protocol integration
-2. **Automated Setup** (`scripts/automated-setup.ts`) - Project initialization
-3. **Incremental Verification** (`scripts/incremental-verification.ts`) - Health monitoring
-4. **Continuous Testing** (`scripts/continuous-testing.ts`) - Real-time testing
-5. **Monitoring Dashboard** (`scripts/monitoring-dashboard.ts`) - Visual oversight
+2. **Automated Setup** (`scripts/setup/automated-setup.ts`) - Project initialization
+3. **Incremental Verification** (`scripts/setup/incremental-verification.ts`) - Health monitoring
+4. **Continuous Testing** (`scripts/test/continuous-testing.ts`) - Real-time testing
+5. **Monitoring Dashboard** (`scripts/monitor/monitoring-dashboard.ts`) - Visual oversight
 
 ## 🚀 Implementation Details
 
@@ -46,7 +46,7 @@ automated-deployment --environment=production --region=us-east-1
 
 ### 2. Automated Setup System
 
-**Location**: `scripts/automated-setup.ts`
+**Location**: `scripts/setup/automated-setup.ts`
 
 **Templates Available**:
 - **Minimal**: Core Bun + TypeScript setup
@@ -60,7 +60,7 @@ automated-deployment --environment=production --region=us-east-1
 bun run automation:setup my-new-app --template=full --include-ci
 
 # Available templates
-bun run scripts/automated-setup.ts --help
+bun run scripts/setup/automated-setup.ts --help
 ```
 
 **Features**:
@@ -71,7 +71,7 @@ bun run scripts/automated-setup.ts --help
 
 ### 3. Incremental Verification System
 
-**Location**: `scripts/incremental-verification.ts`
+**Location**: `scripts/setup/incremental-verification.ts`
 
 **Verification Categories**:
 - ✅ **Structure**: Monorepo layout validation
@@ -103,7 +103,7 @@ bun run automation:verify --no-security
 
 ### 4. Continuous Testing Pipeline
 
-**Location**: `scripts/continuous-testing.ts`
+**Location**: `scripts/test/continuous-testing.ts`
 
 **Test Categories**:
 - **Core Tests**: Essential functionality
@@ -134,7 +134,7 @@ bun run automation:test --interval=10000 --no-coverage
 
 ### 5. Monitoring Dashboard
 
-**Location**: `scripts/monitoring-dashboard.ts`
+**Location**: `scripts/monitor/monitoring-dashboard.ts`
 
 **Features**:
 - 🎯 **Real-time Metrics**: Live system monitoring

@@ -1,0 +1,70 @@
+# Odds Protocol Configuration - YAML with Bun v1.3
+version: 1.3.0
+environment: ${NODE_ENV:-development}
+
+websocket:
+  port: 3000
+  compression: true
+  backpressure_limit: 524288
+  max_connections: 10000
+  subprotocols: ["odds-v1", "odds-v2"]
+  permessage_deflate: true
+
+arbitrage:
+  edge_threshold: 0.02
+  kelly_fraction: 0.25
+  min_expiry_seconds: 30
+  max_expiry_seconds: 300
+
+sharp_detection:
+  confidence_threshold: 0.8
+  volume_imbalance_threshold: 2.0
+  anomaly_threshold: 0.7
+  features:
+    - reverse_line_movement
+    - volume_imbalance  
+    - tick_velocity
+    - anomaly_score
+
+exchanges:
+  draftkings:
+    rate_limit: 100
+    supported_sports: ["nba", "nfl", "mlb", "nhl"]
+    api_endpoint: "https://api.draftkings.com"
+    
+  fanduel:
+    rate_limit: 90
+    supported_sports: ["nba", "nfl", "mlb", "nhl"]
+    api_endpoint: "https://api.fanduel.com"
+
+sports:
+  nba:
+    market_hours:
+      open: "12:00"
+      close: "01:00"
+      timezone: "America/New_York"
+    typical_totals:
+      min: 180
+      max: 250
+
+  nfl:
+    market_hours:
+      open: "13:00" 
+      close: "23:00"
+      timezone: "America/New_York"
+    typical_totals:
+      min: 30
+      max: 60
+
+security:
+  csrf:
+    secret: ${CSRF_SECRET}
+    expires_in: 3600000
+  cors:
+    origins: ["https://odds-protocol.com", "https://app.odds-protocol.com"]
+    credentials: true
+
+monitoring:
+  metrics_port: 9090
+  health_check_interval: 30000
+  log_level: "info"

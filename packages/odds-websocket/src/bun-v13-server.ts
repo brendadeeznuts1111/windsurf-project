@@ -1,4 +1,4 @@
-// packages/odds-websocket/src/bun-1.3-server.ts - Bun 1.3 optimized WebSocket server
+// packages/odds-websocket/src/bun-v13-server.ts - Bun v1.3 optimized WebSocket server
 import type { OddsTick, ArbitrageOpportunity, SharpSignal } from '../../odds-core/src/types';
 import { BunNativeAPIsIntegration } from '../../odds-core/src/bun-native-apis';
 import { BunCompleteAPIsIntegration } from '../../odds-core/src/bun-complete-apis';

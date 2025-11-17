@@ -11,8 +11,8 @@ import {
   BunPerformanceMonitor,
   getSocketInfo,
   performNetworkDiagnostics
-} from '../utils.js';
-import { OddsTick, ArbitrageOpportunity, WebSocketMessage } from '../types.js';
+} from '../utils';
+import { OddsTick, ArbitrageOpportunity, WebSocketMessage } from '../types';
 
 describe("Odds Core - Mathematical Calculations", () => {
   describe("Kelly Fraction Calculations", () => {

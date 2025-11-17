@@ -115,7 +115,7 @@ bun run test:vscode
 concurrent = true
 maxConcurrency = 10
 randomize = true
-preload = ["./scripts/test-setup.ts"]
+preload = ["./scripts/test/test-setup.ts"]
 
 [coverage]
 enabled = true
@@ -126,7 +126,7 @@ enabled = true
 thresholds = { "hash-operation" = 10 }
 ```
 
-### **Global Test Setup** (`scripts/test-setup.ts`)
+### **Global Test Setup** (`scripts/test/test-setup.ts`)
 - Mock data generators
 - Performance monitoring
 - Mock server management

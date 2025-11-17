@@ -10,8 +10,8 @@ import {
   calculateArbitrageEdge,
   getMemoryStats,
   forceGarbageCollection
-} from '../utils.js';
-import { OddsTick, ArbitrageOpportunity } from '../types.js';
+} from '../utils';
+import { OddsTick, ArbitrageOpportunity } from '../types';
 
 // Mock performance monitor class
 class MockPerformanceMonitor {

@@ -40,10 +40,13 @@
 - **apps/api-gateway** - API gateway with Bun optimization
 - **apps/stream-processor** - High-throughput market data processing
 
-### 🔧 Scripts & Configuration
-- **scripts/build.ts** - Bun-optimized build pipeline with native bundling
-- **scripts/deploy.ts** - Bun Shell deployment automation
-- **scripts/benchmark.ts** - Comprehensive performance benchmarking
+### � MCP Integration
+- **mcp-server** - Model Context Protocol server for AI assistant integration with Bun optimization
+
+### � Scripts & Configuration
+- **scripts/core/build.ts** - Bun-optimized build pipeline with native bundling
+- **scripts/deploy/deploy.ts** - Bun Shell deployment automation
+- **scripts/benchmark/benchmark.ts** - Comprehensive performance benchmarking
 - **bunfig.toml** - Bun configuration for optimal performance
 
 ## 🚀 Quick Start
@@ -192,7 +195,7 @@ bun run typecheck
 
 ### 🐛 Debugging
 
-For comprehensive debugging setup and configuration, see the **[MCP Debugging Guide](docs/MCP_DEBUGGING.md)**.
+For comprehensive debugging setup and configuration, see the **[MCP Debugging Guide](docs/mcp-debugging.md)**.
 
 #### VS Code Debugging
 The project includes pre-configured VS Code debugging configurations:

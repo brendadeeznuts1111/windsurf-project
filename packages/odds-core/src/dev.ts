@@ -19,7 +19,7 @@ const watcher = Bun.watch('./src', {
     const server = await apiTracker.track('Bun.spawn', () => Bun.spawn(['bun', 'run', 'src/server.ts'], {
       stdout: 'inherit',
       stderr: 'inherit',
-    })));
+    }));
     
     console.log('🔄 Server restarted with changes');
   },
@@ -79,8 +79,8 @@ const devServer = await apiTracker.track('Bun.serve', () => Bun.serve({
       </html>
     `, {
       headers: { 'Content-Type': 'text/html' }
-    }));
-  },
+    });
+  }
 }));
 
 // Event stream for hot reload notifications

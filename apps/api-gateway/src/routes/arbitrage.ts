@@ -1,7 +1,9 @@
+import { BUSINESS_CONFIG, TIME_CONSTANTS, ERROR_CODES } from '../../../core/src/constants';
+
 export class ArbitrageRouter {
   static async handle(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
-    
+
     switch (request.method) {
       case 'GET':
         return await this.handleGet(request, url);
@@ -16,49 +18,49 @@ export class ArbitrageRouter {
 
   private static async handleGet(request: Request, url: URL): Promise<Response> {
     const path = url.pathname;
-    
+
     if (path === '/api/arbitrage/opportunities') {
       return await this.getOpportunities(url);
     }
-    
+
     if (path === '/api/arbitrage/opportunities/:id') {
       const id = path.split('/').pop();
       return await this.getOpportunity(id!);
     }
-    
+
     if (path === '/api/arbitrage/history') {
       return await this.getArbitrageHistory(url);
     }
-    
+
     if (path === '/api/arbitrage/stats') {
       return await this.getArbitrageStats();
     }
-    
+
     return new Response('Not found', { status: 404 });
   }
 
   private static async handlePost(request: Request, url: URL): Promise<Response> {
     const path = url.pathname;
-    
+
     if (path === '/api/arbitrage/opportunities') {
       return await this.createOpportunity(request);
     }
-    
+
     if (path === '/api/arbitrage/execute') {
       return await this.executeArbitrage(request);
     }
-    
+
     return new Response('Not found', { status: 404 });
   }
 
   private static async handleDelete(request: Request, url: URL): Promise<Response> {
     const path = url.pathname;
-    
+
     if (path.startsWith('/api/arbitrage/opportunities/')) {
       const id = path.split('/').pop();
       return await this.deleteOpportunity(id!);
     }
-    
+
     return new Response('Not found', { status: 404 });
   }
 
@@ -94,7 +96,7 @@ export class ArbitrageRouter {
         edge: 0.025,
         kellyFraction: 0.08,
         confidence: 0.92,
-        timestamp: Date.now() - 5000,
+        timestamp: Date.now() - BUSINESS_CONFIG.ARBITRAGE.DEFAULT_UPDATE_INTERVAL,
         expiry: Date.now() + 25000
       }
     ].filter(opp => {
@@ -159,7 +161,7 @@ export class ArbitrageRouter {
         edge: 0.066,
         profit: 0.10,
         executed: true,
-        executionTime: Date.now() - 3600000,
+        executionTime: Date.now() - TIME_CONSTANTS.INTERVALS.ONE_HOUR,
         status: 'completed'
       },
       {
@@ -213,7 +215,7 @@ export class ArbitrageRouter {
   private static async createOpportunity(request: Request): Promise<Response> {
     try {
       const body = await request.json();
-      
+
       // Validate request body
       if (!body.symbol || !body.exchangeA || !body.exchangeB) {
         return new Response(JSON.stringify({
@@ -249,7 +251,7 @@ export class ArbitrageRouter {
   private static async executeArbitrage(request: Request): Promise<Response> {
     try {
       const body = await request.json();
-      
+
       if (!body.opportunityId || !body.size) {
         return new Response(JSON.stringify({
           error: 'Missing required fields: opportunityId, size'

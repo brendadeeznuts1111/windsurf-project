@@ -190,8 +190,23 @@ Add the MCP server to your Claude Desktop configuration (`~/Library/Application 
 ```json
 {
   "mcpServers": {
-    "odds-protocol": {
+    "bun-search": {
       "command": "bun",
+      "args": ["run", "/Users/nolarose/CascadeProjects/windsurf-project/mcp-server/working-server.ts"],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}
+```
+
+**Alternative: Use the original comprehensive server:**
+```json
+{
+  "mcpServers": {
+    "odds-protocol": {
+      "command": "bun", 
       "args": ["run", "/Users/nolarose/CascadeProjects/windsurf-project/mcp-server/index.ts"],
       "env": {
         "NODE_ENV": "production"
@@ -284,6 +299,44 @@ mcp-server/
     ├── tools/            # MCP tool implementations
     ├── resources/        # Resource providers
     └── prompts/          # Prompt templates
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues and Solutions
+
+#### 1. Server Won't Start
+```bash
+# Check dependencies
+bun install
+
+# Test basic functionality
+bun run start
+
+# Check for syntax errors
+bun --check working-server.ts
+```
+
+#### 2. MCP Client Connection Issues
+- **Verify path**: Ensure the absolute path is correct in Claude config
+- **Check permissions**: Make sure the file is executable
+- **Test manually**: Run `bun run working-server.ts` to verify it starts
+
+#### 3. Search API Issues
+- The server includes fallback responses when external APIs are unavailable
+- Local documentation is always accessible even without internet
+
+#### 4. Transport Errors
+- **stdio transport**: Default and most reliable for Claude Desktop
+- **HTTP transport**: Available with `MCP_TRANSPORT=http` environment variable
+
+### Debug Mode
+```bash
+# Enable debug logging
+DEBUG=true bun run working-server.ts
+
+# Test with specific query
+echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "SearchBun", "arguments": {"query": "timezone"}}}' | bun run working-server.ts
 ```
 
 ## 🔒 Security

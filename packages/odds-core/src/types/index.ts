@@ -54,6 +54,7 @@ export interface MarketHours {
 // Export new topics and enhanced types
 export * from './topics';
 export * from './enhanced';
+export { ProcessingMetadata } from './topics';
 export * from './lightweight';
 export * from './strict';
 export * from './realtime';

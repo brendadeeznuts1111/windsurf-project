@@ -709,3 +709,42 @@ export function getMemoryStats() {
     arrayBuffers: nodeMemory.arrayBuffers
   };
 }
+
+/**
+ * Calculate arbitrage opportunity from multiple odds
+ */
+export function calculateArbitrageOpportunity(odds: Array<{bookmaker: string, odds: number, commission: number}>): ArbitrageOpportunity | null {
+  if (odds.length < 2) return null;
+  
+  // Calculate implied probabilities including commission
+  const impliedProbs = odds.map(o => {
+    const impliedProb = 1 / o.odds;
+    const adjustedProb = impliedProb * (1 + o.commission);
+    return { bookmaker: o.bookmaker, probability: adjustedProb };
+  });
+  
+  // Sum of adjusted probabilities
+  const totalProb = impliedProbs.reduce((sum, p) => sum + p.probability, 0);
+  
+  // Arbitrage exists if total probability < 1
+  if (totalProb >= 1) return null;
+  
+  // Calculate optimal stakes
+  const totalStake = 100;
+  const stakes = impliedProbs.map(p => ({
+    bookmaker: p.bookmaker,
+    stake: (p.probability / totalProb) * totalStake,
+    odds: odds.find(o => o.bookmaker === p.bookmaker)!.odds
+  }));
+  
+  // Calculate profit
+  const profit = totalStake * (1 / totalProb - 1);
+  
+  return {
+    opportunities: odds,
+    profit,
+    stakes,
+    probability: totalProb,
+    timestamp: new Date()
+  };
+}

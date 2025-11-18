@@ -1,0 +1,234 @@
+# bunfig.toml - Odds Protocol Configuration
+root = "."
+
+[install]
+# Bun v1.3: Use isolated installs for better performance in monorepos
+linker = "isolated"
+
+# Enable fast install with io_uring (Linux) or equivalent
+backend = "fast"
+
+# Cache configuration
+cache = true
+frozen-lockfile = false
+
+# Registry configuration
+registry = "https://registry.npmjs.org"
+
+# Scoped registries for enterprise packages
+[install.scopes]
+"@types" = "https://registry.npmjs.org"
+"@babel" = "https://registry.npmjs.org"
+
+# Lockfile configuration
+[install.lockfile]
+# Save lockfile after successful install
+save = true
+# Print lockfile path
+print = "yarn"
+
+# Telemetry (disable for enterprise)
+telemetry = false
+
+[bundle]
+# Optimize for various targets
+target = "node"
+format = "esm"
+splitting = true
+minify = true
+external = [
+  "@tensorflow/tfjs",
+  "uWebSockets.js",
+  "@cloudflare/workers-types"
+]
+
+[test]
+# Optimized for property testing
+timeout = 120000
+# Enable concurrent testing by default
+concurrent = true
+# Enable coverage
+coverage = true
+# Bun v1.3+: Only show failures in CI to reduce noise
+onlyFailures = false
+# Maximum number of concurrent tests
+maxConcurrency = 20
+# Pass with no tests for monorepo compatibility
+passWithNoTests = true
+# Randomize test order to catch dependencies
+randomize = true
+# Files matching these patterns will run all tests concurrently
+concurrentTestGlob = [
+  "**/integration/**/*.test.ts",
+  "**/*-concurrent.test.ts",
+  "**/api/**/*.test.ts",
+  "**/websocket/**/*.test.ts",
+  "**/*.property.test.ts"
+]
+# Coverage exclusions for better performance
+coveragePathIgnorePatterns = [
+  "node_modules",
+  "dist",
+  "scripts",
+  "**/*.test.ts",
+  "**/*.spec.ts"
+]
+
+[run]
+# Hot reload for development
+hot = true
+# Prefer Bun's runtime
+bun = true
+# Use bun shell for better performance
+shell = "bun"
+# Preload scripts for optimization
+preload = ["./scripts/preload.ts"]
+
+[macro]
+# Enable Bun's macro system for performance
+unsafe = false
+
+# Logging configuration
+[log]
+level = "info"
+format = "json"
+# Enable performance logging
+performance = true
+# Optimize worker communication
+optimizeWorkerMessaging = true
+# Memory management settings
+gcThreshold = 100
+maxHeapSize = "2GB"
+
+# Build configuration
+[build]
+target = "bun"
+outdir = "dist"
+minify = true
+sourcemap = "external"
+# Bun v1.3: 60% faster builds on macOS
+threadpool = true
+# Target ES2022 for modern features
+# Enable minification for production
+# Generate source maps
+
+[build.bundle]
+# Bundle dependencies
+bundle = true
+# External dependencies (keep as node_modules)
+external = ["pg", "redis", "sqlite3"]
+
+# Environment configuration
+[env]
+# Development environment
+development = { 
+  NODE_ENV = "development",
+  BUN_DEBUG = "1"
+}
+
+# Production environment
+production = {
+  NODE_ENV = "production",
+  BUN_DEBUG = "0"
+}
+
+# Test environment
+test = {
+  NODE_ENV = "test",
+  BUN_DEBUG = "0",
+  # Use only failures in test environment for cleaner output
+  TEST_ONLY_FAILURES = "false"
+}
+
+# CI environment (GitHub Actions, GitLab CI, etc.)
+ci = {
+  NODE_ENV = "ci",
+  BUN_DEBUG = "0",
+  # Only show failures in CI to reduce log noise
+  TEST_ONLY_FAILURES = "true",
+  # Pass with no tests for monorepo packages without tests
+  TEST_PASS_WITH_NO_TESTS = "true",
+  # Longer timeout for CI environments
+  TEST_TIMEOUT = "10000"
+}
+
+# Define environment variables
+[define]
+# Global constants
+BUN_VERSION = "1.3.0"
+ODDS_PROTOCOL_VERSION = "1.0.0"
+
+# Optimizations
+[optimize]
+# Enable all optimizations
+all = true
+# Specific optimizations
+dead-code-elimination = true
+constant-folding = true
+inline-functions = true
+
+# Security configuration
+[security]
+# Enable security scanner
+scanner = true
+# Minimum release age for packages (days)
+min-release-age = 7
+
+# Platform-specific dependencies
+[platform]
+"darwin-arm64" = { 
+  "uWebSockets.js" = "github:uNetworking/uWebSockets.js#v20.40.0" 
+}
+"linux-x64" = { 
+  "uWebSockets.js" = "github:uNetworking/uWebSockets.js#v20.40.0" 
+}
+"win32-x64" = { 
+  "uWebSockets.js" = "github:uNetworking/uWebSockets.js#v20.40.0" 
+}
+
+# Workspace configuration (redundant with package.json but explicit)
+[workspace]
+# Enable workspace features
+enabled = true
+# Use catalog for dependency resolution
+catalog = true
+
+# Performance monitoring
+[monitoring]
+# Enable performance metrics
+enabled = true
+# Metrics endpoint
+endpoint = "http://localhost:9090/metrics"
+
+# SQL preconnection for database
+[sql]
+preconnect = true
+
+# WebSocket optimizations
+[websocket]
+# Enable compression for better throughput
+compression = true
+# Backpressure handling
+backpressureLimit = "1MB"
+# Connection limits
+maxConnections = 10000
+# Message size limits
+maxPayloadLength = "4MB"
+
+# Database optimizations
+[database]
+# Preconnect for faster startup
+preconnect = true
+# Connection pooling
+maxConnections = 20
+# Query timeout
+timeout = 30000
+
+# Development optimizations
+[dev]
+# Enable source maps in development
+sourcemap = true
+# Fast refresh for hot reload
+fastRefresh = true
+# Performance monitoring
+enableProfiling = true

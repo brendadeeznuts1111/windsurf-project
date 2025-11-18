@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="bun test" tests="14" assertions="22" failures="6" skipped="0" time="0.178944">
+  <testsuite name="src/comprehensive-test.example.test.ts" file="src/comprehensive-test.example.test.ts" tests="14" assertions="22" failures="6" skipped="0" time="0" hostname="Mac.attlocal.net">
+    <testsuite name="Comprehensive Configuration Demo" file="src/comprehensive-test.example.test.ts" line="6" tests="11" assertions="17" failures="6" skipped="0" time="0.112" hostname="Mac.attlocal.net">
+      <testcase name="API mock works correctly" classname="Comprehensive Configuration Demo" time="0.003684" file="src/comprehensive-test.example.test.ts" line="38" assertions="0">
+        <failure type="AssertionError" />
+      </testcase>
+      <testcase name="environment variables are set correctly" classname="Comprehensive Configuration Demo" time="0.001528" file="src/comprehensive-test.example.test.ts" line="7" assertions="2">
+        <failure type="AssertionError" />
+      </testcase>
+      <testcase name="global test utilities are available" classname="Comprehensive Configuration Demo" time="0.000314" file="src/comprehensive-test.example.test.ts" line="14" assertions="6" />
+      <testcase name="database mock works correctly" classname="Comprehensive Configuration Demo" time="0.000208" file="src/comprehensive-test.example.test.ts" line="26" assertions="2" />
+      <testcase name="timeout configuration works" classname="Comprehensive Configuration Demo" time="0.103028" file="src/comprehensive-test.example.test.ts" line="107" assertions="2" />
+      <testcase name="test environment assertion" classname="Comprehensive Configuration Demo" time="0.00028" file="src/comprehensive-test.example.test.ts" line="119" assertions="1" />
+      <testcase name="configuration mock works correctly" classname="Comprehensive Configuration Demo" time="0.000178" file="src/comprehensive-test.example.test.ts" line="98" assertions="0">
+        <failure type="AssertionError" />
+      </testcase>
+      <testcase name="filesystem mock works correctly" classname="Comprehensive Configuration Demo" time="0.005087" file="src/comprehensive-test.example.test.ts" line="51" assertions="0">
+        <failure type="AssertionError" />
+      </testcase>
+      <testcase name="external service mock works correctly" classname="Comprehensive Configuration Demo" time="0.000206" file="src/comprehensive-test.example.test.ts" line="73" assertions="0">
+        <failure type="AssertionError" />
+      </testcase>
+      <testcase name="logger mock respects log level" classname="Comprehensive Configuration Demo" time="0.000075" file="src/comprehensive-test.example.test.ts" line="86" assertions="0">
+        <failure type="AssertionError" />
+      </testcase>
+      <testcase name="global fetch mock works correctly" classname="Comprehensive Configuration Demo" time="0.000108" file="src/comprehensive-test.example.test.ts" line="63" assertions="4" />
+    </testsuite>
+    <testsuite name="Coverage Configuration Demo" file="src/comprehensive-test.example.test.ts" line="124" tests="3" assertions="5" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+      <testcase name="function coverage example" classname="Coverage Configuration Demo" time="0.000037" file="src/comprehensive-test.example.test.ts" line="125" assertions="2" />
+      <testcase name="branch coverage example" classname="Coverage Configuration Demo" time="0.000195" file="src/comprehensive-test.example.test.ts" line="151" assertions="2" />
+      <testcase name="statement coverage example" classname="Coverage Configuration Demo" time="0.000017" file="src/comprehensive-test.example.test.ts" line="138" assertions="1" />
+    </testsuite>
+  </testsuite>
+</testsuites>

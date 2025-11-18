@@ -14,7 +14,7 @@ export class OddsApiServer {
     
     this.server = serve({
       port: configLoader.get('websocket.port', 3000),
-      development: process.env.NODE_ENV !== 'production',
+      development: Bun.env.NODE_ENV !== 'production',
       
       // Bun v1.3: Enhanced fetch handler with cookie support
       fetch: async (request, server) => {

@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "description": "MCP server for searching Bun documentation",
   "type": "module",
-  "main": "bun-mcp-server.ts",
+  "main": "working-server.ts",
   "scripts": {
-    "start": "bun run bun-mcp-server.ts",
-    "dev": "bun --watch bun-mcp-server.ts",
-    "build": "bun build bun-mcp-server.ts --outdir ./dist --target bun",
-    "test": "bun test"
+    "start": "bun run working-server.ts",
+    "dev": "bun --watch working-server.ts",
+    "build": "bun build working-server.ts --outdir ./dist --target bun",
+    "test": "bun test",
+    "original": "bun run bun-mcp-server.ts"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
     "@types/bun": "latest"

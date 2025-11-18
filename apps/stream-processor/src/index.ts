@@ -1,3 +1,4 @@
+import { NETWORK_CONFIG, TIME_CONSTANTS, BUSINESS_CONFIG } from '../../../core/src/constants';
 import { OddsWebSocketServer } from 'odds-websocket';
 import { SharpDetector } from 'odds-ml';
 import { ArbitrageDetector } from 'odds-arbitrage';
@@ -21,12 +22,12 @@ class StreamProcessor {
 
   constructor() {
     // Initialize components
-    this.wsServer = new OddsWebSocketServer(8080);
+    this.wsServer = new OddsWebSocketServer(NETWORK_CONFIG.DEFAULT_PORTS.STREAM_PROCESSOR);
     this.sharpDetector = new SharpDetector(0.85, 100);
     this.arbitrageDetector = new ArbitrageDetector(0.001);
     this.tickSequencer = new TickSequencer();
     this.validator = new DataValidator();
-    
+
     // Initialize processors and handlers
     this.marketDataProcessor = new MarketDataProcessor();
     this.sharpDetectionHandler = new SharpDetectionHandler(this.sharpDetector);
@@ -36,17 +37,17 @@ class StreamProcessor {
 
   public async start(): Promise<void> {
     console.log('Starting Stream Processor...');
-    
+
     try {
       // Start WebSocket server
       this.wsServer.start();
-      
+
       // Setup event handlers
       this.setupEventHandlers();
-      
+
       // Start processing loops
       this.startProcessingLoops();
-      
+
       console.log('Stream Processor started successfully');
     } catch (error) {
       console.error('Failed to start Stream Processor:', error);
@@ -115,7 +116,7 @@ class StreamProcessor {
 
     // Process for sharp detection
     const sharpResult = this.sharpDetector.detectSharp(sequencedTick);
-    
+
     // Broadcast to WebSocket clients
     this.wsServer.broadcast({
       type: 'tick',
@@ -173,7 +174,7 @@ class StreamProcessor {
   private async handleSubscription(subscriptionData: any): Promise<void> {
     // Handle subscription logic
     console.log('Subscription received:', subscriptionData);
-    
+
     this.wsServer.broadcast({
       type: 'subscription-confirmed',
       data: subscriptionData,
@@ -185,7 +186,7 @@ class StreamProcessor {
   private async handleUnsubscription(unsubscriptionData: any): Promise<void> {
     // Handle unsubscription logic
     console.log('Unsubscription received:', unsubscriptionData);
-    
+
     this.wsServer.broadcast({
       type: 'unsubscription-confirmed',
       data: unsubscriptionData,
@@ -198,11 +199,11 @@ class StreamProcessor {
     // Start periodic tasks
     setInterval(() => {
       this.performPeriodicTasks();
-    }, 1000); // Every second
+    }, TIME_CONSTANTS.INTERVALS.ONE_SECOND);
 
     setInterval(() => {
       this.cleanupOldData();
-    }, 60000); // Every minute
+    }, TIME_CONSTANTS.INTERVALS.ONE_MINUTE);
   }
 
   private performPeriodicTasks(): void {
@@ -218,9 +219,9 @@ class StreamProcessor {
 
   public async stop(): Promise<void> {
     console.log('Stopping Stream Processor...');
-    
+
     this.wsServer.stop();
-    
+
     console.log('Stream Processor stopped');
   }
 }

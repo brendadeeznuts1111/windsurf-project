@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BUSINESS_CONFIG, TIME_CONSTANTS } from '../../../core/src/constants';
 
 interface ArbitrageOpportunity {
   id: string;
@@ -12,30 +13,30 @@ interface ArbitrageOpportunity {
   timestamp: number;
 }
 
-interface ArbitrageTableProps {}
+interface ArbitrageTableProps { }
 
 export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
   const [opportunities, setOpportunities] = useState<ArbitrageOpportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({
     minEdge: 0,
-    maxAge: 300000, // 5 minutes
+    maxAge: TIME_CONSTANTS.INTERVALS.FIVE_MINUTES,
     exchanges: [] as string[]
   });
 
   useEffect(() => {
     // Simulate fetching arbitrage opportunities
     fetchOpportunities();
-    
-    const interval = setInterval(fetchOpportunities, 5000); // Update every 5 seconds
-    
+
+    const interval = setInterval(fetchOpportunities, BUSINESS_CONFIG.ARBITRAGE.DEFAULT_UPDATE_INTERVAL);
+
     return () => clearInterval(interval);
   }, [filter]);
 
   const fetchOpportunities = async () => {
     try {
       setLoading(true);
-      
+
       // Simulate API call
       const mockOpportunities: ArbitrageOpportunity[] = [
         {
@@ -58,20 +59,20 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
           price2: 2801.20,
           profit: 0.70,
           confidence: 0.92,
-          timestamp: Date.now() - 10000
+          timestamp: Date.now() - TIME_CONSTANTS.INTERVALS.TEN_SECONDS
         }
       ];
-      
+
       // Apply filters
       const filtered = mockOpportunities.filter((opp: ArbitrageOpportunity) => {
         const age = Date.now() - opp.timestamp;
-        return opp.profit >= filter.minEdge && 
-               age <= filter.maxAge &&
-               (filter.exchanges.length === 0 || 
-                filter.exchanges.includes(opp.exchange1) || 
-                filter.exchanges.includes(opp.exchange2));
+        return opp.profit >= filter.minEdge &&
+          age <= filter.maxAge &&
+          (filter.exchanges.length === 0 ||
+            filter.exchanges.includes(opp.exchange1) ||
+            filter.exchanges.includes(opp.exchange2));
       });
-      
+
       setOpportunities(filtered.sort((a: ArbitrageOpportunity, b: ArbitrageOpportunity) => b.profit - a.profit));
     } catch (error) {
       console.error('Failed to fetch opportunities:', error);
@@ -115,8 +116,8 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
         <div className="filters">
           <div className="filter-group">
             <label>Min Edge:</label>
-            <input 
-              type="number" 
+            <input
+              type="number"
               step="0.01"
               value={filter.minEdge}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter((prev) => ({ ...prev, minEdge: parseFloat(e.target.value) || 0 }))}
@@ -124,10 +125,10 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
           </div>
           <div className="filter-group">
             <label>Max Age (sec):</label>
-            <input 
+            <input
               type="number"
-              value={filter.maxAge / 1000}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter((prev) => ({ ...prev, maxAge: (parseFloat(e.target.value) || 0) * 1000 }))}
+              value={filter.maxAge / TIME_CONSTANTS.MILLISECONDS_PER_SECOND}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter((prev) => ({ ...prev, maxAge: (parseFloat(e.target.value) || 0) * TIME_CONSTANTS.MILLISECONDS_PER_SECOND }))}
             />
           </div>
           <button onClick={fetchOpportunities} className="refresh">
@@ -135,7 +136,7 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
           </button>
         </div>
       </div>
-      
+
       {loading ? (
         <div className="loading">Loading opportunities...</div>
       ) : opportunities.length === 0 ? (
@@ -169,9 +170,9 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
                   <td className="profit">{formatProfit(opp.profit)}</td>
                   <td className="confidence">
                     <div className="confidence-bar">
-                      <div 
+                      <div
                         className="confidence-fill"
-                        style={{ 
+                        style={{
                           width: `${opp.confidence * 100}%`,
                           backgroundColor: getConfidenceColor(opp.confidence)
                         }}
@@ -196,7 +197,7 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
           </table>
         </div>
       )}
-      
+
       <div className="table-footer">
         <div className="summary">
           <span className="opportunity-count">

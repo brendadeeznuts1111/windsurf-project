@@ -1,5 +1,6 @@
-import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 #!/usr/bin/env bun
+
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';

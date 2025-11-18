@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 #!/usr/bin/env bun
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -295,9 +296,14 @@ ${result.section ? `📂 Section: ${result.section}` : ""}
 
 // Start the server
 async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error("Bun MCP server running on stdio");
+  try {
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.error("Bun MCP server running on stdio");
+  } catch (error) {
+    console.error("Failed to start MCP server:", error);
+    process.exit(1);
+  }
 }
 
 main().catch((error) => {

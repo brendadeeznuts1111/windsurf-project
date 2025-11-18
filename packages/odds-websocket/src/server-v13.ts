@@ -1,12 +1,12 @@
 // packages/odds-websocket/src/server-v13.ts - Bun v1.3 Optimized
 import type { OddsTick, ArbitrageOpportunity } from 'odds-core';
 import { hash, stripANSI } from "bun";
-import { apiTracker } from 'odds-core/src/monitoring/api-tracker.js';
+// import { apiTracker } from 'odds-core/src/monitoring/api-tracker.js';
 // Import utilities from relative path
-import { 
-  getSocketInfo, 
-  performNetworkDiagnostics, 
-  StreamProcessor 
+import {
+  getSocketInfo,
+  performNetworkDiagnostics,
+  StreamProcessor
 } from '../../odds-core/src/utils.js';
 
 interface ConnectionData {
@@ -28,36 +28,65 @@ export class BunV13WebSocketServer {
 
   constructor(options: { port: number; workerCount?: number } = { port: 3000 }) {
     this.initializeWorkers(options.workerCount || 4);
-    
-    this.server = await apiTracker.track('Bun.serve', () => Bun.serve<ConnectionData>({
+
+    this.server = Bun.serve<ConnectionData>({
       port: options.port,
       development: Bun.env.NODE_ENV !== 'production',
-      
+
       // Bun v1.3: Fetch handler with enhanced capabilities
-      fetch: async (req, server) => this.handleFetch(req, server),
-      
+      fetch: async (req, server) => {
+        const url = new URL(req.url);
+
+        // Allow WebSocket upgrades on root path or /ws
+        if ((url.pathname === '/' || url.pathname === '/ws') && server.upgrade(req)) {
+          return new Response();
+        }
+
+        if (url.pathname === '/health') {
+          const stats = this.getEnhancedStats();
+          return new Response(JSON.stringify(stats));
+        }
+
+        if (url.pathname === '/metrics') {
+          return new Response(this.getPerformanceMetrics());
+        }
+
+        if (url.pathname === '/network-diagnostics') {
+          const diagnostics = await this.performNetworkDiagnostics();
+          return new Response(JSON.stringify(diagnostics, null, 2));
+        }
+
+        return new Response('Not Found', { status: 404 });
+      },
+
       websocket: {
+        // TypeScript: specify the type of ws.data
+        data: {} as ConnectionData,
+
         open: (ws) => this.handleOpen(ws),
         message: (ws, message) => this.handleMessage(ws, message),
         close: (ws) => this.handleClose(ws),
-        
+
         // Bun v1.3: Enhanced compression
         perMessageDeflate: {
           compress: true,
         },
-        
+
         // Bun v1.3: Better backpressure handling
         backpressureLimit: 1024 * 1024,
         closeOnBackpressureLimit: false,
         idleTimeout: 60,
         maxPayloadLength: 4 * 1024 * 1024,
       },
-    }));
+    });
 
     console.log(`🚀 Bun v1.3 WebSocket Server running on port ${this.server.port}`);
   }
 
   private initializeWorkers(count: number) {
+    // Skip worker initialization if count is 0 (useful for testing)
+    if (count === 0) return;
+
     for (let i = 0; i < count; i++) {
       const worker = new Worker(new URL('./tick-processor.ts', import.meta.url).href, {
         name: `tick-processor-${i}`,
@@ -79,41 +108,41 @@ export class BunV13WebSocketServer {
 
   private async handleFetch(req: Request, server: ReturnType<typeof Bun.serve>): Promise<Response> {
     const url = new URL(req.url);
-    
-    if (url.pathname === '/ws' && server.upgrade(req)) {
+
+    // Allow WebSocket upgrades on root path or /ws
+    if ((url.pathname === '/' || url.pathname === '/ws') && server.upgrade(req)) {
       return new Response();
     }
-    
+
     if (url.pathname === '/health') {
       const stats = this.getEnhancedStats();
       return new Response(JSON.stringify(stats));
     }
-    
+
     if (url.pathname === '/metrics') {
       return new Response(this.getPerformanceMetrics());
     }
-    
+
     if (url.pathname === '/network-diagnostics') {
       const diagnostics = await this.performNetworkDiagnostics();
       return new Response(JSON.stringify(diagnostics, null, 2));
     }
-    
+
     return new Response('Not Found', { status: 404 });
   }
 
   private handleOpen(ws: any) {
     const connectionId = hash.rapidhash(`${Date.now()}${Math.random()}`).toString(16);
-    
-    // Bun v1.3: Capture enhanced socket information
+
+    // Bun v1.3: Capture available socket information
+    // Note: ServerWebSocket only exposes remoteAddress, not full socket details
     const socketInfo = {
-      localAddress: ws.remoteAddress, // Note: Bun's WebSocket uses different property names
-      localPort: this.server.port,
-      remoteAddress: ws.remoteAddress,
-      remotePort: 'unknown', // WebSocket doesn't expose remote port
+      remoteAddress: ws.remoteAddress,  // Client IP address
+      localPort: this.server.port,       // Server port
       protocol: 'WebSocket',
       connectedAt: performance.now(),
     };
-    
+
     ws.data = {
       id: connectionId,
       connectedAt: performance.now(),
@@ -125,10 +154,10 @@ export class BunV13WebSocketServer {
 
     this.connectionSockets.set(connectionId, ws);
     ws.subscribe('odds-ticks');
-    
+
     console.log(`🔗 New connection: ${connectionId}`);
     console.log(`   Remote: ${socketInfo.remoteAddress}`);
-    console.log(`   Local: ${socketInfo.localAddress}:${socketInfo.localPort}`);
+    console.log(`   Local: ::1:${socketInfo.localPort}`);
   }
 
   private async handleMessage(ws: any, message: string | Buffer) {
@@ -140,20 +169,34 @@ export class BunV13WebSocketServer {
       const cleanData = stripANSI(data);
       const tick: OddsTick = JSON.parse(cleanData);
 
+      // Convert timestamp from JSON string to Date object
+      if (typeof tick.timestamp === 'string' || typeof tick.timestamp === 'number') {
+        tick.timestamp = new Date(tick.timestamp);
+      }
+
+      // Validate timestamp is a valid Date
+      if (!(tick.timestamp instanceof Date && !isNaN(tick.timestamp.getTime()))) {
+        console.error('❌ Invalid timestamp received:', tick.timestamp);
+        ws.close(1011, 'Invalid timestamp format');
+        return;
+      }
+
       // Bun v1.3: Rapidhash for tick deduplication
       const tickHash = this.calculateTickHash(tick);
-      
+
       if (this.isDuplicateTick(tickHash)) {
         return; // Skip duplicates
       }
 
-      // Bun v1.3: 500x faster worker communication
-      const worker = this.getNextWorker();
-      worker.postMessage({ 
-        type: 'process-tick', 
-        tick, 
-        connectionId: ws.data.id 
-      });
+      // Bun v1.3: 500x faster worker communication (skip if no workers)
+      if (this.workerPool.length > 0) {
+        const worker = this.getNextWorker();
+        worker.postMessage({
+          type: 'process-tick',
+          tick,
+          connectionId: ws.data.id
+        });
+      }
 
       // Handle backpressure with Bun v1.3 optimizations
       await this.handleBackpressureOptimized(ws, tick);
@@ -166,12 +209,12 @@ export class BunV13WebSocketServer {
 
   private calculateTickHash(tick: OddsTick): bigint {
     const key = `${tick.exchange}-${tick.gameId}-${tick.line}-${tick.timestamp.getTime()}`;
-    
+
     // Bun v1.3: Rapidhash for fast hashing
     if (!this.rapidHashCache.has(key)) {
       this.rapidHashCache.set(key, hash.rapidhash(key));
     }
-    
+
     return this.rapidHashCache.get(key)!;
   }
 
@@ -189,11 +232,11 @@ export class BunV13WebSocketServer {
 
   private async handleBackpressureOptimized(ws: any, tick: OddsTick) {
     const data = JSON.stringify(tick);
-    const sent = ws.send(data); // Remove the second argument (compress) as it's not supported
-    
+    const sent = ws.send(data, true);
+
     if (sent === -1) {
       ws.data.backpressureCount++;
-      
+
       // Bun v1.3: Use setTimeout instead of scheduler
       setTimeout(() => {
         if (ws.data.backpressureCount > 5) {
@@ -230,7 +273,7 @@ export class BunV13WebSocketServer {
     ];
 
     const results = await performNetworkDiagnostics(endpoints);
-    
+
     return {
       timestamp: Date.now(),
       serverPort: this.server.port,
@@ -292,27 +335,28 @@ export class BunV13WebSocketServer {
   // Bun v1.3: Graceful shutdown with process control
   async gracefulShutdown() {
     console.log('🔄 Initiating graceful shutdown...');
-    
+
     // Notify workers to shutdown
     for (const worker of this.workerPool) {
       worker.postMessage({ type: 'shutdown' });
     }
-    
+
     // Close server
     this.server.stop();
-    
+
     console.log('✅ Server shutdown complete');
   }
 }
 
-// Start server with Bun v1.3 optimizations
-const server = new BunV13WebSocketServer({
-  port: parseInt(Bun.env.WS_PORT || '3000'),
-  workerCount: parseInt(Bun.env.WORKER_COUNT || '4')
-});
+// Only start the server when this module is executed directly, not when imported by tests
+if (import.meta.main) {
+  // Start server with Bun v1.3 optimizations
+  const server = new BunV13WebSocketServer({
+    port: parseInt(Bun.env.WS_PORT || '3000'),
+    workerCount: parseInt(Bun.env.WORKER_COUNT || '4')
+  });
 
-// Bun v1.3: Process signal handling for graceful shutdown
-process.on('SIGTERM', () => server.gracefulShutdown());
-process.on('SIGINT', () => server.gracefulShutdown());
-
-export default server;
+  // Bun v1.3: Process signal handling for graceful shutdown
+  process.on('SIGTERM', () => server.gracefulShutdown());
+  process.on('SIGINT', () => server.gracefulShutdown());
+}

@@ -1,6 +1,6 @@
 // packages/odds-core/src/utils/test-time-helpers.ts - Date/Time Testing Utilities
 
-import { setSystemTime, beforeAll, afterAll, beforeEach, afterEach } from "bun:test";
+import { setSystemTime, beforeAll, afterAll, beforeEach, afterEach, expect } from "bun:test";
 
 /**
  * Time testing configuration
@@ -154,12 +154,17 @@ export function setupBusinessTimeTesting() {
   });
 
   const hooks = helper.createLifecycleHooks();
-  beforeAll(hooks.beforeAll);
-  afterAll(hooks.afterAll);
-  beforeEach(hooks.beforeEach);
-  afterEach(hooks.afterEach);
-
-  return helper;
+  
+  return {
+    helper,
+    hooks,
+    setup: () => {
+      beforeAll(hooks.beforeAll);
+      afterAll(hooks.afterAll);
+      beforeEach(hooks.beforeEach);
+      afterEach(hooks.afterEach);
+    }
+  };
 }
 
 /**
@@ -173,12 +178,17 @@ export function setupUTCTimeTesting(date?: Date) {
   });
 
   const hooks = helper.createLifecycleHooks();
-  beforeAll(hooks.beforeAll);
-  afterAll(hooks.afterAll);
-  beforeEach(hooks.beforeEach);
-  afterEach(hooks.afterEach);
-
-  return helper;
+  
+  return {
+    helper,
+    hooks,
+    setup: () => {
+      beforeAll(hooks.beforeAll);
+      afterAll(hooks.afterAll);
+      beforeEach(hooks.beforeEach);
+      afterEach(hooks.afterEach);
+    }
+  };
 }
 
 /**
@@ -192,12 +202,17 @@ export function setupFixedTimeTesting(startDate?: Date) {
   });
 
   const hooks = helper.createLifecycleHooks();
-  beforeAll(hooks.beforeAll);
-  afterAll(hooks.afterAll);
-  beforeEach(hooks.beforeEach);
-  afterEach(hooks.afterEach);
-
-  return helper;
+  
+  return {
+    helper,
+    hooks,
+    setup: () => {
+      beforeAll(hooks.beforeAll);
+      afterAll(hooks.afterAll);
+      beforeEach(hooks.beforeEach);
+      afterEach(hooks.afterEach);
+    }
+  };
 }
 
 /**

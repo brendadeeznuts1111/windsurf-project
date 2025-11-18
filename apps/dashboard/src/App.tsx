@@ -4,6 +4,7 @@ import { ArbitrageTable } from './components/ArbitrageTable';
 import { MarketDataChart } from './components/MarketDataChart';
 import { SharpDetectionPanel } from './components/SharpDetectionPanel';
 import { PerformanceMetrics } from './components/PerformanceMetrics';
+import BunV13Demo from './components/BunV13Demo';
 import './App.css';
 
 function App() {
@@ -22,41 +23,47 @@ function App() {
       </header>
 
       <nav className="app-nav">
-        <button 
+        <button
           className={activeTab === 'overview' ? 'active' : ''}
           onClick={() => setActiveTab('overview')}
         >
           Overview
         </button>
-        <button 
+        <button
           className={activeTab === 'arbitrage' ? 'active' : ''}
           onClick={() => setActiveTab('arbitrage')}
         >
           Arbitrage
         </button>
-        <button 
+        <button
           className={activeTab === 'market-data' ? 'active' : ''}
           onClick={() => setActiveTab('market-data')}
         >
           Market Data
         </button>
-        <button 
+        <button
           className={activeTab === 'sharp-detection' ? 'active' : ''}
           onClick={() => setActiveTab('sharp-detection')}
         >
           Sharp Detection
         </button>
-        <button 
+        <button
           className={activeTab === 'performance' ? 'active' : ''}
           onClick={() => setActiveTab('performance')}
         >
           Performance
         </button>
+        <button
+          className={activeTab === 'bun-v13' ? 'active' : ''}
+          onClick={() => setActiveTab('bun-v13')}
+        >
+          Bun v1.3 CSS
+        </button>
       </nav>
 
       <main className="app-main">
         <OddsWebSocketClient onConnectionChange={setIsConnected} />
-        
+
         {activeTab === 'overview' && (
           <div className="overview-panel">
             <h2>System Overview</h2>
@@ -85,6 +92,7 @@ function App() {
         {activeTab === 'market-data' && <MarketDataChart />}
         {activeTab === 'sharp-detection' && <SharpDetectionPanel />}
         {activeTab === 'performance' && <PerformanceMetrics />}
+        {activeTab === 'bun-v13' && <BunV13Demo />}
       </main>
     </div>
   );

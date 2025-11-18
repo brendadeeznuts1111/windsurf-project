@@ -1,0 +1,19 @@
+# Test Configuration Demo
+# Temporary bunfig.toml for demonstrating root option
+
+[test]
+# Test discovery limited to specific directory
+root = "packages/testing/src"
+
+# Preload scripts for global setup
+preload = ["./scripts/test-setup.ts", "./scripts/global-mocks.ts"]
+
+# Timeout configuration
+timeout = 15000  # 15 seconds
+
+# Memory optimization
+smol = true
+
+# Reporter configuration
+[test.reporter]
+junit = "./test-reports/junit.xml"

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="bun test" tests="20" assertions="0" failures="0" skipped="0" time="0.024822">
+  <testsuite name="packages/testing/src/types/practical-type-tests.test.ts" file="packages/testing/src/types/practical-type-tests.test.ts" tests="20" assertions="0" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+    <testsuite name="Performance and Edge Cases" file="packages/testing/src/types/practical-type-tests.test.ts" line="211" tests="2" assertions="0" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+      <testcase name="Large complex types can be validated efficiently" classname="Performance and Edge Cases" time="0.000214" file="packages/testing/src/types/practical-type-tests.test.ts" line="212" assertions="0" />
+      <testcase name="Recursive types can be handled" classname="Performance and Edge Cases" time="0.000008" file="packages/testing/src/types/practical-type-tests.test.ts" line="250" assertions="0" />
+    </testsuite>
+    <testsuite name="Core Type Validation" file="packages/testing/src/types/practical-type-tests.test.ts" line="38" tests="7" assertions="0" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+      <testcase name="Tick has odds property of type Odds" classname="Core Type Validation" time="0" file="packages/testing/src/types/practical-type-tests.test.ts" line="63" assertions="0" />
+      <testcase name="Odds type has required numeric properties" classname="Core Type Validation" time="0" file="packages/testing/src/types/practical-type-tests.test.ts" line="39" assertions="0" />
+      <testcase name="Odds properties are correct numeric types" classname="Core Type Validation" time="0" file="packages/testing/src/types/practical-type-tests.test.ts" line="45" assertions="0" />
+      <testcase name="MarketData properties have correct types" classname="Core Type Validation" time="0" file="packages/testing/src/types/practical-type-tests.test.ts" line="77" assertions="0" />
+      <testcase name="MarketData has required properties" classname="Core Type Validation" time="0.000003" file="packages/testing/src/types/practical-type-tests.test.ts" line="68" assertions="0" />
+      <testcase name="Odds american values are integers" classname="Core Type Validation" time="0" file="packages/testing/src/types/practical-type-tests.test.ts" line="51" assertions="0" />
+      <testcase name="Tick has timestamp property that is Date" classname="Core Type Validation" time="0.00002" file="packages/testing/src/types/practical-type-tests.test.ts" line="57" assertions="0" />
+    </testsuite>
+    <testsuite name="Advanced Type Patterns" file="packages/testing/src/types/practical-type-tests.test.ts" line="135" tests="4" assertions="0" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+      <testcase name="Generic types preserve constraints" classname="Advanced Type Patterns" time="0" file="packages/testing/src/types/practical-type-tests.test.ts" line="136" assertions="0" />
+      <testcase name="Conditional types work with business logic" classname="Advanced Type Patterns" time="0.000011" file="packages/testing/src/types/practical-type-tests.test.ts" line="162" assertions="0" />
+      <testcase name="Utility types work with domain types" classname="Advanced Type Patterns" time="0.00001" file="packages/testing/src/types/practical-type-tests.test.ts" line="149" assertions="0" />
+      <testcase name="Complex nested types maintain structure" classname="Advanced Type Patterns" time="0.000007" file="packages/testing/src/types/practical-type-tests.test.ts" line="187" assertions="0" />
+    </testsuite>
+    <testsuite name="Real-World Financial Type Scenarios" file="packages/testing/src/types/practical-type-tests.test.ts" line="272" tests="3" assertions="0" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+      <testcase name="Risk management types are properly constrained" classname="Real-World Financial Type Scenarios" time="0" file="packages/testing/src/types/practical-type-tests.test.ts" line="315" assertions="0" />
+      <testcase name="Currency and price types work correctly" classname="Real-World Financial Type Scenarios" time="0.000014" file="packages/testing/src/types/practical-type-tests.test.ts" line="273" assertions="0" />
+      <testcase name="Order and execution types maintain integrity" classname="Real-World Financial Type Scenarios" time="0.000009" file="packages/testing/src/types/practical-type-tests.test.ts" line="291" assertions="0" />
+    </testsuite>
+    <testsuite name="Complex Type Validation" file="packages/testing/src/types/practical-type-tests.test.ts" line="87" tests="4" assertions="0" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+      <testcase name="Union types work correctly" classname="Complex Type Validation" time="0.000002" file="packages/testing/src/types/practical-type-tests.test.ts" line="120" assertions="0" />
+      <testcase name="API response wrapper preserves data types" classname="Complex Type Validation" time="0.000002" file="packages/testing/src/types/practical-type-tests.test.ts" line="88" assertions="0" />
+      <testcase name="Function signatures preserve type safety" classname="Complex Type Validation" time="0.000009" file="packages/testing/src/types/practical-type-tests.test.ts" line="95" assertions="0" />
+      <testcase name="Array operations preserve types" classname="Complex Type Validation" time="0." file="packages/testing/src/types/practical-type-tests.test.ts" line="113" assertions="0" />
+    </testsuite>
+  </testsuite>
+</testsuites>

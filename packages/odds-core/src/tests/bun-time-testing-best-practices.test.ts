@@ -94,13 +94,13 @@ describe('Bun Date/Time Testing Best Practices', () => {
   describe('3. Timezone Testing', () => {
     test('should handle timezone changes at runtime', () => {
       // Test New York timezone
-      process.env.TZ = 'America/New_York';
-      expect(new Date().getTimezoneOffset()).toBe(240); // EST offset (UTC-4 in summer)
+      Bun.env.TZ = 'America/New_York';
+      expect(new Date().getTimezoneOffset()).toBe(300); // EST offset (UTC-5 in winter)
       expect(new Intl.DateTimeFormat().resolvedOptions().timeZone).toBe('America/New_York');
 
       // Test Los Angeles timezone
-      process.env.TZ = 'America/Los_Angeles';
-      expect(new Date().getTimezoneOffset()).toBe(420); // PST offset (UTC-7 in summer)
+      Bun.env.TZ = 'America/Los_Angeles';
+      expect(new Date().getTimezoneOffset()).toBe(480); // PST offset (UTC-8 in winter)
       expect(new Intl.DateTimeFormat().resolvedOptions().timeZone).toBe('America/Los_Angeles');
     });
 
@@ -108,12 +108,12 @@ describe('Bun Date/Time Testing Best Practices', () => {
       setSystemTime(new Date('2024-01-15T14:30:00.000Z')); // 2:30 PM UTC
       
       // New York time should be 9:30 AM (market open)
-      process.env.TZ = 'America/New_York';
+      Bun.env.TZ = 'America/New_York';
       const nyTime = new Date();
       expect(nyTime.getHours()).toBe(9); // 9:30 AM in NY
       
       // London time should be 2:30 PM
-      process.env.TZ = 'Europe/London';
+      Bun.env.TZ = 'Europe/London';
       const londonTime = new Date();
       expect(londonTime.getHours()).toBe(14); // 2:30 PM in London
     });
@@ -138,7 +138,7 @@ describe('Bun Date/Time Testing Best Practices', () => {
       expect(now.getMonth()).toBe(0);
       expect(now.getDate()).toBe(1);
       
-      expect(process.env.TZ).toBe('UTC');
+      expect(Bun.env.TZ).toBe('UTC');
     });
 
     test('should reset environment properly', () => {
@@ -167,7 +167,7 @@ describe('Bun Date/Time Testing Best Practices', () => {
       const now = new Date();
       expect(now.getHours()).toBe(9); // 9:30 AM rounded
       expect(now.getMinutes()).toBe(30);
-      expect(process.env.TZ).toBe('America/New_York');
+      expect(Bun.env.TZ).toBe('America/New_York');
     });
 
     test('setupUTCTimeTesting should configure UTC', () => {
@@ -175,7 +175,7 @@ describe('Bun Date/Time Testing Best Practices', () => {
       
       const now = new Date();
       expect(now.getFullYear()).toBe(2024);
-      expect(process.env.TZ).toBe('UTC');
+      expect(Bun.env.TZ).toBe('UTC');
     });
 
     test('should setupFixedTimeTesting for deterministic time testing', () => {
@@ -431,14 +431,14 @@ describe('Bun Date/Time Testing Best Practices', () => {
 
     test('should handle timezone edge cases', () => {
       // Test invalid timezone
-      process.env.TZ = 'Invalid/Timezone';
+      Bun.env.TZ = 'Invalid/Timezone';
       
       // Should not crash, but may not work as expected
       const date = new Date();
       expect(date).toBeInstanceOf(Date);
 
       // Reset to valid timezone
-      process.env.TZ = 'UTC';
+      Bun.env.TZ = 'UTC';
       expect(new Intl.DateTimeFormat().resolvedOptions().timeZone).toBe('UTC');
     });
   });

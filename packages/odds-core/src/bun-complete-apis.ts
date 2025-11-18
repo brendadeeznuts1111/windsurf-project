@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 // packages/odds-core/src/bun-complete-apis.ts - Complete Bun native APIs integration
 import { BunUtils, OddsProtocolUtils } from './bun-utils';
 import { BunGlobalsIntegration } from './bun-globals';
@@ -30,7 +31,7 @@ export class BunCompleteAPIsIntegration {
         minify: options.minify || false,
         splitting: options.splitting || true,
         define: {
-          'process.env.NODE_ENV': '"production"'
+          'Bun.env.NODE_ENV': '"production"'
         }
       });
       
@@ -160,11 +161,11 @@ export class BunCompleteAPIsIntegration {
     
     try {
       const client = new Bun.SQL({
-        host: process.env.POSTGRES_HOST || 'localhost',
-        port: parseInt(process.env.POSTGRES_PORT || '5432'),
-        user: process.env.POSTGRES_USER || 'postgres',
-        password: process.env.POSTGRES_PASSWORD || '',
-        database: process.env.POSTGRES_DATABASE || 'market_data'
+        host: Bun.env.POSTGRES_HOST || 'localhost',
+        port: parseInt(Bun.env.POSTGRES_PORT || '5432'),
+        user: Bun.env.POSTGRES_USER || 'postgres',
+        password: Bun.env.POSTGRES_PASSWORD || '',
+        database: Bun.env.POSTGRES_DATABASE || 'market_data'
       });
       
       // Note: SQL API might vary, use generic query approach
@@ -200,7 +201,7 @@ export class BunCompleteAPIsIntegration {
     exists: (key: string) => Promise<boolean>;
     keys: (pattern: string) => Promise<string[]>;
   } {
-    const client = new Bun.RedisClient(process.env.REDIS_URL || 'redis://localhost:6379');
+    const client = new Bun.RedisClient(Bun.env.REDIS_URL || 'redis://localhost:6379');
     
     return {
       get: async (key: string) => {
@@ -345,7 +346,7 @@ export class BunCompleteAPIsIntegration {
     terminate: () => void;
   } {
     const worker = new Worker(scriptPath, {
-      env: options?.env || process.env as Record<string, string>
+      env: options?.env || Bun.env as Record<string, string>
     });
     
     return {
@@ -413,7 +414,7 @@ export class BunCompleteAPIsIntegration {
     const start = performance.now();
     
     try {
-      const resolved = Bun.resolveSync(moduleName, fromPath || process.cwd());
+      const resolved = Bun.resolveSync(moduleName, fromPath || import.meta.dir);
       const resolutionTime = performance.now() - start;
       
       return {

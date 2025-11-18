@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 #!/usr/bin/env bun
 // packages/odds-core/src/__tests__/integration.test.ts - Integration Tests
 

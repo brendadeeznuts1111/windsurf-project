@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 // packages/odds-core/src/dev.ts - Hot reload development
+import { apiTracker } from './monitoring/api-tracker.js';
 
 // Use Bun's hot reload for development
 console.log('🔥 Starting Odds Core dev server with hot reload...');
@@ -15,17 +16,17 @@ const watcher = Bun.watch('./src', {
     });
     
     // Restart server with Bun's spawn
-    const server = Bun.spawn(['bun', 'run', 'src/server.ts'], {
+    const server = await apiTracker.track('Bun.spawn', () => Bun.spawn(['bun', 'run', 'src/server.ts'], {
       stdout: 'inherit',
       stderr: 'inherit',
-    });
+    })));
     
     console.log('🔄 Server restarted with changes');
   },
 });
 
 // Development server with Bun's optimizations
-const devServer = Bun.serve({
+const devServer = await apiTracker.track('Bun.serve', () => Bun.serve({
   port: 4000,
   development: true,
   fetch(req) {
@@ -78,12 +79,12 @@ const devServer = Bun.serve({
       </html>
     `, {
       headers: { 'Content-Type': 'text/html' }
-    });
+    }));
   },
-});
+}));
 
 // Event stream for hot reload notifications
-Bun.serve({
+const eventServer = await apiTracker.track('Bun.serve', () => Bun.serve({
   port: 4001,
   fetch(req) {
     if (req.url.endsWith('/events')) {
@@ -97,7 +98,7 @@ Bun.serve({
     }
     return new Response('Not Found', { status: 404 });
   }
-});
+}));
 
 console.log(`👀 Watching for changes... (http://localhost:${devServer.port})`);
 console.log(`📡 Event stream on http://localhost:4001/events`);

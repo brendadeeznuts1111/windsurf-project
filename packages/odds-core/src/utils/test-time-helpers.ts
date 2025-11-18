@@ -45,7 +45,7 @@ export class TimeTestHelper {
    */
   setupTimezone(timezone: string): void {
     this.timezone = timezone;
-    process.env.TZ = timezone;
+    Bun.env.TZ = timezone;
   }
 
 
@@ -55,7 +55,7 @@ export class TimeTestHelper {
   reset(): void {
     setSystemTime(); // Reset to real time
     if (this.timezone) {
-      delete process.env.TZ;
+      delete Bun.env.TZ;
     }
   }
 

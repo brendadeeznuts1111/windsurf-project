@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 // packages/odds-core/src/bun-native-apis.ts - Advanced Bun native APIs integration
 import { BunUtils, OddsProtocolUtils } from './bun-utils';
 import { BunGlobalsIntegration } from './bun-globals';
@@ -18,7 +19,7 @@ export class BunNativeAPIsIntegration {
   }) {
     return Bun.serve({
       port: options.port || 3000,
-      development: process.env.NODE_ENV !== 'production',
+      development: Bun.env.NODE_ENV !== 'production',
       
       fetch(req: Request) {
         const url = new URL(req.url);
@@ -51,7 +52,7 @@ export class BunNativeAPIsIntegration {
     const start = performance.now();
     
     try {
-      const result = await $`sh -c ${command}`.cwd(options?.cwd || process.cwd()).env(options?.env || {});
+      const result = await $`sh -c ${command}`.cwd(options?.cwd || import.meta.dir).env(options?.env || {});
       // Apply timeout manually if needed
       if (options?.timeout) {
         const timeoutPromise = new Promise((_, reject) => 
@@ -158,7 +159,7 @@ export class BunNativeAPIsIntegration {
     const proc = Bun.spawn(['bun', script, ...args], {
       stdout: 'pipe',
       stderr: 'pipe',
-      env: process.env
+      env: Bun.env
     });
     
     return {
@@ -335,7 +336,7 @@ export class BunNativeAPIsIntegration {
     env?: Record<string, string>;
   }): any {
     return new Worker(scriptPath, {
-      env: options?.env || process.env as Record<string, string>
+      env: options?.env || Bun.env as Record<string, string>
     });
   }
 
@@ -407,7 +408,7 @@ export class BunNativeAPIsIntegration {
   // ===== Module Resolution =====
   
   static resolveModulePath(moduleName: string, fromPath?: string): string {
-    return Bun.resolveSync(moduleName, fromPath || process.cwd());
+    return Bun.resolveSync(moduleName, fromPath || import.meta.dir);
   }
 
   // ===== Memory Management =====

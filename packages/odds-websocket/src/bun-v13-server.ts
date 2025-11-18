@@ -3,6 +3,7 @@ import type { OddsTick, ArbitrageOpportunity, SharpSignal } from '../../odds-cor
 import { BunNativeAPIsIntegration } from '../../odds-core/src/bun-native-apis';
 import { BunCompleteAPIsIntegration } from '../../odds-core/src/bun-complete-apis';
 import { hash, stripANSI } from "bun";
+import { apiTracker } from '../../odds-core/src/monitoring/api-tracker.js';
 
 export interface ConnectionData {
   id: string;
@@ -49,9 +50,9 @@ export class Bun13OptimizedWebSocketServer {
     // Initialize worker pool with Bun 1.3 optimizations
     this.initializeWorkers(workerCount);
     
-    this.server = Bun.serve<OddsTick>({
+    this.server = await apiTracker.track('Bun.serve', () => Bun.serve<OddsTick>({
       port,
-      development: process.env.NODE_ENV !== 'production',
+      development: Bun.env.NODE_ENV !== 'production',
       
       // Enhanced fetch handler with Bun 1.3 optimizations
       fetch: (req, server) => this.handleFetch(req, server),
@@ -73,7 +74,7 @@ export class Bun13OptimizedWebSocketServer {
         idleTimeout: 60,
         maxPayloadLength: 4 * 1024 * 1024, // 4MB for larger market data
       },
-    });
+    }));
 
     console.log(`🚀 Bun 1.3 Optimized WebSocket Server on port ${this.server.port}`);
     console.log(`📊 Worker Pool: ${this.workerPool.length} workers`);
@@ -454,10 +455,10 @@ let serverInstance: Bun13OptimizedWebSocketServer | null = null;
 export function getBun13Server(): Bun13OptimizedWebSocketServer {
   if (!serverInstance) {
     serverInstance = new Bun13OptimizedWebSocketServer({
-      port: parseInt(process.env.WS_PORT || '3000'),
-      workerCount: parseInt(process.env.WORKER_COUNT || '4'),
-      enableBackpressure: process.env.ENABLE_BACKPRESSURE !== 'false',
-      compressionThreshold: parseInt(process.env.COMPRESSION_THRESHOLD || '512'),
+      port: parseInt(Bun.env.WS_PORT || '3000'),
+      workerCount: parseInt(Bun.env.WORKER_COUNT || '4'),
+      enableBackpressure: Bun.env.ENABLE_BACKPRESSURE !== 'false',
+      compressionThreshold: parseInt(Bun.env.COMPRESSION_THRESHOLD || '512'),
     });
   }
   return serverInstance;

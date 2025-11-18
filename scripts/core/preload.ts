@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 #!/usr/bin/env bun
 // scripts/preload.ts - Bun v1.3 Full-Stack Preload
 

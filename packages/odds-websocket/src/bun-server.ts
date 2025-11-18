@@ -3,6 +3,7 @@ import type { OddsTick, ArbitrageOpportunity, WebSocketMessage } from 'odds-core
 import { BunUtils, OddsProtocolUtils } from 'odds-core/src/bun-utils';
 import { BunGlobalsIntegration, MarketDataProcessor } from 'odds-core/src/bun-globals';
 import { BunNativeAPIsIntegration, MarketDataNativeProcessor } from 'odds-core/src/bun-native-apis';
+import { apiTracker } from 'odds-core/src/monitoring/api-tracker.js';
 
 interface BunWebSocketData {
   id: string;
@@ -24,9 +25,9 @@ nativeProcessor.startTCPDataFeed(8080);
 nativeProcessor.startUDPDataFeed(8081);
 
 // Use Bun's native WebSocket with generics and enhanced features
-const server = Bun.serve<OddsTick>({
-  port: process.env.WS_PORT || 3000,
-  development: process.env.NODE_ENV !== 'production',
+const server = await apiTracker.track('Bun.serve', () => Bun.serve<OddsTick>({
+  port: Bun.env.WS_PORT || 3000,
+  development: Bun.env.NODE_ENV !== 'production',
   
   // Enhanced fetch handler with native API integration
   async fetch(req: Request, server: any): Promise<Response | undefined> {
@@ -166,7 +167,7 @@ const server = Bun.serve<OddsTick>({
         
         const result = await BunNativeAPIsIntegration.executeShellCommand(command, {
           timeout,
-          cwd: process.cwd()
+          cwd: import.meta.dir
         });
         
         return BunGlobalsIntegration.createJSONResponse({
@@ -259,7 +260,7 @@ const server = Bun.serve<OddsTick>({
       const filePath = `./exports/${fileName}`;
       
       try {
-        const file = Bun.file(filePath);
+        const file = await apiTracker.track('Bun.file', () => Bun.file(filePath));
         if (!await file.exists()) {
           return new Response('File not found', { status: 404 });
         }
@@ -424,7 +425,7 @@ const server = Bun.serve<OddsTick>({
     idleTimeout: 60,
     maxPayloadLength: 10 * 1024 * 1024,
   },
-});
+}));
 
 // Enhanced message handlers with native API integration
 async function handleTick(ws: any, message: WebSocketMessage): Promise<void> {

@@ -1,12 +1,13 @@
 // YAML configuration loader with Bun v1.3
 import { YAML } from "bun";
 import { join } from "path";
+import { apiTracker } from '../monitoring/api-tracker.js';
 
 export class ConfigLoader {
   private config: any = {};
   private environment: string;
 
-  constructor(environment: string = process.env.NODE_ENV || 'development') {
+  constructor(environment: string = Bun.env.NODE_ENV || 'development') {
     this.environment = environment;
   }
 
@@ -31,8 +32,8 @@ export class ConfigLoader {
 
   private async loadYamlFile(filePath: string): Promise<any> {
     try {
-      const fullPath = join(process.cwd(), filePath);
-      const file = Bun.file(fullPath);
+      const fullPath = join(import.meta.dir, filePath);
+      const file = await apiTracker.track('Bun.file', () => Bun.file(fullPath));
       
       if (await file.exists()) {
         const content = await file.text();
@@ -64,7 +65,7 @@ export class ConfigLoader {
     const substitute = (obj: any): any => {
       if (typeof obj === 'string') {
         return obj.replace(/\$\{([^}]+)\}/g, (match, envVar) => {
-          return process.env[envVar] || match;
+          return Bun.env[envVar] || match;
         });
       }
       

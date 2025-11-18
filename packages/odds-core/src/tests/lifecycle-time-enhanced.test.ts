@@ -183,7 +183,7 @@ describe('Enhanced Lifecycle Management with Time Testing', () => {
   describe('Timezone-Aware Lifecycle Operations', () => {
     test('should handle business hours in different timezones', async () => {
       // Test New York business hours
-      process.env.TZ = 'America/New_York';
+      Bun.env.TZ = 'America/New_York';
       setSystemTime(new Date('2024-01-15T14:30:00.000Z')); // 9:30 AM EST
 
       await lifecycleManager.start();
@@ -204,21 +204,21 @@ describe('Enhanced Lifecycle Management with Time Testing', () => {
       await lifecycleManager.stop();
       
       // Reset timezone
-      delete process.env.TZ;
+      delete Bun.env.TZ;
     });
 
     test('should handle international business hours', async () => {
       await lifecycleManager.start();
 
       // Test London business hours
-      process.env.TZ = 'Europe/London';
+      Bun.env.TZ = 'Europe/London';
       setSystemTime(new Date('2024-01-15T09:00:00.000Z')); // 9:00 AM GMT
 
       const londonMetadata = createTestMetadataWithTimestamp('london_business');
       const londonLifecycle = await lifecycleManager.createLifecycle(londonMetadata, 'test_user');
 
       // Test Tokyo business hours (same time in UTC)
-      process.env.TZ = 'Asia/Tokyo';
+      Bun.env.TZ = 'Asia/Tokyo';
       const tokyoMetadata = createTestMetadataWithTimestamp('tokyo_business');
       const tokyoLifecycle = await lifecycleManager.createLifecycle(tokyoMetadata, 'test_user');
 
@@ -228,7 +228,7 @@ describe('Enhanced Lifecycle Management with Time Testing', () => {
 
       await lifecycleManager.stop();
       
-      delete process.env.TZ;
+      delete Bun.env.TZ;
     });
   });
 

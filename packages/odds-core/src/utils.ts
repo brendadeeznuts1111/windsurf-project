@@ -1,6 +1,8 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 // Core utilities for Odds Protocol with Bun v1.3 optimizations
 
 import { hash, stripANSI } from 'bun';
+import { fork } from 'child_process';
 import type { OddsTick, ArbitrageOpportunity, Result, Sport } from './types.js';
 import { DEFAULTS, PERFORMANCE_THRESHOLDS } from './constants.js';
 
@@ -676,12 +678,11 @@ export function forkProcessWithArgs(
   } = {}
 ) {
   // Use child_process.fork with execArgv support
-  const { fork } = require('child_process');
   
   const child = fork(modulePath, args, {
     execArgv: options.execArgv || [],
     silent: options.silent || false,
-    env: { ...process.env, ...options.env },
+    env: { ...Bun.env, ...options.env },
   });
 
   return child;

@@ -3,6 +3,7 @@
 // scripts/benchmark.ts - Bun performance testing
 import { $ } from 'bun';
 import { performance } from 'perf_hooks';
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 
 // Type declarations for Bun globals
 declare const Bun: {
@@ -245,7 +246,7 @@ class BunBenchmarker {
 
     // Test concurrent async operations
     const promises = Array.from({ length: concurrency }, async (_, i) => {
-      await Bun.sleep(delayMs);
+      await apiTracker.track('Bun.sleep', () => Bun.sleep(delayMs));
       return i;
     });
 
@@ -273,7 +274,7 @@ class BunBenchmarker {
     let messageCount = 0;
 
     // Create test server
-    const server = Bun.serve({
+    const server = await apiTracker.track('Bun.serve', () => Bun.serve({
       port: 0, // Random port
       fetch(req: Request, server: any) {
         if (req.url.endsWith('/ws') && server.upgrade(req)) {
@@ -292,7 +293,7 @@ class BunBenchmarker {
           // Handle close
         }
       }
-    });
+    }));
 
     const start = performance.now();
 
@@ -370,7 +371,7 @@ console.log(`   ✅ ${messageCount} messages in ${duration.toFixed(2)}ms`);
 
     // Test nanosecond precision timing
     const start = performance.now();
-    const startNanos = Bun.nanoseconds();
+    const startNanos = await apiTracker.track('Bun.nanoseconds', () => Bun.nanoseconds());
     
     // Simulate some work
     let sum = 0;
@@ -379,7 +380,7 @@ console.log(`   ✅ ${messageCount} messages in ${duration.toFixed(2)}ms`);
     }
     
     const duration = performance.now() - start;
-    const nanos = Bun.nanoseconds() - startNanos;
+    const nanos = await apiTracker.track('Bun.nanoseconds', () => Bun.nanoseconds()) - startNanos;
 
     console.log(`   ⏱️  Timing: ${duration.toFixed(2)}ms (${nanos}ns precision)`);
 
@@ -399,7 +400,7 @@ console.log(`   ✅ ${messageCount} messages in ${duration.toFixed(2)}ms`);
     }));
     
     for (let i = 0; i < 1000; i++) {
-      Bun.deepEquals(testObjects[i], testObjects[i]);
+      await apiTracker.track('Bun.deepEquals', () => Bun.deepEquals(testObjects[i], testObjects[i]));
     }
     
     const deepEqualsDuration = performance.now() - deepEqualsStart;
@@ -434,17 +435,17 @@ console.log(`   ✅ ${messageCount} messages in ${duration.toFixed(2)}ms`);
 
     // Test Gzip compression
     const gzipStart = performance.now();
-    const gzipCompressed = Bun.gzipSync(buffer);
+    const gzipCompressed = await apiTracker.track('Bun.gzipSync', () => Bun.gzipSync(buffer));
     const gzipDuration = performance.now() - gzipStart;
     
     // Test Deflate compression
     const deflateStart = performance.now();
-    const deflateCompressed = Bun.deflateSync(buffer);
+    const deflateCompressed = await apiTracker.track('Bun.deflateSync', () => Bun.deflateSync(buffer));
     const deflateDuration = performance.now() - deflateStart;
     
     // Test ZSTD compression
     const zstdStart = performance.now();
-    const zstdCompressed = Bun.zstdCompressSync(buffer);
+    const zstdCompressed = await apiTracker.track('Bun.zstdCompressSync', () => Bun.zstdCompressSync(buffer));
     const zstdDuration = performance.now() - zstdStart;
 
     console.log(`   📦 Original: ${(originalSize / 1024).toFixed(2)} KB`);
@@ -555,7 +556,7 @@ console.log(`   ✅ ${messageCount} messages in ${duration.toFixed(2)}ms`);
     }
 
     // Export results to JSON
-    Bun.write('./benchmark-results.json', JSON.stringify({
+    await apiTracker.track('Bun.write', () => Bun.write('./benchmark-results.json', JSON.stringify({
       timestamp: new Date().toISOString(),
       results: this.results,
       summary: {
@@ -566,7 +567,7 @@ console.log(`   ✅ ${messageCount} messages in ${duration.toFixed(2)}ms`);
           ? successful.reduce((sum, r) => sum + r.duration, 0) / successful.length 
           : 0
       }
-    }, null, 2));
+    }, null, 2)));
 
     console.log('\n💾 Results saved to benchmark-results.json');
   }

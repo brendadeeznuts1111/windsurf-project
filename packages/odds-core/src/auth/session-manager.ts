@@ -42,7 +42,7 @@ export class SessionManager {
     
     // Set cookie in response if provided
     if (response) {
-      const cookieValue = `sessionId=${sessionId}; HttpOnly; Secure=${process.env.NODE_ENV === 'production'}; SameSite=lax; Max-Age=${this.sessionTimeout / 1000}; Path=/`;
+      const cookieValue = `sessionId=${sessionId}; HttpOnly; Secure=${Bun.env.NODE_ENV === 'production'}; SameSite=lax; Max-Age=${this.sessionTimeout / 1000}; Path=/`;
       response.headers.set('Set-Cookie', cookieValue);
     }
 

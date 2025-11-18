@@ -1,6 +1,7 @@
 // packages/odds-websocket/src/server-v13.ts - Bun v1.3 Optimized
 import type { OddsTick, ArbitrageOpportunity } from 'odds-core';
 import { hash, stripANSI } from "bun";
+import { apiTracker } from 'odds-core/src/monitoring/api-tracker.js';
 // Import utilities from relative path
 import { 
   getSocketInfo, 
@@ -28,9 +29,9 @@ export class BunV13WebSocketServer {
   constructor(options: { port: number; workerCount?: number } = { port: 3000 }) {
     this.initializeWorkers(options.workerCount || 4);
     
-    this.server = Bun.serve<ConnectionData>({
+    this.server = await apiTracker.track('Bun.serve', () => Bun.serve<ConnectionData>({
       port: options.port,
-      development: process.env.NODE_ENV !== 'production',
+      development: Bun.env.NODE_ENV !== 'production',
       
       // Bun v1.3: Fetch handler with enhanced capabilities
       fetch: async (req, server) => this.handleFetch(req, server),
@@ -51,7 +52,7 @@ export class BunV13WebSocketServer {
         idleTimeout: 60,
         maxPayloadLength: 4 * 1024 * 1024,
       },
-    });
+    }));
 
     console.log(`🚀 Bun v1.3 WebSocket Server running on port ${this.server.port}`);
   }
@@ -277,7 +278,7 @@ export class BunV13WebSocketServer {
         postmessage_optimized: true, // 500x faster
         rapidhash_enabled: true, // Fast hashing
         stripani_optimized: true, // 6-57x faster
-        sql_preconnected: !!process.env.DATABASE_URL,
+        sql_preconnected: !!Bun.env.DATABASE_URL,
       },
       timestamps: {
         collected_at: new Date().toISOString(),
@@ -306,8 +307,8 @@ export class BunV13WebSocketServer {
 
 // Start server with Bun v1.3 optimizations
 const server = new BunV13WebSocketServer({
-  port: parseInt(process.env.WS_PORT || '3000'),
-  workerCount: parseInt(process.env.WORKER_COUNT || '4')
+  port: parseInt(Bun.env.WS_PORT || '3000'),
+  workerCount: parseInt(Bun.env.WORKER_COUNT || '4')
 });
 
 // Bun v1.3: Process signal handling for graceful shutdown

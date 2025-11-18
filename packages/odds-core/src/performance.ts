@@ -275,7 +275,7 @@ export function measurePerformance<T extends (...args: any[]) => any>(
       originalMethod.apply(this, args)
     );
     
-    if (process.env.NODE_ENV === 'development') {
+    if (Bun.env.NODE_ENV === 'development') {
       console.log(`⏱️  ${propertyKey}: ${duration.toFixed(2)}ms (${nanoseconds}ns)`);
     }
     
@@ -298,7 +298,7 @@ export function measurePerformanceAsync<T extends (...args: any[]) => Promise<an
       originalMethod.apply(this, args)
     );
     
-    if (process.env.NODE_ENV === 'development') {
+    if (Bun.env.NODE_ENV === 'development') {
       console.log(`⏱️  ${propertyKey}: ${duration.toFixed(2)}ms (${nanoseconds}ns) (async)`);
     }
     

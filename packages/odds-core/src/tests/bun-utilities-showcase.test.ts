@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 // packages/odds-core/src/tests/bun-utilities-showcase.test.ts - Complete Bun Utilities Demonstration
 
 import { test, expect, describe } from "bun:test";
@@ -17,7 +18,7 @@ describe("Bun Utilities Complete Showcase", () => {
     expect(Bun.main).toBeDefined();
     expect(typeof Bun.main).toBe('string');
     
-    // ✅ Bun.env - Environment variables (alias for process.env)
+    // ✅ Bun.env - Environment variables (alias for Bun.env)
     expect(Bun.env).toBeDefined();
     expect(typeof Bun.env).toBe('object');
   });

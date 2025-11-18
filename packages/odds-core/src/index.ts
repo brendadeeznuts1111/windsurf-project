@@ -16,6 +16,9 @@ export * from './error/error-handler';
 export * from './error/error-types';
 export * from './error/error-middleware';
 
+// Monitoring and API Tracking
+export * from './monitoring/api-tracker';
+
 // Re-export commonly used utilities
 export { configLoader } from './config/yaml-loader';
 export { sessionManager } from './auth/session-manager';

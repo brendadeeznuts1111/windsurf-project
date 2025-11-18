@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 // packages/odds-core/src/bun-utils.ts - Enhanced Bun runtime utilities for odds protocol
 import { estimateShallowMemoryUsageOf } from "bun:jsc";
 

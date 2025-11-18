@@ -31,13 +31,13 @@ const generateMockOddsTick = (override: any = {}): OddsTick => ({
 // Global test setup
 beforeAll(async () => {
   console.log("🚀 Setting up Bun v1.3 test suite...");
-  process.env.NODE_ENV = "test";
-  process.env.BUN_DEBUG = "0";
+  Bun.env.NODE_ENV = "test";
+  Bun.env.BUN_DEBUG = "0";
 });
 
 afterAll(async () => {
   console.log("🧹 Cleaning up test environment...");
-  process.env.NODE_ENV = "development";
+  Bun.env.NODE_ENV = "development";
 });
 
 describe.concurrent("Bun v1.3 Enhanced Testing Features", () => {

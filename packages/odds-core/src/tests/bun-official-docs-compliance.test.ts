@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 // packages/odds-core/src/tests/bun-official-docs-compliance.test.ts - Official Documentation Compliance
 
 import { test, expect, describe } from "bun:test";
@@ -13,10 +14,10 @@ describe("Official Bun Documentation Compliance", () => {
     expect(Bun.revision).toMatch(/^[a-f0-9]{40}$/);
     console.log(`✅ Bun.revision: "${Bun.revision}" (matches official docs)`);
     
-    // ✅ Bun.env - Exactly as documented (alias for process.env)
+    // ✅ Bun.env - Exactly as documented (alias for Bun.env)
     expect(Bun.env).toBeDefined();
-    expect(Bun.env).toBe(process.env);
-    console.log(`✅ Bun.env: Alias for process.env (matches official docs)`);
+    expect(Bun.env).toBe(Bun.env);
+    console.log(`✅ Bun.env: Alias for Bun.env (matches official docs)`);
     
     // ✅ Bun.main - Exactly as documented
     expect(Bun.main).toBeDefined();

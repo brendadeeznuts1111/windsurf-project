@@ -1,3 +1,4 @@
+import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
 #!/usr/bin/env bun
 
 // scripts/generate-rule-dashboard.ts
@@ -65,7 +66,7 @@ async function getHistoricalReports(): Promise<any[]> {
     
     const reports = [];
     for (const file of reportFiles.slice(-5)) { // Last 5 reports
-      const content = await Bun.file(`./reports/${file}`).text();
+      const content = await Bun.file(\`./reports/\${file}\`).text();
       reports.push(JSON.parse(content));
     }
     
@@ -116,7 +117,7 @@ function generateDashboardRecommendations(result: any): string[] {
   const { violations, summary } = result;
   
   if (summary.errorCount > 0) {
-    recommendations.push(`Address ${summary.errorCount} error-level violations immediately`);
+    recommendations.push(\`Address \${summary.errorCount} error-level violations immediately\`);
   }
   
   if (violations.some((v: any) => v.rule === 'Use Bun Builtins')) {
@@ -124,7 +125,7 @@ function generateDashboardRecommendations(result: any): string[] {
   }
   
   if (summary.passedRules < summary.totalRules) {
-    recommendations.push(`Focus on achieving 100% rule compliance (currently ${summary.passedRules}/${summary.totalRules})`);
+    recommendations.push(\`Focus on achieving 100% rule compliance (currently \${summary.passedRules}/\${summary.totalRules})\`);
   }
   
   if (recommendations.length === 0) {
@@ -143,15 +144,15 @@ function generateTrendVisualization(data: DashboardData): string {
     stable: '➡️'
   };
   
-  return `
-**Current Score**: ${overallScore}% ${trendIcons[trend]}
+  return \`
+**Current Score**: \${overallScore}% \${trendIcons[trend]}
 
-${trend === 'improving' 
+\${trend === 'improving' 
   ? 'Compliance is improving! Keep up the good work!'
   : trend === 'declining'
   ? 'Compliance has declined. Review recent changes.'
   : 'Compliance remains stable.'}
-  `;
+  \`;
 }
 
 await generateDashboard();

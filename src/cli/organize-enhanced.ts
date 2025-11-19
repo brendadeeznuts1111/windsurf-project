@@ -100,7 +100,7 @@ export class EnhancedFrontMatterOrganizer {
         // Update resource awareness
         ResourceAwareMCP.updatePressureScore();
 
-        const base = {
+        const base: Record<string, any> = {
             ...existing,
             // **Auto-populate** runtime metrics
             drift: existing.drift ?? driftMonitor.getRunningAverage(),
@@ -115,6 +115,7 @@ export class EnhancedFrontMatterOrganizer {
             type: existing.type ?? 'daily-note',
             status: existing.status ?? 'draft',
             priority: existing.priority ?? 'medium',
+            tags: existing.tags ?? [],
         };
 
         // Handle tags conversion

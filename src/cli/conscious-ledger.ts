@@ -9,11 +9,13 @@ export interface LedgerEntry {
 export class ConsciousLedger {
     private static entries: LedgerEntry[] = [];
 
-    static log(entry: Omit<LedgerEntry, 'timestamp'>): void {
-        this.entries.push({
+    static log(entry: { type: string;[key: string]: any }): void {
+        const ledgerEntry: LedgerEntry = {
             ...entry,
             timestamp: new Date().toISOString()
-        });
+        };
+
+        this.entries.push(ledgerEntry);
 
         console.log(`📊 Ledger: ${entry.type}`, entry.data || '');
     }

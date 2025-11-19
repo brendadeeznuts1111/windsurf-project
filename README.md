@@ -1,5 +1,7 @@
 # Odds Protocol Monorepo
 
+**Success = (Measurement × Algorithm × Memory × Network × Platform × Database × Testing × Monitoring × Architecture × Business × Culture × Innovation)ⁿ**
+
 > Institutional-grade sports betting odds protocol with 700k msg/sec WebSocket throughput
 
 ## 🚀 Quick Start
@@ -40,13 +42,22 @@ windsurf-project/
 ├── 🏗️ mcp-server/        # Model Context Protocol server
 ├── 🎯 property-tests/    # Property-based testing
 ├── 📚 Odds-mono-map/     # Knowledge management vault
-└── 🗂️ .root/             # Root documentation and archives
+└── 🗂️ .root/             # Historical docs, guides, archives
     ├── docs/             # Historical documentation
     ├── guides/           # Migration and setup guides
     ├── archives/         # Archived summaries and reports
     ├── references/       # Reference materials
     └── templates/        # Project templates
 ```
+
+## Updated Top‑Level Directory Layout
+
+- `docs/` – primary technical documentation.
+- `reports/` – test results, performance benchmarks, and other reports.
+- `.root/` – archived documentation, guides, and historical files (kept for reference only).
+
+These directories are now reflected in the tree above.
+
 
 ## 🎯 Core Features
 
@@ -196,6 +207,7 @@ bun run security:audit   # Security audit
 - **[API Reference](./docs/api/)**: Complete API documentation
 - **[Guides](./.root/guides/)**: Setup and migration guides
 - **[Architecture](./docs/architecture/)**: System architecture documentation
+- **[Archives](./.root/)**: Historical documentation, guides, and archives (read‑only)
 
 ## 📄 License
 

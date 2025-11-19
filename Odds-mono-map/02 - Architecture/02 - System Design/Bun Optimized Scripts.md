@@ -430,7 +430,7 @@ validation_rules:
   - habit-monitoring
 ---
 
-# 📅 {{date:YYYY-MM-DD}} - Daily Note
+## 📅 {{date:YYYY-MM-DD}} - Daily Note
 
 > **🎯 Focus**: {{daily_focus}} | **💪 Energy**: {{energy_level}} | **😊 Mood**: {{mood_level}}
 
@@ -553,7 +553,7 @@ team_size: "{{team_size}}"
 
 ---
 
-# 🚀 {{project_name}}
+## 🚀 {{project_name}}
 
 > **📊 Project Details**: {{project_type}} | **👥 Team**: {{team_size}} | **📅 Timeline**: {{start_date}} - {{end_date}} | **💰 Budget**: {{budget}}
 

@@ -1,0 +1,48 @@
+# Feature Flags Configuration
+# Demonstrates advanced feature management with Bun YAML
+
+features:
+  newDashboard:
+    enabled: true
+    rolloutPercentage: 50
+    allowedUsers:
+      - admin@example.com
+      - beta@example.com
+  
+  experimentalAPI:
+    enabled: false
+    endpoints:
+      - /api/v2/experimental
+      - /api/v2/beta
+  
+  darkMode:
+    enabled: true
+    default: auto # auto, light, dark
+  
+  betaFeatures:
+    enabled: true
+    rolloutPercentage: 25
+    allowedUsers:
+      - alpha@example.com
+      - beta@example.com
+      - gamma@example.com
+  
+  performanceMode:
+    enabled: false
+    description: "High-performance mode with reduced animations"
+  
+  advancedSearch:
+    enabled: true
+    rolloutPercentage: 75
+    features:
+      - fuzzySearch
+      - semanticSearch
+      - autocomplete
+
+  bunOptimizations:
+    enabled: true
+    features:
+      - fast-startup
+      - low-memory
+      - native-ffi
+      - hot-reloading

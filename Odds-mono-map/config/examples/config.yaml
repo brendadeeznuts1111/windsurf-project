@@ -1,0 +1,56 @@
+# Bun YAML Configuration Example
+# Supports hot reloading with `bun --hot`
+
+server:
+  port: 3000
+  host: localhost
+
+features:
+  debug: true
+  verbose: false
+
+database:
+  host: localhost
+  port: 5432
+  name: myapp
+
+redis:
+  host: localhost
+  port: 6379
+
+defaults: &defaults
+  timeout: 5000
+  retries: 3
+  cache:
+    enabled: true
+    ttl: 3600
+
+development:
+  <<: *defaults
+  api:
+    url: http://localhost:4000
+    key: dev_key_12345
+  logging:
+    level: debug
+    pretty: true
+
+staging:
+  <<: *defaults
+  api:
+    url: https://staging-api.example.com
+    key: STAGING_API_KEY
+  logging:
+    level: info
+    pretty: false
+
+production:
+  <<: *defaults
+  api:
+    url: https://api.example.com
+    key: PROD_API_KEY
+  cache:
+    enabled: true
+    ttl: 86400
+  logging:
+    level: error
+    pretty: false

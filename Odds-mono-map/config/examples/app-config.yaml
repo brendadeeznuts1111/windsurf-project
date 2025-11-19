@@ -1,0 +1,16 @@
+# Application Configuration
+# Demonstrates Bun YAML with database, redis, and features
+
+database:
+  host: localhost
+  port: 5432
+  name: myapp
+
+redis:
+  host: localhost
+  port: 6379
+
+features:
+  auth: true
+  rateLimit: true
+  analytics: false

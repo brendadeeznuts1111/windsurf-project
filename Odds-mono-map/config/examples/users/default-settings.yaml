@@ -1,0 +1,28 @@
+# Default User Settings
+# Fallback configuration when user-specific settings don't exist
+
+user:
+  theme: auto
+  language: en
+  timezone: UTC
+
+preferences:
+  notifications:
+    email: true
+    push: false
+    sms: false
+  
+  privacy:
+    profileVisible: true
+    activityVisible: false
+    dataSharing: false
+
+features:
+  betaFeatures: false
+  experimentalUI: false
+  advancedAnalytics: false
+
+limits:
+  maxProjects: 5
+  maxStorage: 1000
+  apiRateLimit: 100

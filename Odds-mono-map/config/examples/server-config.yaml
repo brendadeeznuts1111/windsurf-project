@@ -1,0 +1,28 @@
+server:
+  port: 3000
+  host: localhost
+
+features:
+  debug: true
+  verbose: false
+
+routes:
+  /config:
+    method: GET
+    handler: config
+    enabled: true
+  
+  /status:
+    method: GET
+    handler: status
+    enabled: true
+  
+  /debug:
+    method: GET
+    handler: debug
+    enabled: true
+  
+  /reload:
+    method: GET
+    handler: reload
+    enabled: true

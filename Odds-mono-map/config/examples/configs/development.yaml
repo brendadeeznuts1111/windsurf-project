@@ -1,0 +1,26 @@
+# Development Environment Configuration
+# Dynamically loaded based on NODE_ENV
+
+debug:
+  enabled: true
+  level: verbose
+
+api:
+  url: http://localhost:4000
+  timeout: 5000
+  retries: 3
+
+database:
+  host: localhost
+  port: 5432
+  name: myapp_dev
+
+logging:
+  level: debug
+  console: true
+  file: false
+
+features:
+  hotReload: true
+  mockData: true
+  debugMode: true

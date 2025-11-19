@@ -1,0 +1,36 @@
+# Database Configuration with Bun YAML
+# Supports environment variable interpolation
+
+connections:
+  primary:
+    type: postgres
+    host: localhost
+    port: 5432
+    database: myapp
+    username: postgres
+    password: ""
+    pool:
+      min: 2
+      max: 10
+      idleTimeout: 30000
+
+  cache:
+    type: redis
+    host: localhost
+    port: 6379
+    password: ""
+    db: 0
+
+  analytics:
+    type: sqlite
+    path: ./analytics.db
+    journal_mode: WAL
+    synchronous: NORMAL
+
+migrations:
+  autoRun: false
+  directory: ./migrations
+
+seeds:
+  enabled: false
+  directory: ./seeds

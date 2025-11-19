@@ -1,0 +1,36 @@
+# Admin User Settings
+# Overrides default settings for admin users
+
+user:
+  theme: dark
+  language: en
+  timezone: UTC
+  role: admin
+
+preferences:
+  notifications:
+    email: true
+    push: true
+    sms: true
+  
+  privacy:
+    profileVisible: true
+    activityVisible: true
+    dataSharing: true
+
+features:
+  betaFeatures: true
+  experimentalUI: true
+  advancedAnalytics: true
+  adminPanel: true
+  systemLogs: true
+
+limits:
+  maxProjects: 100
+  maxStorage: 10000
+  apiRateLimit: 1000
+
+admin:
+  canManageUsers: true
+  canViewSystemLogs: true
+  canModifySettings: true

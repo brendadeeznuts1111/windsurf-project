@@ -1,0 +1,32 @@
+[test]
+# Test configuration for Bun YAML examples
+# Run with: bun test
+
+# Test execution options
+root = "."
+preload = ["./test-setup.ts"]
+
+# Performance testing
+max_concurrency = 4
+timeout = 5000
+
+# Coverage reporting
+coverage = true
+coverage_dir = "./coverage"
+coverage_threshold = 80
+
+# Reporting
+reporter = ["spec", "junit"]
+junit_file = "./test-results/yaml-results.xml"
+
+# Watch mode for development
+watch = false
+# Enable with: bun test --watch
+
+# Bail on first failure for CI
+bail = false
+# Enable with: bun test --bail
+
+# Snapshot testing
+snapshot_dir = "./__snapshots__"
+# Update with: bun test --update-snapshots

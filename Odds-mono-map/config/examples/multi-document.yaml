@@ -1,0 +1,71 @@
+---
+# Development Environment Configuration
+name: development
+database:
+  host: localhost
+  port: 5432
+  name: myapp_dev
+redis:
+  host: localhost
+  port: 6379
+features:
+  debug: true
+  verbose: true
+  analytics: false
+---
+# Staging Environment Configuration
+name: staging
+database:
+  host: staging-db.example.com
+  port: 5432
+  name: myapp_staging
+redis:
+  host: staging-redis.example.com
+  port: 6379
+features:
+  debug: false
+  verbose: false
+  analytics: true
+---
+# Production Environment Configuration
+name: production
+database:
+  host: prod-db.example.com
+  port: 5432
+  name: myapp_production
+redis:
+  host: prod-redis.example.com
+  port: 6379
+features:
+  debug: false
+  verbose: false
+  analytics: true
+---
+# Testing Configuration
+name: testing
+database:
+  host: localhost
+  port: 5433
+  name: myapp_test
+redis:
+  host: localhost
+  port: 6380
+features:
+  debug: true
+  verbose: true
+  analytics: false
+---
+# Local Development Configuration
+name: local
+database:
+  host: localhost
+  port: 5432
+  name: myapp_local
+redis:
+  host: localhost
+  port: 6379
+features:
+  debug: true
+  verbose: true
+  hotReload: true
+  analytics: false

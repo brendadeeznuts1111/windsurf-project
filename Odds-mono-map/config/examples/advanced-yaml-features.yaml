@@ -1,0 +1,110 @@
+# Advanced YAML Features Demonstration
+# Full YAML 1.2 specification support in Bun
+
+# Employee record with anchor
+employee: &emp
+  name: Jane Smith
+  department: Engineering
+  skills:
+    - JavaScript
+    - TypeScript
+    - React
+  active: true
+  salary: !!float 125000.50
+  join_date: !!str 2024-01-15
+
+# Manager referencing employee anchor
+manager: *emp
+
+# Configuration with explicit type tags
+config:
+  port: !!int 3000
+  debug: !!bool true
+  timeout: !!null
+  version: !!str "1.0.0"
+
+# Multi-line strings
+description: |
+  This is a multi-line
+  literal string that preserves
+  line breaks and spacing.
+  
+  It maintains the exact formatting
+  including empty lines above.
+
+summary: >
+  This is a folded string
+  that joins lines with spaces
+  unless there are blank lines.
+  
+  New paragraphs are preserved
+  but single lines are joined.
+
+# Complex nested structures
+company:
+  name: TechCorp Inc.
+  founded: !!int 2010
+  employees:
+    - &dev1
+      name: Alice Johnson
+      role: Senior Developer
+      skills: [Python, Django, PostgreSQL]
+    - &dev2
+      name: Bob Wilson
+      role: DevOps Engineer
+      skills: [Docker, Kubernetes, AWS]
+  
+  teams:
+    frontend: [*dev1]
+    backend: [*dev2]
+    fullstack: [*dev1, *dev2]
+
+# Mixed content types
+mixed_data:
+  string_value: "Hello World"
+  number_value: 42
+  float_value: 3.14159
+  boolean_value: true
+  null_value: null
+  array_value: [1, 2, 3, "four", true]
+  object_value:
+    nested_key: nested_value
+    another_nested: 123
+
+# Flow style collections
+flow_arrays:
+  compact: [item1, item2, item3]
+  nested: [[1, 2], [3, 4], [5, 6]]
+
+flow_objects:
+  compact: {key1: value1, key2: value2}
+  nested: {outer: {inner: value}}
+
+# Set notation (YAML 1.2)
+set_example: !!set
+  ? item1
+  ? item2
+  ? item3
+
+# Ordered map (YAML 1.2)
+ordered_map: !!omap
+  - key1: value1
+  - key2: value2
+  - key3: value3
+
+# Merge keys (YAML 1.1 compatibility)
+merge_keys:
+  base: &base_config
+    timeout: 30
+    retries: 3
+    logging: true
+  
+  development:
+    <<: *base_config
+    debug: true
+    hot_reload: true
+  
+  production:
+    <<: *base_config
+    debug: false
+    monitoring: true

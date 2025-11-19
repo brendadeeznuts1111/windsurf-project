@@ -1,0 +1,155 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`📸 Snapshot Tests ✅ should snapshot configuration 1`] = `
+{
+  "database": {
+    "host": "localhost",
+    "name": "myapp",
+    "port": 5432,
+  },
+  "defaults": {
+    "cache": {
+      "enabled": true,
+      "ttl": 3600,
+    },
+    "retries": 3,
+    "timeout": 5000,
+  },
+  "development": {
+    "api": {
+      "key": "dev_key_12345",
+      "url": "http://localhost:4000",
+    },
+    "cache": {
+      "enabled": true,
+      "ttl": 3600,
+    },
+    "logging": {
+      "level": "debug",
+      "pretty": true,
+    },
+    "retries": 3,
+    "timeout": 5000,
+  },
+  "features": {
+    "debug": true,
+    "verbose": false,
+  },
+  "production": {
+    "api": {
+      "key": "PROD_API_KEY",
+      "url": "https://api.example.com",
+    },
+    "cache": {
+      "enabled": true,
+      "ttl": 86400,
+    },
+    "logging": {
+      "level": "error",
+      "pretty": false,
+    },
+    "retries": 3,
+    "timeout": 5000,
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379,
+  },
+  "server": {
+    "host": "localhost",
+    "port": 3000,
+  },
+  "staging": {
+    "api": {
+      "key": "STAGING_API_KEY",
+      "url": "https://staging-api.example.com",
+    },
+    "cache": {
+      "enabled": true,
+      "ttl": 3600,
+    },
+    "logging": {
+      "level": "info",
+      "pretty": false,
+    },
+    "retries": 3,
+    "timeout": 5000,
+  },
+}
+`;
+
+exports[`📸 Snapshot Tests ✅ should snapshot database configuration 1`] = `
+{
+  "connections": {
+    "analytics": {
+      "journal_mode": "WAL",
+      "path": "./analytics.db",
+      "synchronous": "NORMAL",
+      "type": "sqlite",
+    },
+    "cache": {
+      "db": 0,
+      "host": "localhost",
+      "password": "",
+      "port": 6379,
+      "type": "redis",
+    },
+    "primary": {
+      "database": "myapp",
+      "host": "localhost",
+      "password": "",
+      "pool": {
+        "idleTimeout": 30000,
+        "max": 10,
+        "min": 2,
+      },
+      "port": 5432,
+      "type": "postgres",
+      "username": "postgres",
+    },
+  },
+  "migrations": {
+    "autoRun": false,
+    "directory": "./migrations",
+  },
+  "seeds": {
+    "directory": "./seeds",
+    "enabled": false,
+  },
+}
+`;
+
+exports[`📸 Snapshot Tests ✅ should snapshot feature flags 1`] = `
+{
+  "features": {
+    "bunOptimizations": {
+      "enabled": true,
+      "features": [
+        "fast-startup",
+        "low-memory",
+        "native-ffi",
+        "hot-reloading",
+      ],
+    },
+    "darkMode": {
+      "default": "auto",
+      "enabled": true,
+    },
+    "experimentalAPI": {
+      "enabled": false,
+      "endpoints": [
+        "/api/v2/experimental",
+        "/api/v2/beta",
+      ],
+    },
+    "newDashboard": {
+      "allowedUsers": [
+        "admin@example.com",
+        "beta@example.com",
+      ],
+      "enabled": true,
+      "rolloutPercentage": 50,
+    },
+  },
+}
+`;

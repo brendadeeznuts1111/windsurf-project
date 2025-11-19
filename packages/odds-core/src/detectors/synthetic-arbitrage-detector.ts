@@ -18,7 +18,7 @@ import {
     HistoricalDataFactory,
     RotationNumberUtils,
     RotationNumberRegistry
-} from '@odds-core/utils';
+} from '../utils/index';
 
 /**
  * Detection criteria configuration

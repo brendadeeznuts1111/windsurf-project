@@ -594,17 +594,4 @@ export class BusinessLogicError extends Error {
     }
 }
 
-// ===== EXPORT ALL SCHEMAS =====
-
-export {
-    SyntheticArbitrageV1Schema,
-    SyntheticArbitrageV2Schema,
-    SyntheticArbitrageV3Schema,
-    MarketLegSchema,
-    SportMarketSchema,
-    RiskMetricsSchema,
-    ExecutionPlanSchema,
-    CorrelationMatrixSchema,
-    MonitoringMetricsSchema,
-    PerformanceTrackingSchema
-};
+// ===== SCHEMAS ALREADY EXPORTED AT DEFINITION =====

@@ -6,11 +6,11 @@ views:
     name: Table
     order:
       - file.name
+      - file.links
       - file.basename
       - file.ctime
       - file.folder
       - file.fullname
-      - file.links
       - file.mtime
       - file.size
       - file.path
@@ -77,13 +77,15 @@ views:
       - console-type
       - maintainer
     sort:
+      - property: file.name
+        direction: DESC
+      - property: file.links
+        direction: DESC
       - property: priority
         direction: ASC
       - property: file.path
         direction: ASC
       - property: target-date
-        direction: ASC
-      - property: file.name
         direction: ASC
       - property: file.folder
         direction: DESC
@@ -94,6 +96,7 @@ views:
       - property: file.size
         direction: DESC
     columnSize:
+      file.links: 126
       file.basename: 241
       file.path: 188
       note.related-files: 154

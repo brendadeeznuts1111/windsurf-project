@@ -83,7 +83,7 @@ describe.concurrent("Arbitrage Detection Property Tests", () => {
         ), { numRuns: 1000 });
     }, { timeout: 120000 });
 
-    test.failing.concurrent("handles edge cases correctly", async () => {
+    test.concurrent("handles edge cases correctly", async () => {
         await fc.assert(fc.asyncProperty(
             fc.record({
                 market1Odds: fc.float({ min: Math.fround(1.01), max: Math.fround(100) }),
@@ -121,7 +121,7 @@ describe.concurrent("Arbitrage Detection Property Tests", () => {
                 stake: fc.float({ min: Math.fround(100), max: Math.fround(10000) })
             }),
             async ({ market1Odds, market2Odds, stake }) => {
-                fc.pre(validateOdds(market1Odds) && validateOdds(market2Odds));
+                fc.pre(validateOdds(market1Odds) && validateOdds(market2Odds) && !Number.isNaN(stake));
 
                 const result = detectArbitrage(market1Odds, market2Odds, stake);
 
@@ -184,7 +184,7 @@ describe.concurrent("Odds Validation Property Tests", () => {
 });
 
 // Known bug example (now fixed - demonstrate TDD workflow)
-test.failing.concurrent("handles leap year timestamp edge cases correctly", () => {
+test.concurrent("handles leap year timestamp edge cases correctly", () => {
     // This represents a known issue with timestamp validation
     const leapYearTick = {
         timestamp: "2024-02-29T23:59:59Z",

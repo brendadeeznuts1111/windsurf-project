@@ -12,7 +12,7 @@ author: Odds Protocol Development Team
 teamMember: Type System Architect
 version: 1.0.0
 ---
-
+********
 # 🔧 Type System Overview
 
 ## 📋 Complete Type Architecture for Odds Protocol

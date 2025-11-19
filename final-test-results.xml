@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="bun test" tests="16" assertions="13" failures="1" skipped="0" time="0.302287">
+  <testsuite name="property-tests/memory-leak.property.test.ts" file="property-tests/memory-leak.property.test.ts" tests="7" assertions="0" failures="1" skipped="0" time="0" hostname="Mac.attlocal.net">
+    <testsuite name="Memory Leak Detection Tests" file="property-tests/memory-leak.property.test.ts" line="154" tests="7" assertions="0" failures="1" skipped="0" time="0.343" hostname="Mac.attlocal.net">
+      <testcase name="large array processing doesn&apos;t leak" classname="Memory Leak Detection Tests" time="0.006122" file="property-tests/memory-leak.property.test.ts" line="231" assertions="0" />
+      <testcase name="database connection pool doesn&apos;t leak" classname="Memory Leak Detection Tests" time="0.000938" file="property-tests/memory-leak.property.test.ts" line="262" assertions="0" />
+      <testcase name="event listeners don&apos;t leak" classname="Memory Leak Detection Tests" time="0.002621" file="property-tests/memory-leak.property.test.ts" line="297" assertions="0" />
+      <testcase name="intentional memory leak detection" classname="Memory Leak Detection Tests" time="0.002329" file="property-tests/memory-leak.property.test.ts" line="344" assertions="0">
+        <failure message="test marked with .failing() did not throw" type="AssertionError"/>
+      </testcase>
+      <testcase name="rapidhash processing doesn&apos;t leak" classname="Memory Leak Detection Tests" time="0.105252" file="property-tests/memory-leak.property.test.ts" line="357" assertions="0" />
+      <testcase name="websocket server lifecycle doesn&apos;t leak" classname="Memory Leak Detection Tests" time="0.004332" file="property-tests/memory-leak.property.test.ts" line="408" assertions="0" />
+      <testcase name="websocket connection doesn&apos;t leak" classname="Memory Leak Detection Tests" time="0.224399" file="property-tests/memory-leak.property.test.ts" line="155" assertions="0" />
+    </testsuite>
+  </testsuite>
+  <testsuite name="property-tests/arbitrage/arbitrage.property.test.ts" file="property-tests/arbitrage/arbitrage.property.test.ts" tests="6" assertions="0" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+    <testsuite name="Arbitrage Detection Property Tests" file="property-tests/arbitrage/arbitrage.property.test.ts" line="44" tests="3" assertions="0" failures="0" skipped="0" time="0.015" hostname="Mac.attlocal.net">
+      <testcase name="detects arbitrage opportunities correctly" classname="Arbitrage Detection Property Tests" time="0.009237" file="property-tests/arbitrage/arbitrage.property.test.ts" line="45" assertions="0" />
+      <testcase name="handles edge cases correctly" classname="Arbitrage Detection Property Tests" time="0.004236" file="property-tests/arbitrage/arbitrage.property.test.ts" line="86" assertions="0" />
+      <testcase name="validates stake distribution" classname="Arbitrage Detection Property Tests" time="0.002012" file="property-tests/arbitrage/arbitrage.property.test.ts" line="116" assertions="0" />
+    </testsuite>
+    <testsuite name="Odds Validation Property Tests" file="property-tests/arbitrage/arbitrage.property.test.ts" line="148" tests="2" assertions="0" failures="0" skipped="0" time="0.001" hostname="Mac.attlocal.net">
+      <testcase name="validates odds format correctly" classname="Odds Validation Property Tests" time="0.00155" file="property-tests/arbitrage/arbitrage.property.test.ts" line="149" assertions="0" />
+      <testcase name="handles special number cases" classname="Odds Validation Property Tests" time="0.000284" file="property-tests/arbitrage/arbitrage.property.test.ts" line="169" assertions="0" />
+    </testsuite>
+    <testcase name="handles leap year timestamp edge cases correctly" classname="" time="0.000155" file="property-tests/arbitrage/arbitrage.property.test.ts" line="187" assertions="0" />
+  </testsuite>
+  <testsuite name="packages/testing/src/contracts/websocket-simple.test.ts" file="packages/testing/src/contracts/websocket-simple.test.ts" tests="3" assertions="13" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+    <testsuite name="WebSocket Contract Tests (Simple)" file="packages/testing/src/contracts/websocket-simple.test.ts" line="6" tests="3" assertions="13" failures="0" skipped="0" time="0" hostname="Mac.attlocal.net">
+      <testcase name="validates WebSocket message structure" classname="WebSocket Contract Tests (Simple)" time="0.000813" file="packages/testing/src/contracts/websocket-simple.test.ts" line="7" assertions="5" />
+      <testcase name="validates arbitrage alert structure" classname="WebSocket Contract Tests (Simple)" time="0.000067" file="packages/testing/src/contracts/websocket-simple.test.ts" line="25" assertions="4" />
+      <testcase name="validates market data structure" classname="WebSocket Contract Tests (Simple)" time="0.000086" file="packages/testing/src/contracts/websocket-simple.test.ts" line="43" assertions="4" />
+    </testsuite>
+  </testsuite>
+</testsuites>

@@ -28,9 +28,12 @@ concurrentTestGlob = [
   "**/tests/integration/**/*.test.ts",
   "**/tests/performance/**/*.test.ts",
   "**/integration/**/*.test.ts",
+  "**/contracts/*-concurrent.test.ts",
+  "**/contracts/concurrent-*.test.ts",
+  "packages/testing/src/contracts/*-concurrent.test.ts",
+  "packages/testing/src/contracts/concurrent-*.test.ts",
   "**/*-concurrent.test.ts",
-  "property-tests/**/*.test.ts",
-  "packages/testing/src/contracts/**/*.test.ts"
+  "property-tests/**/*.test.ts"
 ]
 
 # Ignore patterns

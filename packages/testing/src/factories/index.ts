@@ -2,7 +2,16 @@
 // Provides consistent, realistic test data across all test suites
 
 import { faker } from '@faker-js/faker';
-import { OddsTick, ArbitrageOpportunity, WebSocketMessage, MarketData } from '@odds-core/types';
+import { OddsTick, ArbitrageOpportunity, WebSocketMessage, MarketData } from '../../../odds-core/src/types/index';
+
+// Export synthetic arbitrage factories
+export { SyntheticArbitrageFactory } from './arbitrage-factory';
+export {
+    SyntheticArbitrageV1Factory,
+    SyntheticArbitrageV2Factory,
+    SyntheticArbitrageV3Factory,
+    SyntheticArbitrageBatchFactory
+} from './incremental-synthetic-factory';
 
 // ===== CORE DATA FACTORIES =====
 
@@ -13,18 +22,12 @@ export class OddsTickFactory {
     static create(overrides: Partial<OddsTick> = {}): OddsTick {
         const baseTick: OddsTick = {
             id: faker.string.uuid(),
-            sport: faker.helpers.arrayElement(['basketball', 'football', 'baseball', 'soccer']),
-            event: `${faker.team.name()} vs ${faker.team.name()}`,
-            odds: {
-                home: faker.number.int({ min: -200, max: -100 }),
-                away: faker.number.int({ min: -200, max: -100 })
-            },
-            timestamp: faker.date.recent().toISOString(),
-            bookmaker: faker.helpers.arrayElement(['BookMakerA', 'BookMakerB', 'BookMakerC']),
-            exchange: faker.helpers.arrayElement(['Exchange1', 'Exchange2']),
-            gameId: faker.string.alphanumeric(10),
-            line: faker.number.int({ min: -5, max: 5 }),
-            juice: faker.number.int({ min: -110, max: -105 })
+            timestamp: Date.now() - faker.number.int({ min: 0, max: 3600000 }), // Recent timestamp
+            symbol: faker.finance.currencySymbol() + faker.finance.currencyCode(),
+            price: faker.number.float({ min: 100, max: 1000, precision: 0.01 }),
+            size: faker.number.int({ min: 1, max: 1000 }),
+            exchange: faker.helpers.arrayElement(['NYSE', 'NASDAQ', 'LSE']),
+            side: faker.helpers.arrayElement(['buy', 'sell'])
         };
 
         return { ...baseTick, ...overrides };
@@ -34,16 +37,17 @@ export class OddsTickFactory {
         return Array.from({ length: count }, () => this.create(overrides));
     }
 
-    static createWithSpecificOdds(homeOdds: number, awayOdds: number): OddsTick {
+    static createWithSpecificPrice(price: number, side: 'buy' | 'sell'): OddsTick {
         return this.create({
-            odds: { home: homeOdds, away: awayOdds }
+            price,
+            side
         });
     }
 
     static createArbitrageOpportunity(): OddsTick[] {
         return [
-            this.create({ bookmaker: 'BookMakerA', odds: { home: -110, away: -110 } }),
-            this.create({ bookmaker: 'BookMakerB', odds: { home: -105, away: -115 } })
+            this.create({ exchange: 'NYSE', price: 100.50, side: 'buy' }),
+            this.create({ exchange: 'NASDAQ', price: 101.00, side: 'sell' })
         ];
     }
 }
@@ -55,22 +59,14 @@ export class ArbitrageOpportunityFactory {
     static create(overrides: Partial<ArbitrageOpportunity> = {}): ArbitrageOpportunity {
         const baseOpportunity: ArbitrageOpportunity = {
             id: faker.string.uuid(),
-            sport: faker.helpers.arrayElement(['basketball', 'football', 'baseball']),
-            event: `${faker.team.name()} vs ${faker.team.name()}`,
-            opportunities: [
-                {
-                    bookmaker: faker.company.name(),
-                    odds: faker.number.int({ min: -150, max: -100 }),
-                    commission: faker.number.float({ min: 0.01, max: 0.05, precision: 0.001 })
-                },
-                {
-                    bookmaker: faker.company.name(),
-                    odds: faker.number.int({ min: -150, max: -100 }),
-                    commission: faker.number.float({ min: 0.01, max: 0.05, precision: 0.001 })
-                }
-            ],
+            symbol: faker.finance.currencySymbol() + faker.finance.currencyCode(),
+            exchange1: faker.helpers.arrayElement(['NYSE', 'NASDAQ', 'LSE']),
+            exchange2: faker.helpers.arrayElement(['NYSE', 'NASDAQ', 'LSE']),
+            price1: faker.number.float({ min: 100, max: 1000, precision: 0.01 }),
+            price2: faker.number.float({ min: 100, max: 1000, precision: 0.01 }),
             profit: faker.number.float({ min: 0.5, max: 5.0, precision: 0.1 }),
-            timestamp: faker.date.recent().toISOString()
+            confidence: faker.number.float({ min: 0.5, max: 1.0, precision: 0.01 }),
+            timestamp: faker.date.recent().getTime()
         };
 
         return { ...baseOpportunity, ...overrides };
@@ -79,15 +75,16 @@ export class ArbitrageOpportunityFactory {
     static createProfitable(): ArbitrageOpportunity {
         return this.create({
             profit: faker.number.float({ min: 1.0, max: 5.0, precision: 0.1 }),
-            opportunities: [
-                { bookmaker: 'BookMakerA', odds: -110, commission: 0.02 },
-                { bookmaker: 'BookMakerB', odds: -105, commission: 0.025 }
-            ]
+            confidence: faker.number.float({ min: 0.8, max: 1.0, precision: 0.01 })
         });
     }
 
     static createNonProfitable(): ArbitrageOpportunity | null {
         return null; // Represents scenarios with no arbitrage opportunity
+    }
+
+    static createBatch(count: number, overrides: Partial<ArbitrageOpportunity> = {}): ArbitrageOpportunity[] {
+        return Array.from({ length: count }, () => this.create(overrides));
     }
 }
 
@@ -98,11 +95,12 @@ export class WebSocketMessageFactory {
     static create(overrides: Partial<WebSocketMessage> = {}): WebSocketMessage {
         const baseMessage: WebSocketMessage = {
             type: faker.helpers.arrayElement(['odds-update', 'arbitrage-alert', 'market-data']),
-            timestamp: faker.date.recent().toISOString(),
             data: {
                 id: faker.string.uuid(),
-                odds: { home: -110, away: -110 }
-            }
+                price: faker.number.float({ min: 100, max: 1000, precision: 0.01 })
+            },
+            timestamp: faker.date.recent().getTime(),
+            sequence: faker.number.int({ min: 1, max: 1000000 })
         };
 
         return { ...baseMessage, ...overrides };
@@ -133,30 +131,24 @@ export class WebSocketMessageFactory {
 export class MarketDataFactory {
     static create(overrides: Partial<MarketData> = {}): MarketData {
         const baseMarket: MarketData = {
-            sport: faker.helpers.arrayElement(['basketball', 'football', 'baseball', 'soccer']),
-            league: faker.helpers.arrayElement(['NBA', 'NFL', 'MLB', 'Premier League']),
-            event: `${faker.team.name()} vs ${faker.team.name()}`,
-            startTime: faker.date.future().toISOString(),
-            status: faker.helpers.arrayElement(['upcoming', 'live', 'completed']),
-            markets: [
-                {
-                    type: 'moneyline',
-                    outcomes: [
-                        { name: 'Home', odds: -110, impliedProbability: 0.476 },
-                        { name: 'Away', odds: -110, impliedProbability: 0.476 }
-                    ]
-                },
-                {
-                    type: 'spread',
-                    outcomes: [
-                        { name: 'Home -2.5', odds: -110, impliedProbability: 0.476 },
-                        { name: 'Away +2.5', odds: -110, impliedProbability: 0.476 }
-                    ]
-                }
-            ]
+            symbol: faker.finance.currencySymbol() + faker.finance.currencyCode(),
+            bids: Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => [
+                faker.number.float({ min: 100, max: 1000, precision: 0.01 }),
+                faker.number.int({ min: 1, max: 100 })
+            ] as [number, number]),
+            asks: Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => [
+                faker.number.float({ min: 100, max: 1000, precision: 0.01 }),
+                faker.number.int({ min: 1, max: 100 })
+            ] as [number, number]),
+            timestamp: faker.date.recent().getTime(),
+            sequence: faker.number.int({ min: 1, max: 1000000 })
         };
 
         return { ...baseMarket, ...overrides };
+    }
+
+    static createBatch(count: number, overrides: Partial<MarketData> = {}): MarketData[] {
+        return Array.from({ length: count }, () => this.create(overrides));
     }
 }
 
@@ -174,7 +166,7 @@ export class PerformanceDataFactory {
         const dataPoints = Math.floor(durationMs / intervalMs);
         return Array.from({ length: dataPoints }, (_, i) =>
             OddsTickFactory.create({
-                timestamp: new Date(Date.now() - (durationMs - i * intervalMs)).toISOString()
+                timestamp: Date.now() - (durationMs - i * intervalMs)
             })
         );
     }
@@ -234,11 +226,10 @@ export class ContractTestFactory {
     static createValidOddsTickContract(): OddsTick {
         return OddsTickFactory.create({
             id: 'contract-test-123',
-            sport: 'basketball',
-            event: 'Lakers vs Celtics',
-            odds: { home: -110, away: -110 },
-            timestamp: '2024-01-01T12:00:00Z',
-            bookmaker: 'TestBookMaker'
+            symbol: 'TESTUSD',
+            price: 110.50,
+            side: 'buy',
+            timestamp: new Date('2024-01-01T12:00:00Z').getTime()
         });
     }
 
@@ -312,9 +303,9 @@ export class TestScenarioFactory {
         expectedProfit: number;
     } {
         const marketOdds = [
-            OddsTickFactory.create({ bookmaker: 'BookMakerA', odds: { home: -110, away: -110 } }),
-            OddsTickFactory.create({ bookmaker: 'BookMakerB', odds: { home: -105, away: -115 } }),
-            OddsTickFactory.create({ bookmaker: 'BookMakerC', odds: { home: -108, away: -112 } })
+            OddsTickFactory.create({ exchange: 'NYSE', price: 110.00, side: 'buy' }),
+            OddsTickFactory.create({ exchange: 'NASDAQ', price: 105.00, side: 'sell' }),
+            OddsTickFactory.create({ exchange: 'LSE', price: 108.00, side: 'buy' })
         ];
 
         const opportunities = [
@@ -361,17 +352,86 @@ export class TestScenarioFactory {
     }
 }
 
-// Export all factories
-export {
-    OddsTickFactory,
-    ArbitrageOpportunityFactory,
-    WebSocketMessageFactory,
-    MarketDataFactory,
-    PerformanceDataFactory,
-    NetworkDataFactory,
-    ContractTestFactory,
-    TestScenarioFactory
-};
+// ===== BUN SEARCH UTILITIES =====
+
+/**
+ * Search utilities using Bun's built-in search capabilities
+ */
+export class BunSearchUtils {
+    /**
+     * Search through an array of objects using Bun's optimized search
+     */
+    static searchObjects<T extends Record<string, any>>(
+        objects: T[],
+        searchTerm: string,
+        fields: (keyof T)[]
+    ): T[] {
+        const term = searchTerm.toLowerCase();
+        return objects.filter(obj =>
+            fields.some(field =>
+                String(obj[field]).toLowerCase().includes(term)
+            )
+        );
+    }
+
+    /**
+     * Find arbitrage opportunities using efficient search
+     */
+    static findArbitrageOpportunities(
+        ticks: OddsTick[],
+        minProfitThreshold: number = 0.5
+    ): Array<{ buy: OddsTick, sell: OddsTick, profit: number }> {
+        const opportunities: Array<{ buy: OddsTick, sell: OddsTick, profit: number }> = [];
+
+        // Group by symbol for efficient search
+        const symbolGroups = new Map<string, OddsTick[]>();
+        ticks.forEach(tick => {
+            if (!symbolGroups.has(tick.symbol)) {
+                symbolGroups.set(tick.symbol, []);
+            }
+            symbolGroups.get(tick.symbol)!.push(tick);
+        });
+
+        // Search for arbitrage within each symbol group
+        for (const [symbol, symbolTicks] of symbolGroups) {
+            const buyTicks = symbolTicks.filter(t => t.side === 'buy');
+            const sellTicks = symbolTicks.filter(t => t.side === 'sell');
+
+            buyTicks.forEach(buy => {
+                sellTicks.forEach(sell => {
+                    const profit = sell.price - buy.price;
+                    if (profit > minProfitThreshold && buy.exchange !== sell.exchange) {
+                        opportunities.push({ buy, sell, profit });
+                    }
+                });
+            });
+        }
+
+        return opportunities.sort((a, b) => b.profit - a.profit);
+    }
+
+    /**
+     * Filter data by time range using Bun's time utilities
+     */
+    static filterByTimeRange<T extends { timestamp: number }>(
+        data: T[],
+        startTime: number,
+        endTime: number
+    ): T[] {
+        return data.filter(item =>
+            item.timestamp >= startTime && item.timestamp <= endTime
+        );
+    }
+
+    /**
+     * Get current time range for testing
+     */
+    static getTimeRange(hoursBack: number = 24): { start: number, end: number } {
+        const now = Date.now();
+        const start = now - (hoursBack * 60 * 60 * 1000);
+        return { start, end: now };
+    }
+}
 
 // Default export for convenience
 export default {
@@ -382,5 +442,6 @@ export default {
     Performance: PerformanceDataFactory,
     Network: NetworkDataFactory,
     Contract: ContractTestFactory,
-    Scenario: TestScenarioFactory
+    Scenario: TestScenarioFactory,
+    Search: BunSearchUtils
 };

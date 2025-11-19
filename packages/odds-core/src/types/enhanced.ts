@@ -1,18 +1,25 @@
 // packages/odds-core/src/types/enhanced.ts - Enhanced data structures with topics and metadata
 
-import type { 
-  MarketTopic, 
-  DataCategory, 
-  EnhancedMetadata, 
+import type {
+  MarketTopic,
+  DataCategory,
+  EnhancedMetadata,
   TopicAnalysis,
   MarketContext,
-  DataSource
+  DataSource,
+  MarketSession,
+  LiquidityLevel,
+  VolatilityLevel,
+  DataQuality
 } from './topics';
 
+import type { ProcessingMetadata } from './lightweight';
+
+
 /**
- * Enhanced OddsTick with comprehensive metadata and topic information
+ * Enhanced Trade Tick with comprehensive metadata and topic information
  */
-export interface EnhancedOddsTick {
+export interface EnhancedTradeTick {
   // Original fields
   id: string;
   timestamp: number;
@@ -21,17 +28,17 @@ export interface EnhancedOddsTick {
   size: number;
   exchange: string;
   side: 'buy' | 'sell';
-  
+
   // Enhanced fields
   metadata: EnhancedMetadata;
   topics: MarketTopic[];
   category: DataCategory;
-  
+
   // Market context
   marketContext: {
-    session: string;
-    liquidity: 'high' | 'medium' | 'low';
-    volatility: 'high' | 'medium' | 'low';
+    session: MarketSession;
+    liquidity: LiquidityLevel;
+    volatility: VolatilityLevel;
     relatedMarkets: string[];
     impactFactors: {
       news: number;
@@ -40,23 +47,15 @@ export interface EnhancedOddsTick {
       fundamental: number;
     };
   };
-  
+
   // Quality metrics
-  quality: {
-    confidence: number; // 0-1
-    reliability: number; // 0-1
-    freshness: number; // seconds
-    completeness: number; // 0-1
-  };
-  
+  quality: DataQuality;
+
+
   // Processing info
-  processing: {
-    latency: number; // milliseconds
-    pipeline: string[];
-    enrichments: string[];
-    sourceLatency: number; // source to receipt
-  };
+  processing: ProcessingMetadata;
 }
+
 
 /**
  * Enhanced MarketData with topics and metadata
@@ -67,12 +66,12 @@ export interface EnhancedMarketData {
   asks: [number, number][];
   timestamp: number;
   sequence: number;
-  
+
   // Enhanced fields
   metadata: EnhancedMetadata;
   topics: MarketTopic[];
   category: DataCategory;
-  
+
   // Market depth analysis
   depth: {
     bidDepth: number;
@@ -81,7 +80,7 @@ export interface EnhancedMarketData {
     spreadPercentage: number;
     imbalance: number; // -1 to 1
   };
-  
+
   // Context information
   context: {
     volume: number;
@@ -105,12 +104,12 @@ export interface EnhancedArbitrageOpportunity {
   profit: number;
   confidence: number;
   timestamp: number;
-  
+
   // Enhanced fields
   metadata: EnhancedMetadata;
   topics: MarketTopic[];
   category: DataCategory;
-  
+
   // Detailed analysis
   analysis: {
     edge: number; // percentage
@@ -121,7 +120,7 @@ export interface EnhancedArbitrageOpportunity {
     executionRisk: number;
     timeDecay: number;
   };
-  
+
   // Market conditions
   conditions: {
     marketVolatility: 'high' | 'medium' | 'low';
@@ -129,7 +128,7 @@ export interface EnhancedArbitrageOpportunity {
     spreadTightness: 'tight' | 'normal' | 'wide';
     volumeProfile: 'high' | 'normal' | 'low';
   };
-  
+
   // Execution parameters
   execution: {
     estimatedSlippage: number;
@@ -149,12 +148,12 @@ export interface EnhancedSharpDetectionResult {
   confidence: number;
   reasoning: string;
   timestamp: number;
-  
+
   // Enhanced fields
   metadata: EnhancedMetadata;
   topics: MarketTopic[];
   category: DataCategory;
-  
+
   // Detailed analysis
   features: {
     reverseLineMovement: number;
@@ -165,7 +164,7 @@ export interface EnhancedSharpDetectionResult {
     newsImpact: number;
     socialVolume: number;
   };
-  
+
   // Signal classification
   classification: {
     strength: 'weak' | 'moderate' | 'strong' | 'extreme';
@@ -173,7 +172,7 @@ export interface EnhancedSharpDetectionResult {
     reliability: number; // 0-1
     historicalAccuracy: number; // 0-1
   };
-  
+
   // Related signals
   relatedSignals: {
     correlatedSymbols: string[];
@@ -194,12 +193,12 @@ export interface EnhancedTradingSignal {
   risk: number;
   timestamp: number;
   expiry: number;
-  
+
   // Enhanced fields
   metadata: EnhancedMetadata;
   topics: MarketTopic[];
   category: DataCategory;
-  
+
   // Signal reasoning
   reasoning: {
     primary: string;
@@ -212,7 +211,7 @@ export interface EnhancedTradingSignal {
       flow: number;
     };
   };
-  
+
   // Risk metrics
   riskMetrics: {
     maxDrawdown: number;
@@ -221,7 +220,7 @@ export interface EnhancedTradingSignal {
     beta: number;
     correlation: number;
   };
-  
+
   // Execution parameters
   execution: {
     entryPrice: number;
@@ -240,12 +239,12 @@ export interface EnhancedWebSocketMessage {
   data: unknown;
   timestamp: number;
   id?: string;
-  
+
   // Enhanced fields
   metadata: EnhancedMetadata;
   topics: MarketTopic[];
   category: DataCategory;
-  
+
   // Message routing
   routing: {
     targetTopics: MarketTopic[];
@@ -253,7 +252,7 @@ export interface EnhancedWebSocketMessage {
     ttl: number; // time to live in seconds
     retryCount: number;
   };
-  
+
   // Performance metrics
   performance: {
     size: number; // in bytes
@@ -291,7 +290,7 @@ export interface TopicAnalytics {
     end: number;
     duration: number; // in seconds
   };
-  
+
   // Volume metrics
   volume: {
     total: number;
@@ -299,7 +298,7 @@ export interface TopicAnalytics {
     peak: number;
     trend: 'rising' | 'falling' | 'stable';
   };
-  
+
   // Quality metrics
   quality: {
     average: number;
@@ -307,7 +306,7 @@ export interface TopicAnalytics {
     max: number;
     distribution: Record<string, number>;
   };
-  
+
   // Performance metrics
   performance: {
     latency: {
@@ -321,7 +320,7 @@ export interface TopicAnalytics {
       rate: number; // messages per second
     };
   };
-  
+
   // Relationships
   relationships: {
     correlatedTopics: Array<{

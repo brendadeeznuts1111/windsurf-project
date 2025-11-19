@@ -60,3 +60,13 @@ export * from './strict';
 export * from './realtime';
 export * from './analytics';
 export * from './lifecycle';
+export * from './enhanced-odds';
+
+// Export incremental synthetic arbitrage types (improved approach)
+export * from './synthetic-arbitrage-v1';
+export * from './synthetic-arbitrage-v2';
+export * from './synthetic-arbitrage-v3';
+export * from './synthetic-validation-v2';
+
+// Export comprehensive rotation number system
+export * from './rotation-numbers';

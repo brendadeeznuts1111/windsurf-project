@@ -1,7 +1,8 @@
 // packages/odds-core/src/types/realtime.ts - Real-time metadata types
 
-import { MarketTopic, DataCategory } from './topics';
-import { EnhancedMetadata, QualityMetrics } from './enhanced';
+import { MarketTopic, DataCategory, DataQuality, MarketSession, LiquidityLevel, VolatilityLevel, EnhancedMetadata } from './topics';
+
+
 
 /**
  * Real-time metadata interface extending Phase 1 enhanced metadata
@@ -15,7 +16,7 @@ export interface RealtimeMetadata extends EnhancedMetadata {
     streamId: string;
     timestamp: number;
   };
-  
+
   // Stream metadata
   stream: {
     source: string;

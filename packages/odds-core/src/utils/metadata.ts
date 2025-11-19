@@ -490,61 +490,398 @@ export class QualityAssessor {
 /**
  * Metadata validation utilities
  */
+// Custom validation rule interfaces
+export interface ValidationRule {
+    readonly name: string;
+    readonly description: string;
+    readonly severity: 'error' | 'warning' | 'info';
+    readonly validate: (metadata: EnhancedMetadata) => ValidationResult;
+}
+
+export interface ValidationSchema {
+    readonly name: string;
+    readonly version: string;
+    readonly rules: ValidationRule[];
+    readonly requiredFields?: string[];
+    readonly optionalFields?: string[];
+}
+
+export interface ValidationResult {
+    readonly valid: boolean;
+    readonly errors: string[];
+    readonly warnings: string[];
+    readonly info: string[];
+}
+
+export interface ValidationContext {
+    readonly schema?: ValidationSchema;
+    readonly customRules?: ValidationRule[];
+    readonly strictMode?: boolean;
+    readonly includeWarnings?: boolean;
+}
+
 export class MetadataValidator {
+    private static customSchemas = new Map<string, ValidationSchema>();
+    private static globalRules: ValidationRule[] = [];
+
     /**
-     * Validate enhanced metadata structure
+     * Register a custom validation schema
+     */
+    static registerSchema(schema: ValidationSchema): void {
+        this.customSchemas.set(schema.name, schema);
+    }
+
+    /**
+     * Unregister a custom validation schema
+     */
+    static unregisterSchema(schemaName: string): void {
+        this.customSchemas.delete(schemaName);
+    }
+
+    /**
+     * Get all registered schemas
+     */
+    static getRegisteredSchemas(): ValidationSchema[] {
+        return Array.from(this.customSchemas.values());
+    }
+
+    /**
+     * Add a global validation rule (applies to all validations)
+     */
+    static addGlobalRule(rule: ValidationRule): void {
+        this.globalRules.push(rule);
+    }
+
+    /**
+     * Remove a global validation rule
+     */
+    static removeGlobalRule(ruleName: string): void {
+        this.globalRules = this.globalRules.filter(rule => rule.name !== ruleName);
+    }
+
+    /**
+     * Validate enhanced metadata structure (backward compatible)
      */
     static validate(metadata: EnhancedMetadata): { valid: boolean; errors: string[] } {
+        const result = this.validateWithContext(metadata, {});
+        return {
+            valid: result.valid,
+            errors: result.errors
+        };
+    }
+
+    /**
+     * Validate with custom context and rules
+     */
+    static validateWithContext(
+        metadata: EnhancedMetadata,
+        context: ValidationContext = {}
+    ): ValidationResult {
         const errors: string[] = [];
+        const warnings: string[] = [];
+        const info: string[] = [];
 
-        // Required fields
-        if (!metadata.id) errors.push('Missing id');
-        if (!metadata.timestamp) errors.push('Missing timestamp');
-        if (!metadata.version) errors.push('Missing version');
-        if (!metadata.source) errors.push('Missing source');
-        if (!metadata.market) errors.push('Missing market');
-        if (!metadata.topics) errors.push('Missing topics');
-        if (!metadata.category) errors.push('Missing category');
-        if (!metadata.quality) errors.push('Missing quality');
-        if (!metadata.processing) errors.push('Missing processing');
-        if (!metadata.business) errors.push('Missing business');
-        if (!metadata.technical) errors.push('Missing technical');
-        if (!metadata.relationships) errors.push('Missing relationships');
+        // Default validation (backward compatibility)
+        this.performDefaultValidation(metadata, errors, warnings);
 
-        // Field validation
+        // Apply custom schema if provided
+        if (context.schema) {
+            this.applyCustomSchema(metadata, context.schema, errors, warnings, info);
+        }
+
+        // Apply global rules
+        this.applyGlobalRules(metadata, errors, warnings, info);
+
+        // Apply custom rules
+        if (context.customRules) {
+            this.applyCustomRules(metadata, context.customRules, errors, warnings, info);
+        }
+
+        // Filter results based on context
+        const filteredResult = this.filterValidationResult(
+            { valid: errors.length === 0, errors, warnings, info },
+            context
+        );
+
+        return filteredResult;
+    }
+
+    /**
+     * Validate using a specific registered schema
+     */
+    static validateWithSchema(
+        metadata: EnhancedMetadata,
+        schemaName: string,
+        context: Omit<ValidationContext, 'schema'> = {}
+    ): ValidationResult {
+        const schema = this.customSchemas.get(schemaName);
+        if (!schema) {
+            throw new Error(`Schema '${schemaName}' not found. Available schemas: ${Array.from(this.customSchemas.keys()).join(', ')}`);
+        }
+
+        return this.validateWithContext(metadata, { ...context, schema });
+    }
+
+    /**
+     * Validate topic assignment (enhanced with context)
+     */
+    static validateTopics(
+        topics: MarketTopic[],
+        context: { allowCustom?: boolean; customTopics?: string[] } = {}
+    ): { valid: boolean; errors: string[]; warnings?: string[] } {
+        const errors: string[] = [];
+        const warnings: string[] = [];
+
+        const validTopics = Object.values(MarketTopic);
+
+        for (const topic of topics) {
+            if (!validTopics.includes(topic)) {
+                if (context.allowCustom && context.customTopics?.includes(topic)) {
+                    warnings.push(`Using custom topic: ${topic}`);
+                } else {
+                    errors.push(`Invalid topic: ${topic}`);
+                }
+            }
+        }
+
+        const result: { valid: boolean; errors: string[]; warnings?: string[] } = {
+            valid: errors.length === 0,
+            errors
+        };
+
+        if (warnings.length > 0) {
+            result.warnings = warnings;
+        }
+
+        return result;
+    }
+
+    /**
+     * Create a custom validation rule
+     */
+    static createRule(
+        name: string,
+        description: string,
+        validator: (metadata: EnhancedMetadata) => { valid: boolean; message: string; severity?: 'error' | 'warning' | 'info' },
+        severity: 'error' | 'warning' | 'info' = 'error'
+    ): ValidationRule {
+        return {
+            name,
+            description,
+            severity,
+            validate: (metadata) => {
+                const result = validator(metadata);
+                return {
+                    valid: result.valid,
+                    errors: result.valid ? [] : [result.message],
+                    warnings: result.severity === 'warning' && !result.valid ? [result.message] : [],
+                    info: result.severity === 'info' && !result.valid ? [result.message] : []
+                };
+            }
+        };
+    }
+
+    /**
+     * Create a custom validation schema
+     */
+    static createSchema(
+        name: string,
+        version: string,
+        rules: ValidationRule[],
+        requiredFields?: string[],
+        optionalFields?: string[]
+    ): ValidationSchema {
+        return {
+            name,
+            version,
+            rules,
+            requiredFields,
+            optionalFields
+        };
+    }
+
+    /**
+     * Validate specific field
+     */
+    static validateField(
+        metadata: EnhancedMetadata,
+        fieldName: string,
+        customValidator?: (value: any) => { valid: boolean; message: string }
+    ): { valid: boolean; errors: string[] } {
+        const errors: string[] = [];
+        const value = (metadata as any)[fieldName];
+
+        // Check if field exists
+        if (value === undefined || value === null) {
+            errors.push(`Missing required field: ${fieldName}`);
+            return { valid: false, errors };
+        }
+
+        // Apply custom validator if provided
+        if (customValidator) {
+            const result = customValidator(value);
+            if (!result.valid) {
+                errors.push(`${fieldName}: ${result.message}`);
+            }
+        }
+
+        return { valid: errors.length === 0, errors };
+    }
+
+    /**
+     * Batch validate multiple metadata objects
+     */
+    static validateBatch(
+        metadataArray: EnhancedMetadata[],
+        context: ValidationContext = {}
+    ): Array<{ metadata: EnhancedMetadata; result: ValidationResult; index: number }> {
+        return metadataArray.map((metadata, index) => ({
+            metadata,
+            result: this.validateWithContext(metadata, context),
+            index
+        }));
+    }
+
+    /**
+     * Get validation summary statistics
+     */
+    static getValidationSummary(results: ValidationResult[]): {
+        total: number;
+        valid: number;
+        invalid: number;
+        totalErrors: number;
+        totalWarnings: number;
+        totalInfo: number;
+        errorRate: number;
+        warningRate: number;
+    } {
+        const total = results.length;
+        const valid = results.filter(r => r.valid).length;
+        const invalid = total - valid;
+        const totalErrors = results.reduce((sum, r) => sum + r.errors.length, 0);
+        const totalWarnings = results.reduce((sum, r) => sum + r.warnings.length, 0);
+        const totalInfo = results.reduce((sum, r) => sum + r.info.length, 0);
+
+        return {
+            total,
+            valid,
+            invalid,
+            totalErrors,
+            totalWarnings,
+            totalInfo,
+            errorRate: total > 0 ? invalid / total : 0,
+            warningRate: total > 0 ? totalWarnings / total : 0
+        };
+    }
+
+    // ===== PRIVATE METHODS =====
+
+    private static performDefaultValidation(
+        metadata: EnhancedMetadata,
+        errors: string[],
+        warnings: string[]
+    ): void {
+        // Required fields (original validation logic)
+        const requiredFields = [
+            'id', 'timestamp', 'version', 'source', 'market', 'topics',
+            'category', 'quality', 'processing', 'business', 'technical', 'relationships'
+        ];
+
+        for (const field of requiredFields) {
+            if (!(metadata as any)[field]) {
+                errors.push(`Missing ${field}`);
+            }
+        }
+
+        // Field validation (original logic)
         if (metadata.topics && !Array.isArray(metadata.topics)) {
             errors.push('Topics must be an array');
         }
         if (metadata.tags && !Array.isArray(metadata.tags)) {
             errors.push('Tags must be an array');
         }
-        if (metadata.quality && metadata.quality.overall < 0 || metadata.quality.overall > 1) {
+        if (metadata.quality && (metadata.quality.overall < 0 || metadata.quality.overall > 1)) {
             errors.push('Quality overall score must be between 0 and 1');
         }
-
-        return {
-            valid: errors.length === 0,
-            errors
-        };
     }
 
-    /**
-     * Validate topic assignment
-     */
-    static validateTopics(topics: MarketTopic[]): { valid: boolean; errors: string[] } {
-        const errors: string[] = [];
-        const validTopics = Object.values(MarketTopic);
-
-        for (const topic of topics) {
-            if (!validTopics.includes(topic)) {
-                errors.push(`Invalid topic: ${topic}`);
+    private static applyCustomSchema(
+        metadata: EnhancedMetadata,
+        schema: ValidationSchema,
+        errors: string[],
+        warnings: string[],
+        info: string[]
+    ): void {
+        // Check required fields for schema
+        if (schema.requiredFields) {
+            for (const field of schema.requiredFields) {
+                if (!(metadata as any)[field]) {
+                    errors.push(`Schema required field missing: ${field}`);
+                }
             }
         }
 
-        return {
-            valid: errors.length === 0,
-            errors
-        };
+        // Apply schema rules
+        for (const rule of schema.rules) {
+            const result = rule.validate(metadata);
+            errors.push(...result.errors);
+            warnings.push(...result.warnings);
+            info.push(...result.info);
+        }
+    }
+
+    private static applyGlobalRules(
+        metadata: EnhancedMetadata,
+        errors: string[],
+        warnings: string[],
+        info: string[]
+    ): void {
+        for (const rule of this.globalRules) {
+            const result = rule.validate(metadata);
+            errors.push(...result.errors);
+            warnings.push(...result.warnings);
+            info.push(...result.info);
+        }
+    }
+
+    private static applyCustomRules(
+        metadata: EnhancedMetadata,
+        customRules: ValidationRule[],
+        errors: string[],
+        warnings: string[],
+        info: string[]
+    ): void {
+        for (const rule of customRules) {
+            const result = rule.validate(metadata);
+            errors.push(...result.errors);
+            warnings.push(...result.warnings);
+            info.push(...result.info);
+        }
+    }
+
+    private static filterValidationResult(
+        result: ValidationResult,
+        context: ValidationContext
+    ): ValidationResult {
+        if (context.strictMode) {
+            // In strict mode, warnings are treated as errors
+            const strictErrors = [...result.errors, ...result.warnings];
+            return {
+                valid: strictErrors.length === 0,
+                errors: strictErrors,
+                warnings: [],
+                info: context.includeWarnings ? result.info : []
+            };
+        }
+
+        if (!context.includeWarnings) {
+            return {
+                ...result,
+                warnings: []
+            };
+        }
+
+        return result;
     }
 }
 

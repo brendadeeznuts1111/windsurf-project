@@ -108,3 +108,63 @@ export {
     createTestMetadataWithTimestamp,
     createTimeSeriesMetadata
 } from './test-time-helpers';
+
+// Rotation number utilities (Phase 3.1)
+export {
+    RotationNumberUtils
+} from './rotation-utils';
+
+export type {
+    RotationNumberRegistry
+} from '../types/rotation-numbers';
+
+// Covariance matrix utilities (Phase 3.2)
+export {
+    CovarianceMatrixCalculator,
+    HistoricalDataFactory
+} from './covariance-matrix';
+
+export type {
+    HistoricalDataPoint,
+    CovarianceMatrixResult,
+    HedgeRatioResult,
+    CovariancePerformanceMetrics
+} from './covariance-matrix';
+
+// Synthetic arbitrage detection system (Phase 3.3)
+export {
+    SyntheticArbitrageDetector,
+    SyntheticArbitrageDetectorFactory
+} from '../detectors/synthetic-arbitrage-detector';
+
+export type {
+    DetectionCriteria,
+    DetectionResult,
+    MarketOpportunity
+} from '../detectors/synthetic-arbitrage-detector';
+
+// Multi-period stream processing system (Phase 3.4)
+export {
+    MultiPeriodStreamProcessor,
+    MultiPeriodStreamProcessorFactory
+} from '../processors/multi-period-stream-processor';
+
+export type {
+    MultiPeriodMarketStream,
+    PeriodSyntheticArbitrage,
+    StreamProcessorConfig,
+    ProcessingMetrics
+} from '../processors/multi-period-stream-processor';
+
+// Synthetic position tracking system (Phase 3.5)
+export {
+    SyntheticPositionTracker,
+    SyntheticPositionTrackerFactory
+} from '../trackers/synthetic-position-tracker';
+
+export type {
+    SyntheticPosition,
+    PortfolioMetrics,
+    RiskAlert,
+    PositionTrackerConfig
+} from '../trackers/synthetic-position-tracker';

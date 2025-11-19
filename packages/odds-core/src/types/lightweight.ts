@@ -1,6 +1,7 @@
 // packages/odds-core/src/types/lightweight.ts - Lightweight metadata for simple use cases
 
 import type { MarketTopic, DataCategory } from './topics';
+import type { DataSource, MarketContext, DataQuality, ProcessingMetadata } from './topics';
 
 /**
  * Branded types for better type safety
@@ -53,35 +54,23 @@ export interface BusinessMetadata {
 }
 
 /**
- * Processing metadata component (optional)
- */
-export interface ProcessingMetadata {
-  pipeline: string[];
-  enrichments: string[];
-  transformations: string[];
-  validation: string[];
-  processingTime: number; // in milliseconds
-  version: string;
-}
-
-/**
  * Composable enhanced metadata
  * Uses composition over the monolithic approach
  */
 export interface ComposableEnhancedMetadata extends BaseMetadata {
   // Required components
-  source: import('./topics').DataSource;
-  market: import('./topics').MarketContext;
+  source: DataSource;
+  market: MarketContext;
   topics: MarketTopic[];
   category: DataCategory;
   tags: string[];
-  quality: import('./topics').DataQuality;
-  
+  quality: DataQuality;
+
   // Optional components (only include when needed)
   technical?: TechnicalMetadata;
   business?: BusinessMetadata;
   processing?: ProcessingMetadata;
-  
+
   // Relationships (always useful)
   relationships: {
     parentId?: MetadataId;
@@ -90,6 +79,7 @@ export interface ComposableEnhancedMetadata extends BaseMetadata {
     dependencies: string[];
   };
 }
+
 
 /**
  * Smart metadata type - chooses appropriate format based on use case
@@ -121,7 +111,7 @@ export interface LightweightOddsTick {
   size: number;
   exchange: string;
   side: 'buy' | 'sell';
-  
+
   // Lightweight metadata
   metadata: LightweightMetadata;
 }
@@ -129,7 +119,8 @@ export interface LightweightOddsTick {
 /**
  * Smart odds tick that can be either lightweight or enhanced
  */
-export type SmartOddsTick = LightweightOddsTick | import('./enhanced').EnhancedOddsTick;
+export type SmartOddsTick = LightweightOddsTick | import('./enhanced').EnhancedTradeTick;
+
 
 /**
  * Utility functions for branded types
@@ -138,23 +129,23 @@ export const BrandedTypeUtils = {
   createTopicId(id: string): TopicId {
     return id as TopicId;
   },
-  
+
   createMetadataId(id: string): MetadataId {
     return id as MetadataId;
   },
-  
+
   createSymbolId(id: string): SymbolId {
     return id as SymbolId;
   },
-  
+
   isValidTopicId(id: string): id is TopicId {
     return typeof id === 'string' && id.length > 0;
   },
-  
+
   isValidMetadataId(id: string): id is MetadataId {
     return typeof id === 'string' && id.length > 0;
   },
-  
+
   isValidSymbolId(id: string): id is SymbolId {
     return typeof id === 'string' && id.length > 0;
   }

@@ -73,9 +73,10 @@ describe("WebSocket Contract Tests", () => {
     beforeAll(async () => {
         // Start test WebSocket server
         server = new WebSocketServer({ port: 0 });
-        serverUrl = `ws://localhost:${(server.address() as any)?.port}`;
+        const address = server.address() as { port: number };
+        serverUrl = `ws://localhost:${address.port}`;
 
-        server.on('connection', (ws) => {
+        server.on('connection', (ws: WebSocket) => {
             clientConnections.push(ws);
 
             // Send initial contract test messages
@@ -129,8 +130,8 @@ describe("WebSocket Contract Tests", () => {
                 type: 'arbitrage-alert',
                 data: {
                     id: 'arb-123',
-                    sport: opportunity.sport,
-                    event: opportunity.event,
+                    exchange: opportunity.exchange,
+                    timestamp: opportunity.timestamp,
                     profit: 2.5,
                     opportunities: [opportunity]
                 }
@@ -139,7 +140,7 @@ describe("WebSocket Contract Tests", () => {
             expect(arbitrageMessage.type).toBe('arbitrage-alert');
             expect(arbitrageMessage.data).toHaveProperty('profit');
             expect(arbitrageMessage.data).toHaveProperty('opportunities');
-            expect(typeof arbitrageMessage.data.profit).toBe('number');
+            expect(typeof (arbitrageMessage.data as any).profit).toBe('number');
         });
     });
 
@@ -148,8 +149,8 @@ describe("WebSocket Contract Tests", () => {
             const ws = new WebSocket(serverUrl);
 
             await new Promise<void>((resolve, reject) => {
-                ws.on('open', () => resolve());
-                ws.on('error', reject);
+                ws.addEventListener('open', () => resolve());
+                ws.addEventListener('error', reject);
                 setTimeout(() => reject(new Error('Connection timeout')), 5000);
             });
 
@@ -161,8 +162,8 @@ describe("WebSocket Contract Tests", () => {
             const ws = new WebSocket(serverUrl);
 
             const message = await new Promise<string>((resolve, reject) => {
-                ws.on('message', (data) => resolve(data.toString()));
-                ws.on('error', reject);
+                ws.addEventListener('message', (event: any) => resolve(event.data.toString()));
+                ws.addEventListener('error', reject);
                 setTimeout(() => reject(new Error('Message timeout')), 5000);
             });
 
@@ -177,7 +178,7 @@ describe("WebSocket Contract Tests", () => {
             const ws = new WebSocket(serverUrl);
 
             await new Promise<void>((resolve, reject) => {
-                ws.on('open', () => {
+                ws.addEventListener('open', () => {
                     // Send malformed JSON
                     ws.send('{"invalid": json}');
 
@@ -188,7 +189,7 @@ describe("WebSocket Contract Tests", () => {
                     }, 1000);
                 });
 
-                ws.on('error', reject);
+                ws.addEventListener('error', reject);
                 setTimeout(() => reject(new Error('Connection timeout')), 5000);
             });
 
@@ -202,31 +203,32 @@ describe("WebSocket Contract Tests", () => {
             const receivedMessages: any[] = [];
 
             await new Promise<void>((resolve, reject) => {
-                ws.on('open', () => {
-                    // Send multiple messages with different timestamps
+                ws.addEventListener('open', () => {
+                    // Send multiple messages with different timestamps using standard time utilities
+                    const baseTime = Date.now();
                     const messages = [
                         WebSocketMessageFactory.create({
-                            timestamp: '2024-01-01T12:00:00Z'
+                            timestamp: baseTime
                         }),
                         WebSocketMessageFactory.create({
-                            timestamp: '2024-01-01T12:01:00Z'
+                            timestamp: baseTime + 60000 // 1 minute later
                         }),
                         WebSocketMessageFactory.create({
-                            timestamp: '2024-01-01T12:02:00Z'
+                            timestamp: baseTime + 120000 // 2 minutes later
                         })
                     ];
 
                     messages.forEach(msg => ws.send(JSON.stringify(msg)));
                 });
 
-                ws.on('message', (data) => {
-                    receivedMessages.push(JSON.parse(data.toString()));
+                ws.addEventListener('message', (event: any) => {
+                    receivedMessages.push(JSON.parse(event.data.toString()));
                     if (receivedMessages.length === 3) {
                         resolve();
                     }
                 });
 
-                ws.on('error', reject);
+                ws.addEventListener('error', reject);
                 setTimeout(() => reject(new Error('Message flow timeout')), 5000);
             });
 
@@ -243,7 +245,7 @@ describe("WebSocket Contract Tests", () => {
             let rejectedCount = 0;
 
             await new Promise<void>((resolve, reject) => {
-                ws.on('open', () => {
+                ws.addEventListener('open', () => {
                     // Send messages rapidly to test rate limiting
                     for (let i = 0; i < 100; i++) {
                         ws.send(JSON.stringify(WebSocketMessageFactory.create()));
@@ -252,8 +254,8 @@ describe("WebSocket Contract Tests", () => {
                     setTimeout(() => resolve(), 2000);
                 });
 
-                ws.on('message', () => messageCount++);
-                ws.on('error', () => rejectedCount++);
+                ws.addEventListener('message', () => messageCount++);
+                ws.addEventListener('error', () => rejectedCount++);
 
                 setTimeout(() => reject(new Error('Rate limit test timeout')), 10000);
             });
@@ -271,7 +273,7 @@ describe("WebSocket Contract Tests", () => {
             const ws = new WebSocket(serverUrl);
 
             const response = await new Promise<string>((resolve, reject) => {
-                ws.on('open', () => {
+                ws.addEventListener('open', () => {
                     ws.send(JSON.stringify({
                         type: 'unknown-type',
                         timestamp: new Date().toISOString(),
@@ -279,8 +281,8 @@ describe("WebSocket Contract Tests", () => {
                     }));
                 });
 
-                ws.on('message', (data) => resolve(data.toString()));
-                ws.on('error', reject);
+                ws.addEventListener('message', (event: any) => resolve(event.data.toString()));
+                ws.addEventListener('error', reject);
                 setTimeout(() => reject(new Error('Error response timeout')), 5000);
             });
 
@@ -295,17 +297,17 @@ describe("WebSocket Contract Tests", () => {
             const ws = new WebSocket(serverUrl);
 
             await new Promise<void>((resolve, reject) => {
-                ws.on('open', () => {
+                ws.addEventListener('open', () => {
                     // Send message that violates protocol
                     ws.send('completely invalid message');
                 });
 
-                ws.on('close', (code) => {
-                    expect(code).toBe(1002); // Protocol error
+                ws.addEventListener('close', (event: any) => {
+                    expect(event.code).toBe(1002); // Protocol error
                     resolve();
                 });
 
-                ws.on('error', reject);
+                ws.addEventListener('error', reject);
                 setTimeout(() => reject(new Error('Close timeout')), 5000);
             });
         });
@@ -317,25 +319,28 @@ describe("WebSocket Contract Tests", () => {
             const latencies: number[] = [];
 
             await new Promise<void>((resolve, reject) => {
-                ws.on('open', () => {
+                ws.addEventListener('open', () => {
                     const testMessage = WebSocketMessageFactory.create();
 
                     for (let i = 0; i < 10; i++) {
                         const startTime = performance.now();
                         ws.send(JSON.stringify(testMessage));
 
-                        ws.once('message', () => {
+                        const messageHandler = () => {
                             const latency = performance.now() - startTime;
                             latencies.push(latency);
 
                             if (latencies.length === 10) {
+                                ws.removeEventListener('message', messageHandler);
                                 resolve();
                             }
-                        });
+                        };
+
+                        ws.addEventListener('message', messageHandler);
                     }
                 });
 
-                ws.on('error', reject);
+                ws.addEventListener('error', reject);
                 setTimeout(() => reject(new Error('Performance test timeout')), 10000);
             });
 
@@ -351,14 +356,14 @@ describe("WebSocket Contract Tests", () => {
 
             await new Promise<void>((resolve, reject) => {
                 connections.forEach(ws => {
-                    ws.on('open', () => {
+                    ws.addEventListener('open', () => {
                         connectedCount++;
                         if (connectedCount === connections.length) {
                             resolve();
                         }
                     });
 
-                    ws.on('error', reject);
+                    ws.addEventListener('error', reject);
                 });
 
                 setTimeout(() => reject(new Error('Connection timeout')), 10000);
@@ -369,6 +374,13 @@ describe("WebSocket Contract Tests", () => {
             // Cleanup
             connections.forEach(ws => ws.close());
         });
+    });
+
+    afterAll(() => {
+        // Clean up test server
+        if (server) {
+            server.close();
+        }
     });
 });
 

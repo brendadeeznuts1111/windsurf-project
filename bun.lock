@@ -58,6 +58,20 @@
         "vitest": "catalog:testing",
       },
     },
+    "packages/core": {
+      "name": "@odds-core/types",
+      "version": "1.0.0",
+      "dependencies": {
+        "@types/bun": "catalog:",
+        "@types/node": "catalog:",
+        "typescript": "catalog:",
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "eslint": "catalog:",
+        "prettier": "catalog:",
+      },
+    },
     "packages/odds-arbitrage": {
       "name": "odds-arbitrage",
       "version": "1.0.0",
@@ -86,6 +100,7 @@
         "zod": "3.20.0",
       },
       "devDependencies": {
+        "@odds-testing/core": "workspace:*",
         "@vitest/coverage-v8": "catalog:testing",
         "eslint": "catalog:",
         "fast-check": "catalog:",
@@ -152,6 +167,7 @@
         "ws": "catalog:websocket",
       },
       "devDependencies": {
+        "@odds-testing/core": "workspace:*",
         "@types/supertest": "catalog:testing",
         "@vitest/coverage-v8": "catalog:testing",
         "eslint": "catalog:",
@@ -160,19 +176,39 @@
         "vitest": "catalog:testing",
       },
     },
+    "packages/testing": {
+      "name": "@odds-testing/core",
+      "version": "1.0.0",
+      "dependencies": {
+        "@faker-js/faker": "^8.4.1",
+        "@types/ws": "^8.5.10",
+        "ws": "^8.14.2",
+      },
+      "devDependencies": {
+        "@types/bun": "latest",
+        "bun-types": "1.3.2",
+      },
+      "peerDependencies": {
+        "@odds-core/types": "workspace:*",
+      },
+    },
   },
   "catalog": {
     "@js-temporal/polyfill": "^0.4.4",
     "@types/bun": "latest",
     "@types/node": "^20.0.0",
+    "chokidar": "^3.5.3",
     "date-fns": "^3.3.1",
     "debug": "^4.3.4",
     "eslint": "^8.57.0",
     "fast-check": "^3.13.0",
+    "glob": "^10.3.10",
     "lodash": "^4.17.21",
+    "markdown-it": "^14.0.0",
     "prettier": "^3.2.0",
     "typescript": "^5.4.5",
     "uuid": "^9.0.1",
+    "yaml": "^2.3.4",
     "zod": "^3.22.4",
   },
   "catalogs": {
@@ -388,6 +424,8 @@
 
     "@eslint/js": ["@eslint/js@8.57.1", "", {}, "sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q=="],
 
+    "@faker-js/faker": ["@faker-js/faker@8.4.1", "", {}, "sha512-XQ3cU+Q8Uqmrbf2e0cIC/QN43sTBSC8KF12u29Mb47tWrt2hAgBXSgpZMj4Ao8Uk0iJcU99QsOCaIL8934obCg=="],
+
     "@fastify/busboy": ["@fastify/busboy@2.1.1", "", {}, "sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA=="],
 
     "@humanwhocodes/config-array": ["@humanwhocodes/config-array@0.13.0", "", { "dependencies": { "@humanwhocodes/object-schema": "^2.0.3", "debug": "^4.3.1", "minimatch": "^3.0.5" } }, "sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw=="],
@@ -459,6 +497,10 @@
     "@nodelib/fs.stat": ["@nodelib/fs.stat@2.0.5", "", {}, "sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A=="],
 
     "@nodelib/fs.walk": ["@nodelib/fs.walk@1.2.8", "", { "dependencies": { "@nodelib/fs.scandir": "2.1.5", "fastq": "^1.6.0" } }, "sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg=="],
+
+    "@odds-core/types": ["@odds-core/types@workspace:packages/core"],
+
+    "@odds-testing/core": ["@odds-testing/core@workspace:packages/testing"],
 
     "@paralleldrive/cuid2": ["@paralleldrive/cuid2@2.3.1", "", { "dependencies": { "@noble/hashes": "^1.1.5" } }, "sha512-XO7cAxhnTZl0Yggq6jOgjiOHhbgcO4NqFqwSmQpjK3b6TEE6Uj/jfSk6wzYyemh3+I0sHirKSetjQwn5cZktFw=="],
 
@@ -1260,7 +1302,7 @@
 
     "youch": ["youch@3.3.4", "", { "dependencies": { "cookie": "^0.7.1", "mustache": "^4.2.0", "stacktracey": "^2.1.8" } }, "sha512-UeVBXie8cA35DS6+nBkls68xaBBXCye0CNznrhszZjTbRVnJKQuNsyLKBTTL4ln1o1rh2PKtv35twV7irj5SEg=="],
 
-    "zod": ["zod@3.20.0", "", {}, "sha512-ZWxs7oM5ixoo1BMoxTNeDMYSih/F/FUnExsnRtHT04rG6q0Bd74TKS45RGXw07TOalOZyyzdKaYH38k8yTEv9A=="],
+    "zod": ["zod@3.25.76", "", {}, "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="],
 
     "@babel/code-frame/js-tokens": ["js-tokens@4.0.0", "", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
 
@@ -1328,7 +1370,7 @@
 
     "odds-core/fast-check": ["fast-check@3.23.2", "", { "dependencies": { "pure-rand": "^6.1.0" } }, "sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A=="],
 
-    "odds-validation/zod": ["zod@3.25.76", "", {}, "sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ=="],
+    "odds-core/zod": ["zod@3.20.0", "", {}, "sha512-ZWxs7oM5ixoo1BMoxTNeDMYSih/F/FUnExsnRtHT04rG6q0Bd74TKS45RGXw07TOalOZyyzdKaYH38k8yTEv9A=="],
 
     "p-locate/p-limit": ["p-limit@3.1.0", "", { "dependencies": { "yocto-queue": "^0.1.0" } }, "sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ=="],
 

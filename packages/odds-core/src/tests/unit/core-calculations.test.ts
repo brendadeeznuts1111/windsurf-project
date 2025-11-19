@@ -2,7 +2,7 @@
 // Merged from multiple scattered test files
 
 import { test, describe, expect } from "bun:test";
-import { OddsTickFactory, ArbitrageOpportunityFactory } from "@testing/factories";
+import { OddsTickFactory, ArbitrageOpportunityFactory } from "@odds-testing/core/factories";
 
 // Import core functions (these would be actual imports in the real implementation)
 // import { calculateKellyFraction, calculateExpectedValue, calculateArbitrageOpportunity } from '../../utils';

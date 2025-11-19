@@ -10,7 +10,6 @@ import {
   BaseMetadata,
   TechnicalMetadata,
   BusinessMetadata,
-  ProcessingMetadata,
   ComposableEnhancedMetadata,
   SmartMetadata,
   LightweightOddsTick,
@@ -21,7 +20,7 @@ import {
   createLightweightMetadata,
   createEssentialMetadata
 } from '../types/lightweight.js';
-import { MarketTopic, DataCategory, DataSource, MarketContext, DataQuality } from '../types/topics.js';
+import { MarketTopic, DataCategory, DataSource, MarketContext, DataQuality, ProcessingMetadata } from '../types/topics.js';
 
 describe('Lightweight Types', () => {
   describe('Branded Type Utils', () => {
@@ -197,7 +196,7 @@ describe('Lightweight Types', () => {
 
     test('should validate side property', () => {
       const validSides: Array<'buy' | 'sell'> = ['buy', 'sell'];
-      
+
       validSides.forEach(side => {
         const tick: LightweightOddsTick = {
           id: BrandedTypeUtils.createSymbolId('test'),
@@ -379,7 +378,7 @@ describe('Lightweight Types', () => {
 
     test('should handle quality score bounds', () => {
       const validQualities = [0, 0.5, 0.8, 1];
-      
+
       validQualities.forEach(quality => {
         const metadata = createLightweightMetadata(
           'test',
@@ -388,7 +387,7 @@ describe('Lightweight Types', () => {
           'test',
           quality
         );
-        
+
         expect(metadata.quality).toBeGreaterThanOrEqual(0);
         expect(metadata.quality).toBeLessThanOrEqual(1);
       });

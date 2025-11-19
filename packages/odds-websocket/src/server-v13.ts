@@ -265,7 +265,7 @@ export class BunV13WebSocketServer {
     });
   }
 
-  private handleFetch(req: Request, server: ReturnType<typeof Bun.serve>): Promise<Response> {
+  private async handleFetch(req: Request, server: ReturnType<typeof Bun.serve>): Promise<Response> {
     const url = new URL(req.url);
 
     // Allow WebSocket upgrades on root path or /ws

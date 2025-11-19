@@ -7,8 +7,8 @@ import {
     WebSocketMessageFactory,
     DomainAssertions,
     MockWebSocket
-} from "@testing/factories";
-import { BunV13WebSocketServer } from "../server-v13-enhanced";
+} from "@odds-testing/core/factories";
+import { BunV13WebSocketServer } from "../../server-v13-enhanced";
 
 describe("BunV13WebSocketServer - Unit Tests", () => {
     let server: BunV13WebSocketServer;

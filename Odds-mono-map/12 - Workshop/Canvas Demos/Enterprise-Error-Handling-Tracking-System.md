@@ -1,7 +1,7 @@
 ---
 type: enterprise-documentation
 title: 🏢 Enterprise Error Handling & Tracking System
-section: Workshop
+section: "12 - Workshop"
 category: enterprise-systems
 priority: high
 status: completed

@@ -1,7 +1,7 @@
 ---
 type: ultimate-color-formatting-documentation
 title: 🎨 Ultimate Color & Formatting Dashboard
-section: Workshop
+section: "12 - Workshop"
 category: development-tools
 priority: high
 status: completed

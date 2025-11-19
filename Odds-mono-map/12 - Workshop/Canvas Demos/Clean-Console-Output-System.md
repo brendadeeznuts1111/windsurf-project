@@ -1,7 +1,7 @@
 ---
 type: clean-console-documentation
 title: 🧹 Clean Console Output System
-section: Workshop
+section: "12 - Workshop"
 category: user-experience
 priority: high
 status: completed

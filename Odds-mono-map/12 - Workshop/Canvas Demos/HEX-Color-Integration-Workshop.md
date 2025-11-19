@@ -1,7 +1,7 @@
 ---
 type: workshop-index
 title: 🎨 HEX Color Integration Workshop
-section: Workshop
+section: "12 - Workshop"
 category: canvas-demos
 priority: high
 status: completed

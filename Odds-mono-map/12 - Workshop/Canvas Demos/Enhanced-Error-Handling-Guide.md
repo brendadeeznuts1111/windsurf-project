@@ -1,7 +1,7 @@
 ---
 type: error-handling-guide
 title: 🛡️ Enhanced Error Handling Guide
-section: Workshop
+section: "12 - Workshop"
 category: error-handling
 priority: high
 status: completed

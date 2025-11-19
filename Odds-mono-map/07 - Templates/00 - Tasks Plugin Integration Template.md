@@ -69,7 +69,6 @@ dependencies:
 
 *Consolidated from: Brief description of this content.*
 
-
 > **Advanced task management integration with type-safe configuration, smart templates, and
     performance
 
@@ -78,6 +77,7 @@ dependencies:
 ## 🎯 **Integration Overview**
 
 *Consolidated from: ### **📊 Enhanced Capabilities***
+
 - ✅ **Type-Safe Configuration** - Full TypeScript schema with IntelliSense
 - ✅ **Smart Task Templates** - Auto-analysis and dependency tracking
 - ✅ **Project Dashboards** - Real-time metrics and completion analytics
@@ -86,6 +86,7 @@ dependencies:
 - ✅ **Performance Monitoring** - Task completion rates and bottleneck analysis
 
 ### **🚀 Integration Benefits**
+
 - **Unified Workflow** - Seamless integration with existing template system
 - **Performance Optimization** - Bun-native task processing
 - **Enterprise Features** - Advanced analytics and reporting
@@ -96,6 +97,7 @@ dependencies:
 ## 📝 **type-safe configuration schema**
 
 *Consolidated from: ### **🔧 Core configuration interface***
+
 ```typescript
 // src/config/tasks-plugin-schema.ts
 export interface TasksPluginConfig {
@@ -269,7 +271,7 @@ export const tasksConfig: TasksPluginConfig = {
 ---
 type: task
 title: "{{taskDescription}}"
-section: "02"
+section: "07 - Templates"
 category: "tasks"
 priority: "{{priority}}"
 status: "active"
@@ -308,6 +310,7 @@ uuid: <%* const utils = require('./scripts/template-utils.js'); tR += utils.gene
 ```
 
 ### **📝 Description**
+
 {{description}}
 
 ---
@@ -315,7 +318,7 @@ uuid: <%* const utils = require('./scripts/template-utils.js'); tR += utils.gene
 ## 🔗 **Task Dependencies**
 
 *Consolidated from: ### **📋 Subtasks***
-<%* 
+<%*
 const subtasks = [
   "Research requirements",
   "Create initial design",
@@ -329,7 +332,8 @@ subtasks.forEach(subtask => {
 %>
 
 ### **🔗 Dependencies**
-<%* 
+
+<%*
 const dependencies = [
   "Setup development environment",
   "Review requirements document",
@@ -350,8 +354,8 @@ const perf = utils.getBunPerformanceMetrics();
 
 // Simulate task analysis
 const taskAnalysis = {
-  complexity: Math.floor(Math.random() * 5) + 3,
-  estimatedHours: Math.floor(Math.random() * 8) + 2,
+  complexity: Math.floor(Math.random() *5) + 3,
+  estimatedHours: Math.floor(Math.random()* 8) + 2,
   dependencies: dependencies.length,
   subtasks: subtasks.length,
   blockers: Math.floor(Math.random() * 2),
@@ -372,7 +376,8 @@ tR += `| **Analysis Time** | ${perf.getElapsedMs().toFixed(3)}ms |\n\n`;
 %>
 
 ### **🎯 Recommendations**
-<%* 
+
+<%*
 if (taskAnalysis.complexity > 7) {
   tR += `- ⚠️ **High Complexity**: Consider breaking into smaller tasks\n`;
 }
@@ -392,6 +397,7 @@ if (taskAnalysis.blockers > 0) {
 ## 📅 **Timeline & Milestones**
 
 *Consolidated from: ### **📋 Task Timeline***
+
 ```mermaid
 gantt
     title {{taskDescription}} Timeline
@@ -405,6 +411,7 @@ gantt
 ```
 
 ### **🎯 Key Milestones**
+
 - [ ] **Research Complete** - Requirements gathered and analyzed
 - [ ] **Design Approved** - Technical design reviewed and approved
 - [ ] **Implementation Ready** - Core functionality implemented
@@ -416,6 +423,7 @@ gantt
 ## 🔄 **task workflow**
 
 *Consolidated from: ### **📋 Status transitions***
+
 ```mermaid
 stateDiagram-v2
     [*] --> Todo
@@ -429,6 +437,7 @@ stateDiagram-v2
 ```
 
 ### **⚡ Quick actions**
+
 | Action | Command | Hotkey |
 |--------|---------|--------|
 | Start Task | `Tasks: Toggle task` | `Cmd/Ctrl + Enter` |
@@ -441,11 +450,13 @@ stateDiagram-v2
 ## 📞 **Task Communication**
 
 *Consolidated from: ### **👥 Stakeholders***
+
 - **Assignee**: [Your Name]
 - **Reviewer**: [Reviewer Name]
 - **Stakeholder**: [Stakeholder Name]
 
 ### **📧 Communication Log**
+
 - **2024-01-01**: Task created and assigned
 - **2024-01-02**: Initial review completed
 - **2024-01-03**: Dependencies identified
@@ -457,6 +468,7 @@ and performance monitoring powered by Bun-native utilities.
 
 ---
 **📋 Smart Task Template** • **Analytics Enabled** • **Performance Optimized**
+
 ```
 
 ### **B. Project Task Dashboard Template**
@@ -465,7 +477,7 @@ and performance monitoring powered by Bun-native utilities.
 ---
 type: dashboard
 title: "{{project}} Task Dashboard"
-section: "02"
+section: "07 - Templates"
 category: "dashboards"
 status: "active"
 tags:
@@ -510,6 +522,7 @@ dv.paragraph(`## 📊 **Project Statistics**
 ```
 
 ### **🎯 Priority distribution**
+
 ```dataviewjs
 const project = "{{project}}";
 const tasks = dv.pages().where(p => p.project === project).where(p => p.type === 'task');
@@ -534,6 +547,7 @@ dv.table(["Priority", "Count", "Percentage"], [
 ## 📋 **Active Tasks**
 
 *Consolidated from: ### **🔥 High Priority Tasks***
+
 ```tasks
 preset this_folder
 project is {{project}}
@@ -544,6 +558,7 @@ sort by priority
 ```
 
 ### **⚡ In Progress**
+
 ```tasks
 preset this_folder
 project is {{project}}
@@ -553,6 +568,7 @@ sort by created
 ```
 
 ### **📝 Todo Tasks**
+
 ```tasks
 preset this_folder
 project is {{project}}
@@ -565,8 +581,8 @@ limit 10
 
 ---
 
-
 ### **📈 Completion trends**
+
 ```dataviewjs
 const project = "{{project}}";
 const startOfMonth = dv.date('today').startOf('month');
@@ -592,6 +608,7 @@ dv.table(["Week", "Tasks Completed"], weeks);
 ```
 
 ### **🚨 Blocked tasks**
+
 ```dataviewjs
 const project = "{{project}}";
 const blockedTasks = dv.pages()
@@ -613,6 +630,7 @@ if (blockedTasks.length > 0) {
 ```
 
 ### **📅 Stale tasks (no activity for 7 days)**
+
 ```dataviewjs
 const project = "{{project}}";
 const staleDate = dv.date('today - 7 days');
@@ -640,6 +658,7 @@ if (staleTasks.length > 0) {
 ## 🎯 **Quick Actions**
 
 *Consolidated from: ### **⚡ Task Management***
+
 | Action | Command | Description |
 |--------|---------|-------------|
 | Add Task | [Create Task](obsidian://vault-standards/create-task?project={{project}}) | Create new task for this project |
@@ -649,6 +668,7 @@ if (staleTasks.length > 0) {
 | Set Priority | `Tasks: Set priority` | Update task priority |
 
 ### **📊 Reporting**
+
 | Report | Command | Frequency |
 |--------|---------|----------|
 | Daily Summary | `Tasks: Show daily task report` | Daily |
@@ -661,6 +681,7 @@ if (staleTasks.length > 0) {
 ## 📈 **performance metrics**
 
 *Consolidated from: ### **🎯 Completion rate***
+
 ```dataviewjs
 const project = "{{project}}";
 const tasks = dv.pages().where(p => p.project === project).where(p => p.type === 'task');
@@ -679,6 +700,7 @@ dv.span(`### 📊 **Performance Metrics**
 ```
 
 ### **⏱ ️ task velocity**
+
 ```dataviewjs
 // Calculate task velocity (tasks completed per week)
 const project = "{{project}}";
@@ -699,6 +721,7 @@ dv.span(`**Task Velocity**: ${velocity} tasks/week (last 4 weeks)`);
 ## 🔄 **Workflow Automation**
 
 *Consolidated from: ### **📋 Automated Workflows***
+
 ```yaml
 ## Daily Task Review
 trigger: "09:00 daily"
@@ -721,11 +744,13 @@ conditions:
 ## 📞 **project communication**
 
 *Consolidated from: ### **👥 Team collaboration***
+
 - **Project Channel**: [#{{project}}-team](slack://channel?team={{project}})
 - **Daily Standup**: 09:00 AM - [Meeting Link](https://zoom.us/meeting/{{project}})
 - **Weekly Review**: Friday 4:00 PM - [Calendar Invite](https://calendar.google.com/event/{{project}})
 
 ### **📧 Notification settings**
+
 ```yaml
 notifications:
   high_priority_overdue: true
@@ -742,6 +767,7 @@ tasks efficiently.
 
 ---
 **📊 Project Dashboard** • **Real-time Analytics** • **Performance Optimized**
+
 ```
 
 ---
@@ -883,6 +909,7 @@ const cli = new TasksCLI(tasksConfig);
 ## 📊 **performance monitoring**
 
 *Consolidated from: ### **🎯 Task analytics engine***
+
 ```typescript
 // src/analytics/task-analytics.ts
 export class TaskAnalytics {
@@ -973,6 +1000,7 @@ type TaskEvent = 'created' | 'started' | 'completed' | 'blocked' | 'cancelled';
 ## ✅ **Integration Benefits**
 
 *Consolidated from: ### **🚀 Enhanced Capabilities***
+
 - ✅ **Type Safety** - Full TypeScript schema with IntelliSense
 - ✅ **Smart Templates** - Auto-analysis and dependency tracking
 - ✅ **Real-time Analytics** - Performance monitoring and insights
@@ -981,12 +1009,14 @@ type TaskEvent = 'created' | 'started' | 'completed' | 'blocked' | 'cancelled';
 - ✅ **Automation** - Workflow automation and notifications
 
 ### **📊 Performance Optimization**
+
 - **Bun-Native Processing** - 3-10x faster task operations
 - **Memory Efficiency** - Optimized data structures
 - **Real-time Updates** - Live dashboard refresh
 - **Caching** - Intelligent result caching
 
 ### **🔧 Developer Experience**
+
 - **IntelliSense Support** - Full autocomplete and validation
 - **Hot Reload** - Instant template updates
 - **Debug Mode** - Comprehensive logging and diagnostics
@@ -999,6 +1029,7 @@ type TaskEvent = 'created' | 'started' | 'completed' | 'blocked' | 'cancelled';
 **Status**: ✅ **TASKS PLUGIN INTEGRATION COMPLETE** - Enterprise-grade task management operational!
 
 Your vault now has advanced task management capabilities including:
+
 - **Type-safe configuration** with full IntelliSense support
 - **Smart task templates** with auto-analysis and dependency tracking
 - **Real-time dashboards** with performance metrics and analytics

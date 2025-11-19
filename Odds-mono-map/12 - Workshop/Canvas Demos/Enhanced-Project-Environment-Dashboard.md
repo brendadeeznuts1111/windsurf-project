@@ -1,7 +1,7 @@
 ---
 type: enhanced-dashboard-documentation
 title: 🌍 Enhanced Project Environment Dashboard
-section: Workshop
+section: "12 - Workshop"
 category: development-tools
 priority: high
 status: completed

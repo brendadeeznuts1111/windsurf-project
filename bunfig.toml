@@ -36,7 +36,7 @@ catalog = {
 coverage = true
 
 # Preload test files
-preload = ["global-test-setup.ts"]
+preload = ["./global-test-setup.ts"]
 
 # Test timeout in milliseconds
 timeout = 5000

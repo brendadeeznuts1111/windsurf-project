@@ -15,7 +15,7 @@
 
 #!/usr/bin/env bun
 
-import { VaultDocumentType, typeHeadingMap } from '../../src/types/vault-types.js';
+import { VaultDocumentType, typeHeadingMap } from '../../src/types/tick-processor-types.js';
 
 console.log('🗺️  typeHeadingMap Usage Demonstration');
 console.log('='.repeat(40));

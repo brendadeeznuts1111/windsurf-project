@@ -494,7 +494,7 @@ if (orphans.length > 0) {
 - [[🏗️ Deep Architectural Integration]] - Unified system design
 
 ### **📋 Core Type System**
-- [[src/types/vault-types.ts]] - Master type definitions file (1,925 lines)
+- [[src/types/tick-processor-types.ts]] - Master type definitions file (1,925 lines)
 - [[📊 Document Types]] - VaultDocumentType enum with 12 types
 - [[04 - Documentation/04 - Reference/00 - Template System Types]] - Complete template engine
 - [[🛡️ Error Handling Types]] - Comprehensive validation system
@@ -530,7 +530,7 @@ if (orphans.length > 0) {
 ## 🏷 ️ tags & categories
 
 ### ** Primary tags**
-`#dashboard` `#system` `#daily` `#bun-integration` `#vault-types` `#monitoring` `#enterprise`
+`#dashboard` `#system` `#daily` `#bun-integration` `#tick-processor-types` `#monitoring` `#enterprise`
     `#architecture`
 
 ### ** Content categories**

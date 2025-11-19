@@ -32,12 +32,12 @@ validation_rules:
 ### **⚠️ Primary Problems Found**
 
 1. **Duplicate Interface Definitions**
-   - `TemplateContext`, `TemplateResult`, `BaseTemplate` defined multiple times in `vault-types.ts`
+   - `TemplateContext`, `TemplateResult`, `BaseTemplate` defined multiple times in `tick-processor-types.ts`
    - Causing TypeScript conflicts and compilation errors
    - Leading to "is not defined" and "Cannot find" errors
 
 2. **Import Path Conflicts**
-   - Template files importing from both `vault-types.ts` and local template files
+   - Template files importing from both `tick-processor-types.ts` and local template files
    - Circular dependencies and type mismatches
    - Logger import issues in template system
 
@@ -85,14 +85,14 @@ export interface TemplateResult {
 ### **✅ 2. Fixed Import Dependencies**
 
 #### **Updated: `src/templates/base-template.ts`**
-- **Clean Imports**: Now imports from `template-types.ts` instead of `vault-types.ts`
+- **Clean Imports**: Now imports from `template-types.ts` instead of `tick-processor-types.ts`
 - **Removed Duplicates**: Eliminated local interface definitions
 - **Proper Logger Integration**: Fixed logger import and usage
 - **Type Safety**: All imports properly typed and validated
 
 ```typescript
 // Before (problematic)
-import { TemplateContext, TemplateResult } from '../types/vault-types.js';
+import { TemplateContext, TemplateResult } from '../types/tick-processor-types.js';
 
 // After (fixed)
 import { TemplateContext, TemplateResult, TemplateConfig } from './template-types.js';
@@ -239,7 +239,7 @@ logger.logError(`Template validation failed: ${template.name}`, { errors });
 
 ### **🔧 Files Referenced**
 1. **`src/core/error-handler.ts`** - Logger system (verified working)
-2. **`src/types/vault-types.ts`** - Original type definitions (conflicts identified)
+2. **`src/types/tick-processor-types.ts`** - Original type definitions (conflicts identified)
 
 ---
 

@@ -171,7 +171,7 @@ Operation took: 10.81ms
 ### **Related Files**
 - `10 - Benchmarking/01 - Core Utilities/official-docs-mapping.ts` - Official docs comparison
 - `10 - Benchmarking/05 - Integration Demos/ultimate-enhanced-ecosystem.ts` - Enterprise features
-- `src/types/vault-types.ts` - Type definitions
+- `src/types/tick-processor-types.ts` - Type definitions
 - `scripts/demonstrate-bun-utilities.ts` - Core utilities demo
 
 ---
@@ -233,7 +233,7 @@ VAULT_MODE=benchmark
 ## 📚 References
 
 - **Official Documentation**: https://bun.com/docs/runtime/utils
-- **Type Definitions**: `src/types/vault-types.ts`
+- **Type Definitions**: `src/types/tick-processor-types.ts`
 - **Template System**: `src/config/heading-templates.ts`
 - **Related Benchmarks**: `10 - Benchmarking/` directory
 

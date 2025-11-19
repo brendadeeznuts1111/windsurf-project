@@ -28,7 +28,7 @@ import {
     LinterRule,
     CustomLinterRule,
     ContextualHomepage
-} from '../types/vault-types.js';
+} from '../types/tick-processor-types.js';
 import { logger, ErrorHandler, ErrorSeverity, ErrorCategory, createErrorContext } from '../core/error-handler.js';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';

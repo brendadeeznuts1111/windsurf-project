@@ -461,7 +461,7 @@ fi
 - **Validation Scripts**: `scripts/validate.ts`
 - **Status Monitoring**: `scripts/status.ts`
 - **Template Demo**: `scripts/demonstrate-heading-templates.ts`
-- **Type Definitions**: `src/types/vault-types.ts`
+- **Type Definitions**: `src/types/tick-processor-types.ts`
 - **Utilities**: `10 - Benchmarking/` directory
 
 ---

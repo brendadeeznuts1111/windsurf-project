@@ -16,7 +16,7 @@ The Canvas Vault Integration System provides sophisticated connectivity between 
 ### Type System Integration
 
 ```typescript
-// Connected to vault-types.ts
+// Connected to tick-processor-types.ts
 interface CanvasNodeWithMetadata {
     id: string;
     x: number;

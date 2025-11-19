@@ -33,7 +33,7 @@ validation_rules:
 | Location | Type Count | Purpose | Status |
 |----------|------------|---------|--------|
 | `src/core/error-handler.ts` | 5 types | Core error system | ✅ **Active** |
-| `src/types/vault-types.ts` | 4 types | General vault errors | ⚠️ **Duplicate** |
+| `src/types/tick-processor-types.ts` | 4 types | General vault errors | ⚠️ **Duplicate** |
 | `src/templates/template-types.ts` | 2 types | Template validation | ✅ **Specialized** |
 
 **Total**: 11 error-related type definitions across 3 files
@@ -120,7 +120,7 @@ export class ErrorHandler {
 
 ---
 
-### **2. Vault Types Errors** (`src/types/vault-types.ts`)
+### **2. Vault Types Errors** (`src/types/tick-processor-types.ts`)
 
 #### **⚠️ Duplicate ErrorSeverity Enum**
 ```typescript
@@ -217,7 +217,7 @@ export interface TemplateValidationResult {
 - **VaultErrorContext**: Nearly identical definitions with minor differences
 
 ### **2. Inconsistent Type Usage**
-- **additionalData**: Uses `any` in core, `unknown` in vault-types
+- **additionalData**: Uses `any` in core, `unknown` in tick-processor-types
 - **severity**: Uses enum in some places, string literals in others
 - **Validation Errors**: Similar patterns across different domains
 
@@ -523,7 +523,7 @@ export function getErrorCategory(error: unknown): ErrorCategory {
 4. Test template system integration
 
 ### **🧹 Phase 4: Cleanup (Day 4)**
-1. Remove duplicate types from `src/types/vault-types.ts`
+1. Remove duplicate types from `src/types/tick-processor-types.ts`
 2. Remove duplicate types from `src/templates/template-types.ts`
 3. Update all remaining imports
 4. Run comprehensive tests

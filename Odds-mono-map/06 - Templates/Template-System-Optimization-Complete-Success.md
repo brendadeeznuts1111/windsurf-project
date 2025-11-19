@@ -317,7 +317,7 @@ bun scripts/enhanced-template-validation.ts
 
 ### **Core Systems**
 - `src/config/heading-templates.ts` - Type-safe template engine
-- `src/types/vault-types.ts` - Vault document types
+- `src/types/tick-processor-types.ts` - Vault document types
 - `scripts/validate.ts` - Core validation system
 - `scripts/status.ts` - Status monitoring
 

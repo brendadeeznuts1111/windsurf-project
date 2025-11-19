@@ -23,7 +23,7 @@
 import { VaultValidator } from './validate.js';
 import { VaultOrganizer } from './organize.js';
 import { ErrorHandler, ErrorSeverity, ErrorCategory, createErrorContext, logger } from '../../src/core/error-handler.js';
-import { DailyReport, VaultMetrics } from '../../src/types/vault-types.js';
+import { DailyReport, VaultMetrics } from '../../src/types/tick-processor-types.js';
 import { TIME_CONSTANTS, DISPLAY_CONSTANTS, createTimer, formatTable, formatNanoseconds } from '../../src/constants/vault-constants.js';
 import { VaultCleanup } from './cleanup.js';
 import chalk from 'chalk';

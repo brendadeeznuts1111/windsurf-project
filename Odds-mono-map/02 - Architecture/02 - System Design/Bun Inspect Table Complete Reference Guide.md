@@ -622,7 +622,7 @@ class Logger {
 
 - **[@[Odds-mono-map/06 - Templates/Bun-Utilities-Mastery-Ultimate-Achievement-Summary.md]]** - Complete mastery achievement
 - **[@[BunInspectTableGuide]]** - Implementation code examples
-- **[[src/types/vault-types.ts]]** - Type definitions
+- **[[src/types/tick-processor-types.ts]]** - Type definitions
 - **[[04 - Development/Type System/type-validation-patterns.md]]** - Validation patterns
 - **[[Bun-Native-Integration-Guide.md]]** - Bun native integration
 

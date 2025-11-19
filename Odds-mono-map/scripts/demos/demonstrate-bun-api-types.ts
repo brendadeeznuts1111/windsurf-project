@@ -24,7 +24,7 @@ import {
     BunUtilities,
     BunShell,
     BunWorker
-} from '../../src/types/vault-types.js';
+} from '../../src/types/tick-processor-types.js';
 
 import chalk from 'chalk';
 

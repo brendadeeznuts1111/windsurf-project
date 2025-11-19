@@ -28,7 +28,7 @@
 import {
     VaultDocumentType,
     VaultFile
-} from '../../src/types/vault-types.js';
+} from '../../src/types/tick-processor-types.js';
 import {
     getHeadingTemplate,
     formatHeadingTemplate

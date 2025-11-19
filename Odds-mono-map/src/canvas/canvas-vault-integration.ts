@@ -7,13 +7,13 @@
 // DESCRIPTION: Canvas nodes with metadata integration to vault types
 // =============================================================================
 
-// ✅ Connect canvas to vault-types.ts
+// ✅ Connect canvas to tick-processor-types.ts
 import {
     VaultDocumentType,
     VaultFile,
     Priority,
     DocumentStatus
-} from '../types/vault-types.js';
+} from '../types/tick-processor-types.js';
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 

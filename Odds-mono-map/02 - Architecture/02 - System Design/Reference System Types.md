@@ -597,9 +597,9 @@ recommendations.forEach(rec => console.log(`• ${rec}`));
 ## **📚 Related Documentation**
 
 - **[[04 - Development/Type System/type-system-overview.md]]** - Core type system
-- **[[04 - Development/Type System/vault-types-reference.md]]** - Vault type reference
+- **[[04 - Development/Type System/tick-processor-types-reference.md]]** - Vault type reference
 - **[[04 - Development/Type System/canvas-types-guide.md]]** - Canvas integration
-- **[[src/types/vault-types.ts]]** - Technical implementation
+- **[[src/types/tick-processor-types.ts]]** - Technical implementation
 
 ---
 

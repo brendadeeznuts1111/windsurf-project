@@ -659,7 +659,7 @@ class OddsProtocolSystem {
 - **[[04 - Development/Type System/type-system-overview.md]]** - Core type system
 - **[[🔗 Reference System Types]]** - Cross-link management
 - **[[📊 Metadata Engine Types]]** - Document lifecycle
-- **[[src/types/vault-types.ts]]** - Technical implementation
+- **[[src/types/tick-processor-types.ts]]** - Technical implementation
 
 ---
 

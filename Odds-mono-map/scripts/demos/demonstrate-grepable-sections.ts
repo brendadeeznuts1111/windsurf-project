@@ -44,13 +44,13 @@ sections.forEach((section, index) => {
 
 console.log(chalk.blue.bold('\n🔧 Usage Examples:'));
 console.log(chalk.gray('  # Find all interfaces in CORE_VAULT_TYPES'));
-console.log(chalk.cyan('  grep -A 50 "\\[CORE_VAULT_TYPES\\]" src/types/vault-types.ts | grep "export interface"'));
+console.log(chalk.cyan('  grep -A 50 "\\[CORE_VAULT_TYPES\\]" src/types/tick-processor-types.ts | grep "export interface"'));
 console.log('');
 console.log(chalk.gray('  # Get all enums in DOCUMENT_TYPES'));
-console.log(chalk.cyan('  grep -A 20 "\\[DOCUMENT_TYPES\\]" src/types/vault-types.ts | grep "export enum"'));
+console.log(chalk.cyan('  grep -A 20 "\\[DOCUMENT_TYPES\\]" src/types/tick-processor-types.ts | grep "export enum"'));
 console.log('');
 console.log(chalk.gray('  # Extract template system types'));
-console.log(chalk.cyan('  grep -A 200 "\\[TEMPLATE_SYSTEM_TYPES\\]" src/types/vault-types.ts'));
+console.log(chalk.cyan('  grep -A 200 "\\[TEMPLATE_SYSTEM_TYPES\\]" src/types/tick-processor-types.ts'));
 
 console.log(chalk.green.bold('\n✅ Benefits:'));
 console.log(chalk.white('  • Easy navigation with grep or find'));
@@ -61,7 +61,7 @@ console.log(chalk.white('  • Quick type location'));
 // Demo: Show actual content from one section
 console.log(chalk.blue.bold('\n🎯 Demo: [DOCUMENT_TYPES] Section:'));
 try {
-    const result = execSync('grep -A 15 "\\[DOCUMENT_TYPES\\]" src/types/vault-types.ts', {
+    const result = execSync('grep -A 15 "\\[DOCUMENT_TYPES\\]" src/types/tick-processor-types.ts', {
         encoding: 'utf8',
         cwd: process.cwd()
     });

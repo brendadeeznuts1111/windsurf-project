@@ -48,7 +48,7 @@ graph TB
 // tests/unit/vault-watcher-backlinks.test.ts
 import { VaultWatcher } from '../../../src/watchers/vault-watcher';
 
-import { VaultGraph, VaultNode, VaultRelationship } from '../../../src/types/vault-types.js';
+import { VaultGraph, VaultNode, VaultRelationship } from '../../../src/types/tick-processor-types.js';
 
 describe('Backlink Management', () => {
     let watcher: VaultWatcher;

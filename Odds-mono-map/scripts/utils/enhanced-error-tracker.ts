@@ -829,7 +829,7 @@ async function main(): Promise<void> {
                 severity: 'medium',
                 category: 'VALIDATION',
                 directory: 'src/types',
-                script: 'vault-types.ts',
+                script: 'tick-processor-types.ts',
                 function: 'validateType',
                 message: 'Type validation failed for VaultFile',
                 line: 123

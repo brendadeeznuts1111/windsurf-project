@@ -520,8 +520,8 @@ export function migrateDocumentType(
 ## **📚 Related Documentation**
 
 - **[[04 - Development/Type System/type-system-overview.md]]** - Core type system
-- **[[04 - Development/Type System/vault-types-reference.md]]** - Complete type reference
-- **[[src/types/vault-types.ts]]** - Technical implementation
+- **[[04 - Development/Type System/tick-processor-types-reference.md]]** - Complete type reference
+- **[[src/types/tick-processor-types.ts]]** - Technical implementation
 - **[[🔗 Reference System Types]]** - Cross-link management
 
 ---

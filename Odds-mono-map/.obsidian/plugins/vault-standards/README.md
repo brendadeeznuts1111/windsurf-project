@@ -284,7 +284,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - **Repository**: [Odds Protocol Project](https://github.com/brendadeeznuts1111/windsurf-project)
 - **Issues**: [GitHub Issues](https://github.com/brendadeeznuts1111/windsurf-project/issues)
 - **Documentation**: [Vault Standards Guide](../../docs/)
-- **Type System**: [vault-types.ts](../../src/types/vault-types.ts)
+- **Type System**: [tick-processor-types.ts](../../src/types/tick-processor-types.ts)
 
 ---
 

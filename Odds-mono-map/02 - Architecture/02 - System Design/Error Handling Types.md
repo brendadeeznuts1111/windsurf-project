@@ -661,7 +661,7 @@ errorHandler.registerRecoveryStrategy(templateRecoveryStrategy);
 
 - **[[04 - Development/Type System/type-system-overview.md]]** - Core type system
 - **[[04 - Development/Type System/type-validation-patterns.md]]** - Validation patterns
-- **[[src/types/vault-types.ts]]** - Technical implementation
+- **[[src/types/tick-processor-types.ts]]** - Technical implementation
 - **[[🔗 Reference System Types]]** - Cross-link management
 
 ---

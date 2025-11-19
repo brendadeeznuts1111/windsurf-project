@@ -28,7 +28,7 @@ import {
     MetadataOperations,
     MetadataQuery,
     FilterOperator
-} from '../../src/types/vault-types.js';
+} from '../../src/types/tick-processor-types.js';
 
 import chalk from 'chalk';
 
@@ -45,7 +45,7 @@ console.log(chalk.white('  Complete vault cross-linking management:'));
 // Example reference
 const exampleReference: VaultReference = {
     id: 'ref-001',
-    source: '/docs/api/vault-types.md',
+    source: '/docs/api/tick-processor-types.md',
     target: '/docs/core/vault-system.md',
     type: ReferenceType.WIKI_LINK,
     context: 'See [[Vault System]] for complete architecture',
@@ -88,7 +88,7 @@ console.log(chalk.white('  Comprehensive vault file metadata management:'));
 // Example metadata
 const exampleMetadata: VaultMetadata = {
     id: 'meta-001',
-    filePath: '/docs/api/vault-types.md',
+    filePath: '/docs/api/tick-processor-types.md',
     title: 'Vault Types Documentation',
     description: 'Complete type definitions for the Odds Protocol vault system',
     tags: ['documentation', 'typescript', 'types', 'api'],

@@ -149,7 +149,7 @@ const bunApiMapping = {
         vaultTypes: ['SecurityContext', 'AccessControl', 'VaultUser']
     },
     'BunTest API': {
-        projectLocation: 'tests/vault-types.test.ts',
+        projectLocation: 'tests/tick-processor-types.test.ts',
         vaultIntegration: 'Type system validation',
         useCase: 'Unit tests, integration tests, type validation',
         bunMethods: ['test()', 'expect()', 'describe()'],
@@ -214,7 +214,7 @@ const unifiedArchitecture = {
         protocols: ['HTTP/REST', 'WebSocket', 'SQLite', 'File system']
     },
     typeSystem: {
-        foundation: 'vault-types.ts as single source of truth',
+        foundation: 'tick-processor-types.ts as single source of truth',
         integration: 'All components import from central type system',
         validation: 'Compile-time and runtime type checking',
         evolution: 'Version-controlled type definitions'

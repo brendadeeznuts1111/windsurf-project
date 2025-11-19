@@ -32,7 +32,7 @@ import {
     VaultDocumentType,
     ValidationResult,
     Logger
-} from '../../src/types/vault-types.js';
+} from '../../src/types/tick-processor-types.js';
 import {
     DeepPartial,
     Optional,
@@ -40,7 +40,7 @@ import {
     EventCallback,
     AsyncFunction,
     SyncFunction
-} from '../../src/types/vault-types.js';
+} from '../../src/types/tick-processor-types.js';
 import {
     formatTable,
     createTimer

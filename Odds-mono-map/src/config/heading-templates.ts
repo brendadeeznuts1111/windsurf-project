@@ -11,7 +11,7 @@
 // IMPORTS - 2025-11-18
 // =============================================================================
 
-import { VaultDocumentType, typeHeadingMap } from '../types/vault-types.js';
+import { VaultDocumentType, typeHeadingMap } from '../types/tick-processor-types.js';
 
 // =============================================================================
 // TYPE-SAFE TEMPLATE MAPPING - 2025-11-18
@@ -243,5 +243,5 @@ if (!validateHeadingTemplates()) {
 // EXPORTS - 2025-11-18
 // =============================================================================
 
-export { VaultDocumentType } from '../types/vault-types.js';
-export { typeHeadingMap } from '../types/vault-types.js';
+export { VaultDocumentType } from '../types/tick-processor-types.js';
+export { typeHeadingMap } from '../types/tick-processor-types.js';

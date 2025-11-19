@@ -30,12 +30,12 @@ This section documents the comprehensive type system that powers the Odds Protoc
 ```
 📁 Type System Structure
 ├── 📄 Technical Types (src/types/)
-│   ├── vault-types.ts           # Core vault definitions
+│   ├── tick-processor-types.ts           # Core vault definitions
 │   ├── canvas-types.ts          # Canvas integration types
 │   └── validation-types.ts      # Validation framework types
 ├── 📄 Knowledge Documentation (04 - Development/)
 │   ├── type-system-overview.md  # This file
-│   ├── vault-types-reference.md # Complete API reference
+│   ├── tick-processor-types-reference.md # Complete API reference
 │   ├── canvas-types-guide.md    # Canvas integration guide
 │   └── type-validation-patterns.md # Validation patterns
 └── 🔗 Integration Points
@@ -48,7 +48,7 @@ This section documents the comprehensive type system that powers the Odds Protoc
 
 ## **📊 Type Categories**
 
-### **1. Vault Types** (`src/types/vault-types.ts`)
+### **1. Vault Types** (`src/types/tick-processor-types.ts`)
 
 **Core Enumerations**:
 - `VaultDocumentType` - 12 document categories
@@ -196,7 +196,7 @@ const validationResult = validateCanvasNode(canvasNode, {
 ## **📚 Quick Reference**
 
 ### **Essential Files**
-- `src/types/vault-types.ts` - Core type definitions
+- `src/types/tick-processor-types.ts` - Core type definitions
 - `src/canvas/canvas-vault-integration.ts` - Integration implementation
 - `scripts/validate-canvas-integration.ts` - Validation examples
 

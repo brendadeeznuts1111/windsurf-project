@@ -24,7 +24,7 @@ import { watch, FSWatcher, existsSync } from 'fs';
 import { join } from 'path';
 import chalk from 'chalk';
 import { ErrorHandler, ErrorSeverity, ErrorCategory, createErrorContext, logger } from '../../src/core/error-handler.js';
-import { MonitorStatus, VaultConfig, FileSystemWatcher } from '../../src/types/vault-types.js';
+import { MonitorStatus, VaultConfig, FileSystemWatcher } from '../../src/types/tick-processor-types.js';
 import { TIME_CONSTANTS } from '../../src/constants/vault-constants.js';
 import { VaultOrganizer } from './organize.js';
 import { VaultValidator } from './validate.js';

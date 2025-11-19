@@ -109,7 +109,7 @@ const canvasNodes = [
         contentLength: 220,
         metadata: {
             documentType: 'documentation',
-            relatedFile: 'src/types/vault-types.ts',
+            relatedFile: 'src/types/tick-processor-types.ts',
             tags: ['metadata', 'enrichment', 'vault', 'types'],
             priority: 'high',
             status: 'published',

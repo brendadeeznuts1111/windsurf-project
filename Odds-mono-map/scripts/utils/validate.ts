@@ -26,7 +26,7 @@ import { join, extname, relative } from 'path';
 import { glob } from 'glob';
 import { estimateShallowMemoryUsageOf } from 'bun:jsc';
 import { ErrorHandler, ErrorSeverity, ErrorCategory, createErrorContext, logger } from '../../src/core/error-handler.js';
-import { ValidationResult, FileStatistics } from '../../src/types/vault-types.js';
+import { ValidationResult, FileStatistics } from '../../src/types/tick-processor-types.js';
 import chalk from 'chalk';
 import { parse as parseYaml } from 'yaml';
 

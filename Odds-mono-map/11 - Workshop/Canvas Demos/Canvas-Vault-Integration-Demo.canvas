@@ -73,7 +73,7 @@
       "color": "#EF4444",
       "metadata": {
         "documentType": "api",
-        "relatedFile": "src/types/vault-types.ts",
+        "relatedFile": "src/types/tick-processor-types.ts",
         "tags": [
           "metadata",
           "enrichment",
@@ -193,7 +193,7 @@
       "width": 320,
       "height": 180,
       "type": "text",
-      "text": "# 🔧 TypeScript Integration\n\n## Type-Safe Implementation\n\n**Core Interfaces**:\n- `CanvasNodeWithMetadata`\n- `CanvasEdgeWithMetadata`\n- `CanvasWithMetadata`\n- `CanvasVaultIntegration`\n\n**Key Functions**:\n- `createNodeFromVaultFile()`\n- `createEdgeFromNodes()`\n- `calculateHealthScore()`\n- `generateCanvasFromFiles()`\n\n**Vault Type System**:\n- Connected to vault-types.ts\n- Full type safety\n- Auto-completion support",
+      "text": "# 🔧 TypeScript Integration\n\n## Type-Safe Implementation\n\n**Core Interfaces**:\n- `CanvasNodeWithMetadata`\n- `CanvasEdgeWithMetadata`\n- `CanvasWithMetadata`\n- `CanvasVaultIntegration`\n\n**Key Functions**:\n- `createNodeFromVaultFile()`\n- `createEdgeFromNodes()`\n- `calculateHealthScore()`\n- `generateCanvasFromFiles()`\n\n**Vault Type System**:\n- Connected to tick-processor-types.ts\n- Full type safety\n- Auto-completion support",
       "color": "#EF4444",
       "metadata": {
         "documentType": "general",

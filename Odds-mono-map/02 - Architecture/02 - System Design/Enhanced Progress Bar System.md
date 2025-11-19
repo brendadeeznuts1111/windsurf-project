@@ -508,7 +508,7 @@ class BuildProgressTracker {
 
 ## **🔗 Related Documentation**
 
-- **[[src/types/vault-types.ts]]** - Type definitions
+- **[[src/types/tick-processor-types.ts]]** - Type definitions
 - **[[scripts/enhanced-progress-bar.ts]]** - Implementation
 - **[[04 - Development/Type System/type-validation-patterns.md]]** - Validation patterns
 

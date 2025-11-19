@@ -52,7 +52,7 @@ import {
     TemplateValidationResult,
     TemplateRenderOptions,
     TemplateUsageMetrics
-} from '../../src/types/vault-types.js';
+} from '../../src/types/tick-processor-types.js';
 
 import {
     AbstractBaseTemplate,

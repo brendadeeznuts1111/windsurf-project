@@ -65,6 +65,12 @@ export class EnhancedFrontMatterOrganizer {
                     } catch {
                         acc[key.trim()] = val;
                     }
+                } else if (!isNaN(Number(val)) && val !== '') {
+                    // Convert numeric strings to numbers
+                    acc[key.trim()] = Number(val);
+                } else if (val === 'true' || val === 'false') {
+                    // Convert boolean strings
+                    acc[key.trim()] = val === 'true';
                 } else {
                     acc[key.trim()] = val;
                 }
@@ -82,6 +88,10 @@ export class EnhancedFrontMatterOrganizer {
                     return `${k}: [${v.map(item => `"${item}"`).join(', ')}]`;
                 } else if (typeof v === 'object' && v !== null) {
                     return `${k}: ${JSON.stringify(v)}`;
+                } else if (typeof v === 'number') {
+                    return `${k}: ${v}`;
+                } else if (typeof v === 'boolean') {
+                    return `${k}: ${v}`;
                 } else if (typeof v === 'string' && v.includes(' ')) {
                     return `${k}: "${v}"`;
                 } else {

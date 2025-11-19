@@ -315,7 +315,7 @@ export class TestScenarioFactory {
         return {
             marketOdds,
             opportunities,
-            expectedProfit: opportunities[0].profit
+            expectedProfit: opportunities.length > 0 ? opportunities[0].profit : 0
         };
     }
 
@@ -433,6 +433,66 @@ export class BunSearchUtils {
     }
 }
 
+// ===== UTILITY CLASSES =====
+
+/**
+ * Domain assertion utilities for testing
+ */
+export class DomainAssertions {
+    static isValidOddsTick(tick: any): tick is OddsTick {
+        return tick &&
+            typeof tick.id === 'string' &&
+            typeof tick.timestamp === 'number' &&
+            typeof tick.symbol === 'string' &&
+            typeof tick.price === 'number' &&
+            typeof tick.size === 'number' &&
+            typeof tick.exchange === 'string' &&
+            ['buy', 'sell'].includes(tick.side);
+    }
+
+    static isValidArbitrageOpportunity(opportunity: any): opportunity is ArbitrageOpportunity {
+        return opportunity &&
+            typeof opportunity.isArbitrage === 'boolean' &&
+            typeof opportunity.totalImpliedProbability === 'number' &&
+            typeof opportunity.profitMargin === 'number';
+    }
+}
+
+/**
+ * Mock WebSocket implementation for testing
+ */
+export class MockWebSocket {
+    static CONNECTING = 0;
+    static OPEN = 1;
+    static CLOSING = 2;
+    static CLOSED = 3;
+
+    readyState = MockWebSocket.OPEN;
+    url: string;
+    messages: string[] = [];
+
+    constructor(url: string) {
+        this.url = url;
+    }
+
+    send(data: string) {
+        this.messages.push(data);
+    }
+
+    close() {
+        this.readyState = MockWebSocket.CLOSED;
+    }
+
+    // Event simulation
+    addEventListener(event: string, callback: Function) {
+        // Mock event listener
+    }
+
+    removeEventListener(event: string, callback: Function) {
+        // Mock event listener removal
+    }
+}
+
 // Default export for convenience
 export default {
     OddsTick: OddsTickFactory,
@@ -443,5 +503,7 @@ export default {
     Network: NetworkDataFactory,
     Contract: ContractTestFactory,
     Scenario: TestScenarioFactory,
-    Search: BunSearchUtils
+    Search: BunSearchUtils,
+    DomainAssertions,
+    MockWebSocket
 };

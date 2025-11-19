@@ -13,8 +13,6 @@
  * @tags analytics,template,structure
  */
 
-#!/usr/bin/env bun
-
 /**
  * Ultimate Template System Dashboard
  * Complete integration of Bun.inspect.table(), Bun.stringWidth(), and enhanced progress bars
@@ -89,7 +87,7 @@ class UltimateTemplateDashboard {
     /**
      * Display system overview with progress bars
      */
-    private displaySystemOverview(): void {
+    public displaySystemOverview(): void {
         console.log(chalk.blue.bold('📊 System Overview'));
         console.log(chalk.gray('═'.repeat(100)));
 
@@ -139,16 +137,14 @@ class UltimateTemplateDashboard {
             };
         });
 
-        console.log(Bun.inspect.table(progressMetrics, {
-            'Task': 'task',
-            'Progress': 'bar',
-            'Complete': 'percentage',
-            'Status': 'status',
-            'ETA': 'eta'
-        }, {
-            colors: true,
-            maxStringLength: 25,
-            compact: false
+        console.log(Bun.inspect.table(progressMetrics, [
+            'task',
+            'bar',
+            'percentage',
+            'status',
+            'eta'
+        ], {
+            colors: true
         }));
     }
 
@@ -212,19 +208,17 @@ class UltimateTemplateDashboard {
             }
         ];
 
-        console.log(Bun.inspect.table(templateData, {
-            'Template': 'name',
-            'Category': 'category',
-            'Usage Score': 'usageScore',
-            'Complexity': 'complexity',
-            'Size': 'size',
-            'Modified': 'lastModified',
-            'Status': 'status',
-            'Issues': 'recommendations'
-        }, {
-            colors: true,
-            maxStringLength: 20,
-            compact: false
+        console.log(Bun.inspect.table(templateData, [
+            'name',
+            'category',
+            'usageScore',
+            'complexity',
+            'size',
+            'lastModified',
+            'status',
+            'recommendations'
+        ], {
+            colors: true
         }));
     }
 
@@ -297,10 +291,15 @@ class UltimateTemplateDashboard {
             };
         });
 
-        console.log(Bun.inspect.table(metricsWithProgress, {}, {
-            colors: true,
-            maxStringLength: 18,
-            compact: false
+        console.log(Bun.inspect.table(metricsWithProgress, [
+            'Metric',
+            'Current',
+            'Progress',
+            'Status',
+            'Trend',
+            'Threshold'
+        ], {
+            colors: true
         }));
     }
 
@@ -368,10 +367,15 @@ class UltimateTemplateDashboard {
             };
         });
 
-        console.log(Bun.inspect.table(benchmarkWithProgress, {}, {
-            colors: true,
-            maxStringLength: 20,
-            compact: false
+        console.log(Bun.inspect.table(benchmarkWithProgress, [
+            'Operation',
+            'Baseline',
+            'Current',
+            'Improvement',
+            'Performance',
+            'Status'
+        ], {
+            colors: true
         }));
     }
 
@@ -438,10 +442,15 @@ class UltimateTemplateDashboard {
             };
         });
 
-        console.log(Bun.inspect.table(healthWithProgress, {}, {
-            colors: true,
-            maxStringLength: 20,
-            compact: false
+        console.log(Bun.inspect.table(healthWithProgress, [
+            'Category',
+            'Health Score',
+            'Issues',
+            'Trend',
+            'Status',
+            'Visual'
+        ], {
+            colors: true
         }));
     }
 
@@ -519,10 +528,16 @@ class UltimateTemplateDashboard {
             };
         });
 
-        console.log(Bun.inspect.table(roadmapWithProgress, {}, {
-            colors: true,
-            maxStringLength: 18,
-            compact: false
+        console.log(Bun.inspect.table(roadmapWithProgress, [
+            'Phase',
+            'Focus',
+            'Progress',
+            'Completion',
+            'Priority',
+            'Timeline',
+            'Impact'
+        ], {
+            colors: true
         }));
     }
 
@@ -612,7 +627,7 @@ async function main(): Promise<void> {
         console.log(chalk.gray('Showcasing the power of Bun.inspect.table() + Bun.stringWidth() integration'));
 
     } catch (error) {
-        console.error(chalk.red(`❌ Error: ${error.message}`));
+        console.error(chalk.red(`❌ Error: ${error instanceof Error ? error.message : String(error)}`));
         process.exit(1);
     }
 }

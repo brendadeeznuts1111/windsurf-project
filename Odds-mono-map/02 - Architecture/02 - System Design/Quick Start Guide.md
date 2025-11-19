@@ -321,8 +321,8 @@ bun run vault:validate-dashboard
 ## 🎉 Success Checklist
 
 ### **You're Successfully Set Up When:**
-- [ ] ✅ Created your first daily note
-- [ ] ✅ Explored the main dashboard
+- [ ] ✅ Created your first daily note #quick-start #tutorial #getting-started #automation #templates 🔺
+- [ ] w #quick-start #tutorial #getting-started #automation #templates #project/w ⏫
 - [ ] ✅ Created a project with template
 - [ ] ✅ Set up meeting documentation
 - [ ] ✅ Enabled automation and monitoring

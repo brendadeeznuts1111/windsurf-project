@@ -13,8 +13,6 @@
  * @tags utils
  */
 
-#!/usr/bin/env bun
-
 import chalk from 'chalk';
 
 console.log(chalk.blue.bold('🌍 Enhanced Environment Variables Dashboard'));

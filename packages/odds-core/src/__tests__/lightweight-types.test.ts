@@ -29,9 +29,9 @@ describe('Lightweight Types', () => {
       const metadataId = BrandedTypeUtils.createMetadataId('meta_456');
       const symbolId = BrandedTypeUtils.createSymbolId('symbol_789');
 
-      expect(topicId).toBe('topic_123');
-      expect(metadataId).toBe('meta_456');
-      expect(symbolId).toBe('symbol_789');
+      expect(topicId as string).toBe('topic_123');
+      expect(metadataId as string).toBe('meta_456');
+      expect(symbolId as string).toBe('symbol_789');
     });
 
     test('should validate branded type IDs', () => {
@@ -65,12 +65,44 @@ describe('Lightweight Types', () => {
         id: BrandedTypeUtils.createMetadataId('test_2'),
         timestamp: Date.now(),
         version: '2.0.0',
-        source: { name: 'test', type: 'api' },
-        market: { name: 'crypto', region: 'global' },
+        source: {
+          id: 'test_source',
+          provider: 'test_provider',
+          feed: 'test_feed',
+          latency: 100,
+          reliability: 0.95,
+          lastUpdate: Date.now(),
+          updateFrequency: 1000,
+          name: 'test',
+          type: 'api',
+          cost: 0.01
+        },
+        market: {
+          session: 'continuous' as any,
+          liquidity: 'high' as any,
+          volatility: 'medium' as any,
+          timeZone: 'UTC',
+          name: 'crypto',
+          marketHours: {
+            open: '00:00',
+            close: '23:59',
+            currentStatus: 'open' as const
+          },
+          relatedMarkets: ['BTC', 'ETH'],
+          correlatedSymbols: ['BTC/USD', 'ETH/USD']
+        },
         topics: [MarketTopic.CRYPTO_SPOT],
         category: DataCategory.MARKET_DATA,
         tags: [],
-        quality: { score: 0.9, confidence: 0.95 },
+        quality: {
+          completeness: 0.9,
+          accuracy: 0.95,
+          freshness: 100,
+          consistency: 0.9,
+          validity: 0.95,
+          overall: 0.9,
+          score: 0.9
+        },
         relationships: {
           childIds: [],
           relatedIds: [],
@@ -92,7 +124,7 @@ describe('Lightweight Types', () => {
         'test_source'
       );
 
-      expect(metadata.id).toBe('test_001');
+      expect(metadata.id as string).toEqual('test_001');
       expect(metadata.topic).toBe(MarketTopic.CRYPTO_SPOT);
       expect(metadata.category).toBe(DataCategory.MARKET_DATA);
       expect(metadata.source).toBe('test_source');
@@ -103,8 +135,8 @@ describe('Lightweight Types', () => {
     test('should create lightweight metadata with custom quality', () => {
       const metadata = createLightweightMetadata(
         'test_002',
-        MarketTopic.FUTURES,
-        DataCategory.ANALYTICS,
+        MarketTopic.EQUITIES_FUTURES,
+        DataCategory.SIGNALS,
         'test_source',
         0.95
       );
@@ -115,7 +147,7 @@ describe('Lightweight Types', () => {
     test('should clamp quality values', () => {
       const highQuality = createLightweightMetadata(
         'test_003',
-        MarketTopic.OPTIONS,
+        MarketTopic.EQUITIES_OPTIONS,
         DataCategory.MARKET_DATA,
         'test_source',
         1.5 // Should be clamped to 1
@@ -123,7 +155,7 @@ describe('Lightweight Types', () => {
 
       const lowQuality = createLightweightMetadata(
         'test_004',
-        MarketTopic.PERPETUALS,
+        MarketTopic.CRYPTO_DERIVATIVES,
         DataCategory.MARKET_DATA,
         'test_source',
         -0.5 // Should be clamped to 0
@@ -136,9 +168,41 @@ describe('Lightweight Types', () => {
 
   describe('Enhanced Metadata Creation', () => {
     test('should create essential metadata', () => {
-      const source: DataSource = { name: 'test_api', type: 'api' };
-      const market: MarketContext = { name: 'crypto', region: 'global' };
-      const quality: DataQuality = { score: 0.9, confidence: 0.95 };
+      const source: DataSource = {
+        id: 'test_source',
+        provider: 'test_provider',
+        feed: 'test_feed',
+        latency: 100,
+        reliability: 0.95,
+        lastUpdate: Date.now(),
+        updateFrequency: 1000,
+        name: 'test_api',
+        type: 'api',
+        cost: 0.01
+      };
+      const market: MarketContext = {
+        session: 'continuous' as any,
+        liquidity: 'high' as any,
+        volatility: 'medium' as any,
+        timeZone: 'UTC',
+        name: 'crypto',
+        marketHours: {
+          open: '00:00',
+          close: '23:59',
+          currentStatus: 'open' as const
+        },
+        relatedMarkets: ['BTC', 'ETH'],
+        correlatedSymbols: ['BTC/USD', 'ETH/USD']
+      };
+      const quality: DataQuality = {
+        completeness: 0.9,
+        accuracy: 0.95,
+        freshness: 100,
+        consistency: 0.9,
+        validity: 0.95,
+        overall: 0.9,
+        score: 0.9
+      };
 
       const metadata = createEssentialMetadata(
         'test_005',
@@ -149,7 +213,7 @@ describe('Lightweight Types', () => {
         quality
       );
 
-      expect(metadata.id).toBe('test_005');
+      expect(metadata.id as string).toEqual('test_005');
       expect(metadata.source).toEqual(source);
       expect(metadata.market).toEqual(market);
       expect(metadata.topics).toEqual([MarketTopic.CRYPTO_SPOT]);
@@ -185,7 +249,7 @@ describe('Lightweight Types', () => {
         metadata
       };
 
-      expect(tick.id).toBe('BTC/USD');
+      expect(tick.id as string).toEqual('BTC/USD');
       expect(tick.symbol).toBe('BTC/USD');
       expect(tick.price).toBe(45000.50);
       expect(tick.size).toBe(1.5);
@@ -225,11 +289,43 @@ describe('Lightweight Types', () => {
 
       const enhanced: SmartMetadata = createEssentialMetadata(
         'smart_2',
-        { name: 'test', type: 'api' },
-        { name: 'crypto', region: 'global' },
+        {
+          id: 'test_source',
+          provider: 'test_provider',
+          feed: 'test_feed',
+          latency: 100,
+          reliability: 0.95,
+          lastUpdate: Date.now(),
+          updateFrequency: 1000,
+          name: 'test',
+          type: 'api',
+          cost: 0.01
+        },
+        {
+          session: 'continuous' as any,
+          liquidity: 'high' as any,
+          volatility: 'medium' as any,
+          timeZone: 'UTC',
+          name: 'crypto',
+          marketHours: {
+            open: '00:00',
+            close: '23:59',
+            currentStatus: 'open' as const
+          },
+          relatedMarkets: ['BTC', 'ETH'],
+          correlatedSymbols: ['BTC/USD', 'ETH/USD']
+        },
         [MarketTopic.CRYPTO_SPOT],
         DataCategory.MARKET_DATA,
-        { score: 0.9, confidence: 0.95 }
+        {
+          completeness: 0.9,
+          accuracy: 0.95,
+          freshness: 100,
+          consistency: 0.9,
+          validity: 0.95,
+          overall: 0.9,
+          score: 0.9,
+        }
       );
 
       expect(isLightweightMetadata(lightweight)).toBe(true);
@@ -251,12 +347,44 @@ describe('Lightweight Types', () => {
         id: BrandedTypeUtils.createMetadataId('tech_test'),
         timestamp: Date.now(),
         version: '2.0.0',
-        source: { name: 'test', type: 'api' },
-        market: { name: 'crypto', region: 'global' },
+        source: {
+          id: 'test_source',
+          provider: 'test_provider',
+          feed: 'test_feed',
+          latency: 100,
+          reliability: 0.95,
+          lastUpdate: Date.now(),
+          updateFrequency: 1000,
+          name: 'test',
+          type: 'api',
+          cost: 0.01
+        },
+        market: {
+          session: 'continuous' as any,
+          liquidity: 'high' as any,
+          volatility: 'medium' as any,
+          timeZone: 'UTC',
+          name: 'crypto',
+          marketHours: {
+            open: '00:00',
+            close: '23:59',
+            currentStatus: 'open' as const
+          },
+          relatedMarkets: ['BTC', 'ETH'],
+          correlatedSymbols: ['BTC/USD', 'ETH/USD']
+        },
         topics: [MarketTopic.CRYPTO_SPOT],
         category: DataCategory.MARKET_DATA,
         tags: [],
-        quality: { score: 0.9, confidence: 0.95 },
+        quality: {
+          completeness: 0.9,
+          accuracy: 0.95,
+          freshness: 100,
+          consistency: 0.9,
+          validity: 0.95,
+          overall: 0.9,
+          score: 0.9,
+        },
         technical,
         relationships: {
           childIds: [],
@@ -281,12 +409,44 @@ describe('Lightweight Types', () => {
         id: BrandedTypeUtils.createMetadataId('biz_test'),
         timestamp: Date.now(),
         version: '2.0.0',
-        source: { name: 'test', type: 'api' },
-        market: { name: 'crypto', region: 'global' },
+        source: {
+          id: 'test_source',
+          provider: 'test_provider',
+          feed: 'test_feed',
+          latency: 100,
+          reliability: 0.95,
+          lastUpdate: Date.now(),
+          updateFrequency: 1000,
+          name: 'test',
+          type: 'api',
+          cost: 0.01
+        },
+        market: {
+          session: 'continuous' as any,
+          liquidity: 'high' as any,
+          volatility: 'medium' as any,
+          timeZone: 'UTC',
+          name: 'crypto',
+          marketHours: {
+            open: '00:00',
+            close: '23:59',
+            currentStatus: 'open' as const
+          },
+          relatedMarkets: ['BTC', 'ETH'],
+          correlatedSymbols: ['BTC/USD', 'ETH/USD']
+        },
         topics: [MarketTopic.CRYPTO_SPOT],
         category: DataCategory.MARKET_DATA,
         tags: [],
-        quality: { score: 0.9, confidence: 0.95 },
+        quality: {
+          completeness: 0.9,
+          accuracy: 0.95,
+          freshness: 100,
+          consistency: 0.9,
+          validity: 0.95,
+          overall: 0.9,
+          score: 0.9,
+        },
         business,
         relationships: {
           childIds: [],
@@ -313,12 +473,44 @@ describe('Lightweight Types', () => {
         id: BrandedTypeUtils.createMetadataId('proc_test'),
         timestamp: Date.now(),
         version: '2.0.0',
-        source: { name: 'test', type: 'api' },
-        market: { name: 'crypto', region: 'global' },
+        source: {
+          id: 'test_source',
+          provider: 'test_provider',
+          feed: 'test_feed',
+          latency: 100,
+          reliability: 0.95,
+          lastUpdate: Date.now(),
+          updateFrequency: 1000,
+          name: 'test',
+          type: 'api',
+          cost: 0.01
+        },
+        market: {
+          session: 'continuous' as any,
+          liquidity: 'high' as any,
+          volatility: 'medium' as any,
+          timeZone: 'UTC',
+          name: 'crypto',
+          marketHours: {
+            open: '00:00',
+            close: '23:59',
+            currentStatus: 'open' as const
+          },
+          relatedMarkets: ['BTC', 'ETH'],
+          correlatedSymbols: ['BTC/USD', 'ETH/USD']
+        },
         topics: [MarketTopic.CRYPTO_SPOT],
         category: DataCategory.MARKET_DATA,
         tags: [],
-        quality: { score: 0.9, confidence: 0.95 },
+        quality: {
+          completeness: 0.9,
+          accuracy: 0.95,
+          freshness: 100,
+          consistency: 0.9,
+          validity: 0.95,
+          overall: 0.9,
+          score: 0.9
+        },
         processing,
         relationships: {
           childIds: [],
@@ -343,12 +535,44 @@ describe('Lightweight Types', () => {
         id: BrandedTypeUtils.createMetadataId('main_1'),
         timestamp: Date.now(),
         version: '2.0.0',
-        source: { name: 'test', type: 'api' },
-        market: { name: 'crypto', region: 'global' },
+        source: {
+          id: 'test_source',
+          provider: 'test_provider',
+          feed: 'test_feed',
+          latency: 100,
+          reliability: 0.95,
+          lastUpdate: Date.now(),
+          updateFrequency: 1000,
+          name: 'test',
+          type: 'api',
+          cost: 0.01
+        },
+        market: {
+          session: 'continuous' as any,
+          liquidity: 'high' as any,
+          volatility: 'medium' as any,
+          timeZone: 'UTC',
+          name: 'crypto',
+          marketHours: {
+            open: '00:00',
+            close: '23:59',
+            currentStatus: 'open' as const
+          },
+          relatedMarkets: ['BTC', 'ETH'],
+          correlatedSymbols: ['BTC/USD', 'ETH/USD']
+        },
         topics: [MarketTopic.CRYPTO_SPOT],
         category: DataCategory.MARKET_DATA,
         tags: [],
-        quality: { score: 0.9, confidence: 0.95 },
+        quality: {
+          completeness: 0.9,
+          accuracy: 0.95,
+          freshness: 100,
+          consistency: 0.9,
+          validity: 0.95,
+          overall: 0.9,
+          score: 0.9
+        },
         relationships: {
           parentId,
           childIds: [childId1, childId2],

@@ -112,6 +112,7 @@ export enum VolatilityLevel {
  * Data source information
  */
 export interface DataSource {
+    id: string;
     provider: string;
     feed: string;
     endpoint?: string;
@@ -119,6 +120,9 @@ export interface DataSource {
     reliability: number; // 0-1 score
     lastUpdate: number; // timestamp
     updateFrequency: number; // in milliseconds
+    name?: string;
+    type: string;
+    cost: number;
 }
 
 /**
@@ -129,6 +133,7 @@ export interface MarketContext {
     liquidity: LiquidityLevel;
     volatility: VolatilityLevel;
     timeZone: string;
+    name?: string;
     marketHours: {
         open: string;
         close: string;
@@ -148,6 +153,7 @@ export interface DataQuality {
     consistency: number; // 0-1 score
     validity: number; // 0-1 score
     overall: number; // 0-1 aggregated score
+    score?: number;
 }
 
 /**

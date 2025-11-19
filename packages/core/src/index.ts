@@ -1,2 +1,2 @@
 // Core types and interfaces for Odds Protocol
-export * from '../odds-core/src/types/index.ts';
+export * from '../../odds-core/src/types/index.js';

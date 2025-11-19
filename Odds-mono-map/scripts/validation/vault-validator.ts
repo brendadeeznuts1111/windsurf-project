@@ -79,7 +79,7 @@ class VaultValidator {
 
     constructor(config?: Partial<ValidationConfig>) {
         this.config = {
-            templateNamingPattern: /^[A-Z][a-zA-Z0-9\s-]+\s+Template\.md$/,
+            templateNamingPattern: /^[A-Z][a-zA-Z0-9\s-]+\s+\(Bun Template\)\.md$|^TEMPLATE_MASTER_INDEX\.md$/,
             requiredDirectories: [
                 '01 - Daily Notes',
                 '01 - Daily Notes/01 - Reports',

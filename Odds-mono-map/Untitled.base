@@ -4,9 +4,11 @@ summaries:
 views:
   - type: table
     name: Table
+    groupBy:
+      property: file.folder
+      direction: ASC
     order:
       - file.name
-      - file.links
       - file.basename
       - file.ctime
       - file.folder
@@ -76,19 +78,21 @@ views:
       - focus_area
       - console-type
       - maintainer
+      - dashboard-type
+      - design_system_name
+      - development_lead
+      - mood
+      - modified
+      - meeting_type
     sort:
-      - property: file.name
-        direction: DESC
-      - property: file.links
-        direction: DESC
+      - property: file.ctime
+        direction: ASC
       - property: priority
         direction: ASC
       - property: file.path
         direction: ASC
       - property: target-date
         direction: ASC
-      - property: file.folder
-        direction: DESC
       - property: file.basename
         direction: DESC
       - property: updated
@@ -96,7 +100,7 @@ views:
       - property: file.size
         direction: DESC
     columnSize:
-      file.links: 126
+      file.links: 1265
       file.basename: 241
       file.path: 188
       note.related-files: 154

@@ -13,7 +13,7 @@ priority: medium
 title: ""Consciousness Demo Note""
 ---
 
-# 🧠 Consciousness Demo
+## 🧠 Consciousness Demo
 
 This is a demonstration of the consciousness-aware frontmatter system.
 

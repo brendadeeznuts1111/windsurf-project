@@ -122,6 +122,8 @@ export class EnhancedFrontMatterOrganizer {
             base.tags = existing.tags.split(',').map((t: string) => t.trim());
         } else if (!Array.isArray(existing.tags)) {
             base.tags = [];
+        } else {
+            base.tags = existing.tags;
         }
 
         return base;

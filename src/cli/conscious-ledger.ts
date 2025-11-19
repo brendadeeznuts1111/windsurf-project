@@ -3,6 +3,7 @@ export interface LedgerEntry {
     type: string;
     timestamp: string;
     data?: Record<string, any>;
+    [key: string]: any; // Allow additional properties
 }
 
 export class ConsciousLedger {

@@ -20,7 +20,7 @@ export class FrontMatterOrganizer {
 
             if (!result.success) {
                 console.log(`⚠️  Front matter validation failed for ${filePath}`);
-                console.log(`   Errors: ${result.error.issues.map(i => i.path.join('.')).join(', ')}`);
+                console.log(`   Errors: ${result.error.issues.map((i: any) => i.path.join('.')).join(', ')}`);
 
                 // **Auto-fix** missing fields
                 const fixed = await this.autoFixFrontMatter(frontMatter);

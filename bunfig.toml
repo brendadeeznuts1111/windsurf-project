@@ -1,0 +1,10 @@
+# Azure Artifacts npm registry configuration
+[install.registry]
+url = "https://pkgs.dev.azure.com/brendawill2233/_packaging/brendawill2233/npm/registry"
+username = "brendawill2233"
+# Personal Access Token - DO NOT base64 encode, Bun handles this automatically
+password = "$NPM_PASSWORD"
+
+[install]
+# Use lockfile for reproducible installs
+frozen = false

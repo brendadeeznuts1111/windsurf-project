@@ -1,26 +1,56 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { NETWORK_CONSTANTS, TIMING_CONSTANTS, STATUS_CODES } from '../constants';
 
 interface WebSocketMessage {
   type: string;
+  channel?: string;
   data: any;
   timestamp: number;
   sequence: number;
+  pid?: number;
+}
+
+interface TelemetryTick {
+  tick_id: number;
+  market_id: string;
+  price: number;
+  volume: number;
+  bid: number;
+  ask: number;
+  tick_timestamp: number;
+  pid_context: {
+    pid: number;
+    parent_pid: number;
+    instance_id: string;
+  };
+  telemetry: {
+    ingest_latency_ns: number;
+    queue_depth: number;
+    buffer_utilization: number;
+  };
 }
 
 interface OddsWebSocketClientProps {
   onConnectionChange: (connected: boolean) => void;
+  onTelemetryTick?: (tick: TelemetryTick) => void;
 }
 
-export const OddsWebSocketClient: React.FC<OddsWebSocketClientProps> = ({ onConnectionChange }) => {
+export const OddsWebSocketClient: React.FC<OddsWebSocketClientProps> = ({
+  onConnectionChange,
+  onTelemetryTick
+}) => {
   const [isConnected, setIsConnected] = useState(false);
   const [messages, setMessages] = useState<WebSocketMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [clientId, setClientId] = useState<string | null>(null);
+  const [serverPid, setServerPid] = useState<number | null>(null);
+  const [tickCount, setTickCount] = useState(0);
   const ws = useRef<WebSocket | null>(null);
   const reconnectTimeout = useRef<number | null>(null);
 
   useEffect(() => {
     connect();
-    
+
     return () => {
       disconnect();
     };
@@ -28,19 +58,48 @@ export const OddsWebSocketClient: React.FC<OddsWebSocketClientProps> = ({ onConn
 
   const connect = () => {
     try {
-      ws.current = new WebSocket('ws://localhost:8080');
+      // Connect to unified server on port 6969 with /ws path
+      const wsUrl = `ws://${NETWORK_CONSTANTS.LOCALHOST}:${NETWORK_CONSTANTS.WEBSOCKET_PORT}${NETWORK_CONSTANTS.WS_PATH}`;
+      ws.current = new WebSocket(wsUrl);
+      console.log(`Connecting to WebSocket: ${wsUrl}`);
       
       ws.current.onopen = () => {
         setIsConnected(true);
         setError(null);
         onConnectionChange(true);
-        console.log('WebSocket connected');
+        console.log('WebSocket connected to unified server');
+
+        // Auto-subscribe to telemetry channels
+        setTimeout(() => {
+          subscribeToChannel('market-ticks');
+          subscribeToChannel('metrics');
+        }, 100);
       };
-      
+
       ws.current.onmessage = (event: MessageEvent) => {
         try {
           const message: WebSocketMessage = JSON.parse(event.data);
-          setMessages((prev: WebSocketMessage[]) => [...prev.slice(-99), message]); // Keep last 100 messages
+          setMessages((prev: WebSocketMessage[]) => [...prev.slice(-99), message]);
+
+          // Handle specific message types
+          switch (message.type) {
+            case 'connected':
+              setClientId(message.data?.clientId);
+              setServerPid(message.data?.pid);
+              console.log(`Connected as ${message.data?.clientId}, server PID: ${message.data?.pid}`);
+              break;
+
+            case 'telemetry':
+              if (message.channel === 'market-ticks' && onTelemetryTick) {
+                setTickCount(prev => prev + 1);
+                onTelemetryTick(message.data as TelemetryTick);
+              }
+              break;
+
+            case 'subscribed':
+              console.log(`Subscribed to channel: ${message.data?.channel}`);
+              break;
+          }
         } catch (err) {
           console.error('Failed to parse message:', err);
         }
@@ -52,8 +111,8 @@ export const OddsWebSocketClient: React.FC<OddsWebSocketClientProps> = ({ onConn
         console.log('WebSocket disconnected:', event.code, event.reason);
         
         // Auto-reconnect after 3 seconds
-        if (event.code !== 1000) {
-          reconnectTimeout.current = window.setTimeout(connect, 3000);
+        if (event.code !== STATUS_CODES.NORMAL_CLOSURE) {
+          reconnectTimeout.current = window.setTimeout(connect, TIMING_CONSTANTS.THREE_SECONDS);
         }
       };
       
@@ -75,7 +134,7 @@ export const OddsWebSocketClient: React.FC<OddsWebSocketClientProps> = ({ onConn
     }
     
     if (ws.current) {
-      ws.current.close(1000, 'User disconnected');
+      ws.current.close(STATUS_CODES.NORMAL_CLOSURE, 'User disconnected');
       ws.current = null;
     }
     
@@ -104,8 +163,17 @@ export const OddsWebSocketClient: React.FC<OddsWebSocketClientProps> = ({ onConn
     sendMessage('unsubscribe', { symbol });
   };
 
+  const subscribeToChannel = (channel: string) => {
+    sendMessage('subscribe', { channel });
+  };
+
+  const unsubscribeFromChannel = (channel: string) => {
+    sendMessage('unsubscribe', { channel });
+  };
+
   const clearMessages = () => {
     setMessages([]);
+    setTickCount(0);
   };
 
   return (
@@ -135,8 +203,10 @@ export const OddsWebSocketClient: React.FC<OddsWebSocketClientProps> = ({ onConn
         <span className={`status ${isConnected ? 'connected' : 'disconnected'}`}>
           {isConnected ? 'Connected' : 'Disconnected'}
         </span>
+        {clientId && <span className="client-id">ID: {clientId}</span>}
+        {serverPid && <span className="server-pid">PID: {serverPid}</span>}
         <span className="message-count">
-          {messages.length} messages
+          {messages.length} msgs | {tickCount} ticks
         </span>
       </div>
       

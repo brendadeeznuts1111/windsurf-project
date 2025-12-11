@@ -1,0 +1,368 @@
+/* apps/dashboard/src/components/cross-reference-guide.css */
+
+.cross-reference-guide {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.guide-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.guide-header h2 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.guide-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.guide-content {
+  display: grid;
+  gap: 2rem;
+}
+
+/* Components Overview */
+.components-overview h3 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.component-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.component-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.category-badge {
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.component-header h4 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.component-description {
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.component-tech,
+.component-relations {
+  margin-bottom: 1rem;
+}
+
+.component-tech strong,
+.component-relations strong {
+  display: block;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.tech-tags,
+.relation-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-tag,
+.relation-link {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.relation-link {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Relationships Map */
+.relationships-map h3 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+.relationships-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.relationship-item {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.relationship-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.component-name {
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+  text-align: center;
+}
+
+.component-name.from {
+  text-align: left;
+}
+
+.component-name.to {
+  text-align: right;
+}
+
+.relationship-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 1.5rem;
+  color: #007bff;
+}
+
+.relationship-type {
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: capitalize;
+  background: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.relationship-description {
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Architecture Patterns */
+.architecture-patterns h3 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+.patterns-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.pattern-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.pattern-card h4 {
+  color: #333;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.pattern-card p {
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.pattern-components {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  color: #007bff;
+  background: #f0f8ff;
+  padding: 0.75rem;
+  border-radius: 4px;
+}
+
+/* Cross-Reference Matrix */
+.cross-reference-matrix h3 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+.matrix-container {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e5e7eb;
+  overflow-x: auto;
+}
+
+.integration-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.integration-matrix th,
+.integration-matrix td {
+  padding: 0.75rem;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+}
+
+.matrix-header {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  height: 120px;
+  font-weight: 500;
+  color: #666;
+}
+
+.matrix-row-header {
+  font-weight: 500;
+  color: #333;
+  text-align: left;
+  background: #f8f9fa;
+}
+
+.matrix-cell {
+  background: white;
+}
+
+.relationship-indicator {
+  font-size: 1.2rem;
+}
+
+.relationship-indicator.uses {
+  color: #10b981;
+}
+
+.relationship-indicator.extends {
+  color: #f59e0b;
+}
+
+.relationship-indicator.integrates {
+  color: #3b82f6;
+}
+
+.relationship-indicator.demonstrates {
+  color: #8b5cf6;
+}
+
+.relationship-indicator.complements {
+  color: #ef4444;
+}
+
+.self-reference {
+  color: #6b7280;
+  font-size: 1.2rem;
+}
+
+.no-relationship {
+  color: #e5e7eb;
+  font-size: 1.2rem;
+}
+
+.matrix-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.legend-icon {
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cross-reference-guide {
+    padding: 1rem;
+  }
+
+  .components-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .patterns-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .relationship-flow {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .component-name {
+    text-align: center !important;
+  }
+
+  .matrix-container {
+    font-size: 0.8rem;
+  }
+
+  .matrix-header {
+    height: 80px;
+    font-size: 0.8rem;
+  }
+
+  .integration-matrix th,
+  .integration-matrix td {
+    padding: 0.5rem;
+  }
+}

@@ -1,15 +1,18 @@
 {
   "name": "bun-mcp-server",
-  "version": "1.0.0",
-  "description": "MCP server for searching Bun documentation",
+  "version": "1.1.0",
+  "description": "MCP server for Bun documentation and Azure DevOps integration",
   "type": "module",
-  "main": "working-server.ts",
+  "main": "index.ts",
   "scripts": {
-    "start": "bun run working-server.ts",
-    "dev": "bun --watch working-server.ts",
-    "build": "bun build working-server.ts --outdir ./dist --target bun",
+    "start": "bun run index.ts",
+    "dev": "bun --watch index.ts",
+    "build": "bun build index.ts --outdir ./dist --target bun",
     "test": "bun test",
-    "original": "bun run bun-mcp-server.ts"
+    "original": "bun run bun-mcp-server.ts",
+    "azure": "bun run ../scripts/az-devops-cli.ts",
+    "az:status": "bun run ../scripts/az-devops-cli.ts status",
+    "az:sync": "bun run ../scripts/az-devops-cli.ts sync"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.22.0",

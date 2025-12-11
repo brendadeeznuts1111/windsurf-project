@@ -125,6 +125,58 @@ cd mcp-server && bun run dev    # Dev mode with --watch
 - Target ES2022
 - Bun native APIs preferred over Node.js polyfills
 
+## Azure DevOps Integration
+
+**Organization:** https://dev.azure.com/brendawill2233
+**Project:** brendawill2233
+**Repository:** brendawill2233
+
+### CLI Tools
+
+```bash
+# Azure DevOps CLI helper
+bun run scripts/az-devops-cli.ts <command>
+
+# Common commands
+bun run scripts/az-devops-cli.ts status        # Project overview
+bun run scripts/az-devops-cli.ts sync          # Sync repos
+bun run scripts/az-devops-cli.ts wi:create task "Title"  # Create work item
+bun run scripts/az-devops-cli.ts wi:list Active         # List work items
+bun run scripts/az-devops-cli.ts pipe:run odds-protocol-ci  # Run pipeline
+bun run scripts/az-devops-cli.ts pr:create branch "Title"   # Create PR
+bun run scripts/az-devops-cli.ts help          # All commands
+```
+
+### MCP Server with Azure DevOps
+
+The MCP server (`mcp-server/`) includes Azure DevOps tools:
+- `azure-create-work-item` - Create work items
+- `azure-list-work-items` - Query work items
+- `azure-run-pipeline` - Trigger pipelines
+- `azure-create-pr` - Create pull requests
+- `azure-project-stats` - Project statistics
+
+Start MCP server: `cd mcp-server && bun run start`
+
+### Webhook Handler
+
+```bash
+# Start local webhook handler
+bun run scripts/azure-webhook-handler.ts
+
+# Expose publicly for testing
+ngrok http 9090
+```
+
+Supported events: build.complete, git.pullrequest.created, git.push, workitem.created
+
+### Git Remotes
+
+```bash
+git remote add azure https://dev.azure.com/brendawill2233/brendawill2233/_git/brendawill2233
+git push azure main  # Push to Azure DevOps
+```
+
 ## Project-Specific Notes
 
 - Telemetry uses PID context for process attribution across distributed systems

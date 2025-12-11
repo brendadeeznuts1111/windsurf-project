@@ -1,3 +1,23 @@
+/**
+ * @fileoverview Main Application Component
+ * @description Central dashboard application with comprehensive Bun API demonstrations
+ * @author Odds Protocol Team
+ * @version 1.0.0
+ * @since 2024
+ *
+ * @see {@link FetchDemo} - HTTP networking and API testing
+ * @see {@link TCPDemo} - TCP networking with connection management
+ * @see {@link BunV13Demo} - Bun v1.3 enhanced features
+ * @see {@link MarketTelemetryDemo} - PID-aware market data telemetry
+ * @see {@link PIDFileSystemDemo} - Process-aware file operations
+ * @see {@link BunFileAPIDocs} - Complete file I/O API reference
+ * @see {@link OddsWebSocketClient} - Real-time WebSocket connections
+ * @see {@link ArbitrageTable} - Arbitrage opportunity detection
+ * @see {@link MarketDataChart} - Market data visualization
+ * @see {@link SharpDetectionPanel} - Sharp money detection
+ * @see {@link PerformanceMetrics} - System performance monitoring
+ */
+
 import React, { useState, useEffect } from 'react';
 import { OddsWebSocketClient } from './components/OddsWebSocketClient';
 import { ArbitrageTable } from './components/ArbitrageTable';
@@ -5,10 +25,40 @@ import { MarketDataChart } from './components/MarketDataChart';
 import { SharpDetectionPanel } from './components/SharpDetectionPanel';
 import { PerformanceMetrics } from './components/PerformanceMetrics';
 import BunV13Demo from './components/BunV13Demo';
+import { FetchDemo } from './components/FetchDemo';
+import { BunFileAPIDocs } from './components/BunFileAPIDocs';
+import { PIDFileSystemDemo } from './components/PIDFileSystemDemo';
+import { MarketTelemetryDemo } from './components/MarketTelemetryDemo';
+import { TCPDemo } from './components/TCPDemo';
+import BunV13Demo from './components/BunV13Demo';
+import { CrossReferenceGuide } from './components/CrossReferenceGuide';
+import SQLDemo from './components/SQLDemo';
+import AdvancedSQLDemo from './components/AdvancedSQLDemo';
+import NodeCompatDemo from './components/NodeCompatDemo';
 import './App.css';
 
+/**
+ * Main Application Component
+ *
+ * Central dashboard providing comprehensive demonstrations of Bun's runtime capabilities
+ * including networking, file I/O, telemetry, and advanced features.
+ *
+ * Features:
+ * - Multi-tab interface for different Bun API demonstrations
+ * - Real-time WebSocket connection status
+ * - Comprehensive Bun v1.3 feature showcase
+ * - Enterprise-grade telemetry and monitoring
+ * - Interactive networking and file system demos
+ *
+ * @component
+ * @returns {React.FC} The main application component
+ */
 function App() {
+  // Component state
+  /** @type {boolean} WebSocket connection status */
   const [isConnected, setIsConnected] = useState(false);
+
+  /** @type {string} Currently active tab identifier */
   const [activeTab, setActiveTab] = useState('overview');
 
   return (
@@ -59,6 +109,66 @@ function App() {
         >
           Bun v1.3 CSS
         </button>
+        <button
+          className={activeTab === 'bun-fetch' ? 'active' : ''}
+          onClick={() => setActiveTab('bun-fetch')}
+        >
+          Bun Fetch API
+        </button>
+        <button
+          className={activeTab === 'bun-file-api' ? 'active' : ''}
+          onClick={() => setActiveTab('bun-file-api')}
+        >
+          Bun File I/O
+        </button>
+        <button
+          className={activeTab === 'pid-file-system' ? 'active' : ''}
+          onClick={() => setActiveTab('pid-file-system')}
+        >
+          PID File System
+        </button>
+        <button
+          className={activeTab === 'market-telemetry' ? 'active' : ''}
+          onClick={() => setActiveTab('market-telemetry')}
+        >
+          Market Telemetry
+        </button>
+        <button
+          className={activeTab === 'tcp-demo' ? 'active' : ''}
+          onClick={() => setActiveTab('tcp-demo')}
+        >
+          TCP API Demo
+        </button>
+        <button
+          className={activeTab === 'bun-v13-enhanced' ? 'active' : ''}
+          onClick={() => setActiveTab('bun-v13-enhanced')}
+        >
+          Bun v1.3 Enhanced
+        </button>
+        <button
+          className={activeTab === 'cross-reference' ? 'active' : ''}
+          onClick={() => setActiveTab('cross-reference')}
+        >
+          Cross-Reference Guide
+        </button>
+        <button
+          className={activeTab === 'sql-demo' ? 'active' : ''}
+          onClick={() => setActiveTab('sql-demo')}
+        >
+          Bun SQL API
+        </button>
+        <button
+          className={activeTab === 'advanced-sql-demo' ? 'active' : ''}
+          onClick={() => setActiveTab('advanced-sql-demo')}
+        >
+          Advanced SQL Features
+        </button>
+        <button
+          className={activeTab === 'node-compat-demo' ? 'active' : ''}
+          onClick={() => setActiveTab('node-compat-demo')}
+        >
+          Node.js Compatibility
+        </button>
       </nav>
 
       <main className="app-main">
@@ -93,6 +203,16 @@ function App() {
         {activeTab === 'sharp-detection' && <SharpDetectionPanel />}
         {activeTab === 'performance' && <PerformanceMetrics />}
         {activeTab === 'bun-v13' && <BunV13Demo />}
+        {activeTab === 'bun-fetch' && <FetchDemo />}
+        {activeTab === 'bun-file-api' && <BunFileAPIDocs />}
+        {activeTab === 'pid-file-system' && <PIDFileSystemDemo />}
+        {activeTab === 'market-telemetry' && <MarketTelemetryDemo />}
+        {activeTab === 'tcp-demo' && <TCPDemo />}
+        {activeTab === 'bun-v13-enhanced' && <BunV13Demo />}
+        {activeTab === 'cross-reference' && <CrossReferenceGuide />}
+        {activeTab === 'sql-demo' && <SQLDemo />}
+        {activeTab === 'advanced-sql-demo' && <AdvancedSQLDemo />}
+        {activeTab === 'node-compat-demo' && <NodeCompatDemo />}
       </main>
     </div>
   );

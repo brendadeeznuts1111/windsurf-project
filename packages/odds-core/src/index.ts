@@ -19,6 +19,9 @@ export * from './error/error-middleware';
 // Monitoring and API Tracking
 export * from './monitoring/api-tracker';
 
+// Telemetry and PID Context Management
+export * from './telemetry';
+
 // Re-export commonly used utilities
 export { configLoader } from './config/yaml-loader';
 export { sessionManager } from './auth/session-manager';

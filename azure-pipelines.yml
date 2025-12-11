@@ -1,37 +1,90 @@
 # Azure Pipelines CI/CD for Odds Protocol
+# Triggers on main branch and pull requests
 trigger:
-  - main
+  branches:
+    include:
+      - main
+      - develop
+      - feature/*
+  paths:
+    exclude:
+      - '*.md'
+      - 'docs/**'
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - '*.md'
+      - 'docs/**'
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
   BUN_VERSION: '1.3.4'
+  NODE_ENV: 'production'
 
-steps:
-  - script: |
-      curl -fsSL https://bun.sh/install | bash
-      echo "##vso[task.prependpath]$HOME/.bun/bin"
-    displayName: 'Install Bun'
+stages:
+  - stage: Build
+    displayName: 'Build & Test'
+    jobs:
+      - job: BuildAndTest
+        displayName: 'Build and Test'
+        steps:
+          - script: |
+              curl -fsSL https://bun.sh/install | bash
+              echo "##vso[task.prependpath]$HOME/.bun/bin"
+            displayName: 'Install Bun $(BUN_VERSION)'
 
-  - script: bun --version
-    displayName: 'Verify Bun installation'
+          - script: bun --version
+            displayName: 'Verify Bun installation'
 
-  - script: bun install
-    displayName: 'Install dependencies'
+          - script: bun install
+            displayName: 'Install dependencies'
 
-  - script: |
-      cd packages/odds-core
-      bun test || true
-    displayName: 'Run odds-core tests'
+          - script: |
+              cd packages/odds-core
+              bun test || true
+            displayName: 'Run odds-core tests'
 
-  - script: |
-      cd apps/dashboard
-      bun install
-      bunx tsc --noEmit || true
-    displayName: 'TypeScript check'
+          - script: |
+              cd apps/dashboard
+              bun install
+              bunx tsc --noEmit || true
+            displayName: 'TypeScript check'
 
-  - script: |
-      cd apps/dashboard
-      bun run build
-    displayName: 'Build dashboard'
+          - script: |
+              cd apps/dashboard
+              bun run build
+            displayName: 'Build dashboard'
+
+          - script: |
+              cd mcp-server
+              bun install
+              bun run build || true
+            displayName: 'Build MCP server'
+
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathtoPublish: 'apps/dashboard/dist'
+              artifactName: 'dashboard-build'
+            displayName: 'Publish dashboard artifacts'
+            condition: succeeded()
+
+  - stage: Notify
+    displayName: 'Notifications'
+    dependsOn: Build
+    condition: always()
+    jobs:
+      - job: NotifyStatus
+        displayName: 'Send Build Status'
+        steps:
+          - script: |
+              echo "Build $(Build.BuildId) completed"
+              echo "Status: $(Agent.JobStatus)"
+              echo "Branch: $(Build.SourceBranchName)"
+              echo "Commit: $(Build.SourceVersion)"
+            displayName: 'Log build status'

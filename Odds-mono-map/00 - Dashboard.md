@@ -1,11 +1,18 @@
 ---
+id: 6a870e3c-ebd9-413e-9315-ab35d7268f88
+timestamp: 2025-11-19T10:59:25.697Z
+consciousnessVersion: v1
+drift: 0
+pressure: 0.7870125312762525
+mode: adaptive
 type: dashboard
-title: "Odds Protocol Vault Dashboard"
-section: "00 - Dashboard"
-category: "system"
-priority: "high"
-status: "active"
 tags: ["dashboard", "overview", "metrics", "monitoring"]
+links: []
+status: "active"
+priority: "high"
+title: ""Odds Protocol Vault Dashboard""
+section: ""00 - Dashboard""
+category: "system"
 created: "2025-11-19T00:40:00Z"
 updated: "2025-11-19T00:40:00Z"
 author: "vault-system"

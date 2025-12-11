@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BUSINESS_CONFIG, TIME_CONSTANTS } from '../../../core/src/constants';
+
+import { TIMING_CONSTANTS } from '../constants';
 
 interface ArbitrageOpportunity {
   id: string;
@@ -55,8 +56,8 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
           symbol: 'GOOGL',
           exchange1: 'NASDAQ',
           exchange2: 'LSE',
-          price1: 2800.50,
-          price2: 2801.20,
+          price1: 2800.50, // Keep as specific test data
+          price2: 2801.20, // Keep as specific test data
           profit: 0.70,
           confidence: 0.92,
           timestamp: Date.now() - TIME_CONSTANTS.INTERVALS.TEN_SECONDS

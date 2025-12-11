@@ -4,6 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { z } from "zod";
+import { registerAzureDevOpsTools } from "./src/tools/azure-devops-tools.js";
 
 // Type declaration for global process (Bun provides this globally)
 declare const process: {
@@ -1352,11 +1353,14 @@ Cover:
   }
 );
 
+// Register Azure DevOps tools
+registerAzureDevOpsTools(server);
+
 // Start the server with transport selection
 async function main() {
   const transportType = process.env.MCP_TRANSPORT || "stdio";
   const port = parseInt(process.env.MCP_PORT || "3000");
-  
+
   if (transportType === "http") {
     // HTTP/SSE transport for web-based MCP clients
     const transport = new SSEServerTransport("/message", {

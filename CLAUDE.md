@@ -70,12 +70,14 @@ cd mcp-server && bun run dev    # Dev mode with --watch
 
 ### Key Technical Patterns
 
-**Bun Runtime (v1.3.0+)**
+**Bun Runtime (v1.3.4+)**
 - Native TypeScript execution without compilation
 - `Bun.serve()` for HTTP/WebSocket servers
 - `Bun.file()` for file operations
 - `bun:sqlite` for in-memory databases
 - YAML parsing via native APIs
+- `bun update --interactive` installs updates directly (no extra `bun install` needed)
+- npm: alias prefixes preserved during updates
 
 **Core Package Exports** (packages/odds-core/src/index.ts)
 - Types, constants, utils, validation, errors

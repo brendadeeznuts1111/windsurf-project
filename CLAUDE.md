@@ -90,11 +90,24 @@ cd mcp-server && bun run dev    # Dev mode with --watch
 - Sub-millisecond latency for odds updates
 - Connection management with tick processing
 
-**Dashboard API Server** (apps/dashboard/src/api/)
+**Unified Dashboard Server** (apps/dashboard/src/server.ts)
+- Single Bun.serve() instance on port 6969
+- HTTP API routes via URLPattern routing
+- WebSocket upgrade at `/ws` endpoint
+- Real-time telemetry broadcasting
+- PID-aware tick streaming to connected clients
+
+**Dashboard API** (apps/dashboard/src/api/)
 - URLPattern-based routing for sub-millisecond matching
 - RESTful arbitrage API with SQLite
 - Prometheus metrics endpoints
 - CORS enabled for cross-origin
+
+**Telemetry Integration**
+- `OddsWebSocketClient` - Auto-subscribes to `market-ticks` and `metrics` channels
+- `PerformanceMetrics` - Live tick display with latency tracking
+- Channels: `market-ticks`, `metrics`
+- Messages include PID context for process attribution
 
 ### Testing Strategy
 

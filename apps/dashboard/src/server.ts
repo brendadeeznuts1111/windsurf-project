@@ -309,8 +309,64 @@ setInterval(() => {
   }
 }, TICK_INTERVAL);
 
+// ─────────────────────────────────────────────────────────────────
+// ORCA Dashboard Real-time Updates
+// ─────────────────────────────────────────────────────────────────
+
+/**
+ * Broadcast ORCA package updates
+ */
+export function broadcastOrcaUpdate(data: any): void {
+  broadcastTelemetry('orca-packages', data);
+}
+
+/**
+ * Broadcast ORCA registry status
+ */
+export function broadcastOrcaRegistry(data: any): void {
+  broadcastTelemetry('orca-registries', data);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Azure DevOps Real-time Updates
+// ─────────────────────────────────────────────────────────────────
+
+/**
+ * Broadcast Azure build status updates
+ */
+export function broadcastAzureBuild(data: any): void {
+  broadcastTelemetry('azure-builds', data);
+}
+
+/**
+ * Broadcast Azure work item updates
+ */
+export function broadcastAzureWorkItem(data: any): void {
+  broadcastTelemetry('azure-work-items', data);
+}
+
+/**
+ * Broadcast Azure PR updates
+ */
+export function broadcastAzurePR(data: any): void {
+  broadcastTelemetry('azure-prs', data);
+}
+
+// Start periodic ORCA stats broadcast
+setInterval(() => {
+  if (wsClients.size > 0) {
+    broadcastTelemetry('orca-stats', {
+      timestamp: Date.now(),
+      totalPackages: 11,
+      activeConnections: wsClients.size
+    });
+  }
+}, 5000); // Every 5 seconds
+
 console.log(`✅ Unified Server running at http://${HOST}:${PORT}`);
 console.log(`🔌 WebSocket available at ws://${HOST}:${PORT}/ws`);
 console.log(`📊 Broadcasting telemetry every ${TICK_INTERVAL}ms when clients connected`);
+console.log(`🐋 ORCA Dashboard channels: orca-packages, orca-registries, orca-stats`);
+console.log(`☁️ Azure DevOps channels: azure-builds, azure-work-items, azure-prs`);
 
 export { server };

@@ -30,8 +30,9 @@ import { BunFileAPIDocs } from './components/BunFileAPIDocs';
 import { PIDFileSystemDemo } from './components/PIDFileSystemDemo';
 import { MarketTelemetryDemo } from './components/MarketTelemetryDemo';
 import { TCPDemo } from './components/TCPDemo';
-import BunV13Demo from './components/BunV13Demo';
 import { CrossReferenceGuide } from './components/CrossReferenceGuide';
+import OrcaDashboard from './components/OrcaDashboard';
+import AzureDevOpsDashboard from './components/AzureDevOpsDashboard';
 import SQLDemo from './components/SQLDemo';
 import AdvancedSQLDemo from './components/AdvancedSQLDemo';
 import NodeCompatDemo from './components/NodeCompatDemo';
@@ -169,6 +170,18 @@ function App() {
         >
           Node.js Compatibility
         </button>
+        <button
+          className={activeTab === 'orca-dashboard' ? 'active' : ''}
+          onClick={() => setActiveTab('orca-dashboard')}
+        >
+          ORCA Dashboard
+        </button>
+        <button
+          className={activeTab === 'azure-devops' ? 'active' : ''}
+          onClick={() => setActiveTab('azure-devops')}
+        >
+          Azure DevOps
+        </button>
       </nav>
 
       <main className="app-main">
@@ -213,6 +226,8 @@ function App() {
         {activeTab === 'sql-demo' && <SQLDemo />}
         {activeTab === 'advanced-sql-demo' && <AdvancedSQLDemo />}
         {activeTab === 'node-compat-demo' && <NodeCompatDemo />}
+        {activeTab === 'orca-dashboard' && <OrcaDashboard />}
+        {activeTab === 'azure-devops' && <AzureDevOpsDashboard />}
       </main>
     </div>
   );

@@ -22,6 +22,13 @@ export * from './monitoring/api-tracker';
 // Telemetry and PID Context Management
 export * from './telemetry';
 
+// HB47 Mega Bookie Registry
+export * from './hb47-mega-registry';
+
+// PID-Aware Registry Client
+export * from './registry/pid-registry-client';
+export { registryClient, PIDRegistryClient } from './registry/pid-registry-client';
+
 // Re-export commonly used utilities
 export { configLoader } from './config/yaml-loader';
 export { sessionManager } from './auth/session-manager';

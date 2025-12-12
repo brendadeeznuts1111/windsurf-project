@@ -333,3 +333,88 @@ export class SmartErrorHandler {
 
 // Singleton instance
 export const smartErrorHandler = new SmartErrorHandler();
+
+// ──────────────────────────────────────────────────────────────
+// Logger Manager for PID-aware logging
+// ──────────────────────────────────────────────────────────────
+
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+export class LoggerManager {
+  private static instance: LoggerManager;
+  private logLevel: LogLevel = 'info';
+  private readonly logLevels: Record<LogLevel, number> = {
+    debug: 0,
+    info: 1,
+    warn: 2,
+    error: 3
+  };
+
+  static getInstance(): LoggerManager {
+    if (!LoggerManager.instance) {
+      LoggerManager.instance = new LoggerManager();
+    }
+    return LoggerManager.instance;
+  }
+
+  setLogLevel(level: LogLevel): void {
+    this.logLevel = level;
+  }
+
+  /**
+   * Log message for a specific PID
+   */
+  logForPid(pid: number, level: LogLevel, message: string, data?: Record<string, any>): void {
+    if (this.logLevels[level] < this.logLevels[this.logLevel]) {
+      return;
+    }
+
+    const timestamp = new Date().toISOString();
+    const prefix = `[${timestamp}][PID:${pid}][${level.toUpperCase()}]`;
+
+    const logData = data ? ` ${JSON.stringify(data)}` : '';
+
+    switch (level) {
+      case 'debug':
+        console.debug(`${prefix} ${message}${logData}`);
+        break;
+      case 'info':
+        console.info(`${prefix} ${message}${logData}`);
+        break;
+      case 'warn':
+        console.warn(`${prefix} ${message}${logData}`);
+        break;
+      case 'error':
+        console.error(`${prefix} ${message}${logData}`);
+        break;
+    }
+  }
+
+  /**
+   * Log error with context
+   */
+  error(message: string, data?: Record<string, any>): void {
+    this.logForPid(process.pid, 'error', message, data);
+  }
+
+  /**
+   * Log warning with context
+   */
+  warn(message: string, data?: Record<string, any>): void {
+    this.logForPid(process.pid, 'warn', message, data);
+  }
+
+  /**
+   * Log info with context
+   */
+  info(message: string, data?: Record<string, any>): void {
+    this.logForPid(process.pid, 'info', message, data);
+  }
+
+  /**
+   * Log debug with context
+   */
+  debug(message: string, data?: Record<string, any>): void {
+    this.logForPid(process.pid, 'debug', message, data);
+  }
+}

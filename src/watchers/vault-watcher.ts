@@ -456,6 +456,7 @@ export class VaultWatcher {
                 console.error(`❌ Error updating health for ${backlinkPath}:`, error);
             }
         }
+    }
 
     private emitValidationResults(results: any[]) {
         // Enhanced validation results emission

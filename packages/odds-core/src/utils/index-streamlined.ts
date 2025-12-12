@@ -8,48 +8,25 @@ export {
     americanToImpliedProbability,
     calculateArbitrageEdge,
     calculateTickVelocity,
-    validateOddsTick,
+    // validateOddsTick - not exported from utils
     getMemoryStats,
     forceGarbageCollection
 } from '../utils';
 
 // ===== SYNTHETIC ARBITRAGE CORE =====
-export {
-    SyntheticArbitrageDetector,
-    SyntheticArbitrageDetectorFactory
-} from '../detectors/synthetic-arbitrage-detector';
-
-export type {
-    DetectionCriteria,
-    DetectionResult,
-    MarketOpportunity
-} from '../detectors/synthetic-arbitrage-detector';
+// Note: These imports have broken @odds-core/* aliases - import directly from the source files
+// export { SyntheticArbitrageDetector, SyntheticArbitrageDetectorFactory } from '../detectors/synthetic-arbitrage-detector';
+// export type { DetectionCriteria, DetectionResult, MarketOpportunity } from '../detectors/synthetic-arbitrage-detector';
 
 // ===== MULTI-PERIOD PROCESSING =====
-export {
-    MultiPeriodStreamProcessor,
-    MultiPeriodStreamProcessorFactory
-} from '../processors/multi-period-stream-processor';
-
-export type {
-    MultiPeriodMarketStream,
-    PeriodSyntheticArbitrage,
-    StreamProcessorConfig,
-    ProcessingMetrics
-} from '../processors/multi-period-stream-processor';
+// Note: These imports have broken @odds-core/* aliases - import directly from the source files
+// export { MultiPeriodStreamProcessor, MultiPeriodStreamProcessorFactory } from '../processors/multi-period-stream-processor';
+// export type { MultiPeriodMarketStream, PeriodSyntheticArbitrage, StreamProcessorConfig, ProcessingMetrics } from '../processors/multi-period-stream-processor';
 
 // ===== POSITION TRACKING & RISK MANAGEMENT =====
-export {
-    SyntheticPositionTracker,
-    SyntheticPositionTrackerFactory
-} from '../trackers/synthetic-position-tracker';
-
-export type {
-    SyntheticPosition,
-    PortfolioMetrics,
-    RiskAlert,
-    PositionTrackerConfig
-} from '../trackers/synthetic-position-tracker';
+// Note: These imports have broken @odds-core/* aliases - import directly from the source files
+// export { SyntheticPositionTracker, SyntheticPositionTrackerFactory } from '../trackers/synthetic-position-tracker';
+// export type { SyntheticPosition, PortfolioMetrics, RiskAlert, PositionTrackerConfig } from '../trackers/synthetic-position-tracker';
 
 // ===== COVARIANCE MATRIX & HEDGE CALCULATION =====
 export {
@@ -66,8 +43,8 @@ export type {
 
 // ===== ROTATION NUMBER UTILITIES =====
 export {
-    RotationNumberUtils,
-    RotationNumberRegistry
+    RotationNumberUtils
+    // RotationNumberRegistry - not exported from rotation-utils
 } from './rotation-utils';
 
 // ===== METADATA VALIDATION (ENHANCED) =====
@@ -97,8 +74,8 @@ export {
 // ===== REAL-TIME PROCESSING =====
 export {
     RealtimeMetadataStream,
-    RealtimeEventEmitter,
-    RealtimeMetadataProcessor
+    RealtimeEventEmitter
+    // RealtimeMetadataProcessor - not exported from realtime-stream
 } from './realtime-stream';
 
 // ===== PREDICTIVE ANALYTICS =====
@@ -107,12 +84,8 @@ export {
 } from './predictive-analytics';
 
 // ===== FACTORY FUNCTIONS =====
-export {
-    SyntheticArbitrageV1Factory,
-    SyntheticArbitrageV2Factory,
-    SyntheticArbitrageV3Factory,
-    SyntheticArbitrageBatchFactory
-} from '../../testing/src/factories/incremental-synthetic-factory';
+// Note: Factory imports moved to @odds-protocol/testing package
+// Import directly: import { SyntheticArbitrageV1Factory, ... } from '@odds-protocol/testing';
 
 // ===== CONFIGURATION & CONSTANTS =====
 export { DEFAULTS, PERFORMANCE_THRESHOLDS } from '../constants';

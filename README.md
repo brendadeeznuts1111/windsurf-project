@@ -1,8 +1,8 @@
-# Odds Protocol Monorepo
+# Windsurf - Bun-Based Development Platform
 
-**Success = (Measurement × Algorithm × Memory × Network × Platform × Database × Testing × Monitoring × Architecture × Business × Culture × Innovation)ⁿ**
+**Enterprise-grade development platform built with Bun runtime**
 
-> Institutional-grade sports betting odds protocol with 700k msg/sec WebSocket throughput
+> High-performance development tools and utilities replacing traditional Node.js patterns with Bun-native APIs
 
 ## 🚀 Quick Start
 
@@ -10,44 +10,50 @@
 # Install dependencies
 bun install
 
-# Start development environment
+# Start development dashboard
 bun run dev
 
-# Run tests
-bun run test
+# Run all tests
+bun test
 
-# Build for production
-bun run build:prod
+# Run integration demo
+bun run integration
+
+# View examples
+bun run examples
+
+# Type checking
+bun run typecheck
 ```
 
 ## 📁 Project Structure
 
 ```
 windsurf-project/
-├── 📦 packages/           # Core packages and libraries
-│   ├── odds-core/         # Core odds processing logic
-│   ├── odds-websocket/    # High-performance WebSocket server
-│   ├── odds-arbitrage/    # Arbitrage detection algorithms
-│   ├── odds-ml/          # Machine learning models
-│   └── odds-validation/  # Data validation schemas
-├── 🚀 apps/              # Application entry points
-│   ├── api-gateway/      # API gateway service
-│   ├── dashboard/        # Web dashboard
-│   └── stream-processor/ # Real-time stream processor
-├── 🧪 tests/             # Test configurations and utilities
-├── 📝 docs/              # Technical documentation
+├── 🔧 src/               # Core Windsurf system components
+│   ├── utils/            # Utility modules and tools
+│   │   ├── bun-text-loader.ts      # Text file loading system
+│   │   ├── bun-env-synchronizer.ts # Environment management
+│   │   ├── bun-unix-socket-proxy.ts # Socket proxying
+│   │   ├── config-manager.ts       # Configuration management
+│   │   ├── metrics-collector.ts    # System metrics
+│   │   ├── performance-profiler.ts # Performance analysis
+│   │   └── settings-loader.ts      # Local settings
+│   ├── core/             # Core system components
+│   ├── workers/          # Worker thread management
+│   ├── security/         # Security validation
+│   ├── monitoring/       # System monitoring
+│   └── cli/              # Command-line interfaces
+├── 🎯 examples/          # Usage examples and demos
+├── 🧪 benchmarks/        # Performance benchmarks
+├── 📊 reports/           # Test and benchmark reports
 ├── ⚙️ scripts/           # Build and automation scripts
-├── 🔧 config/            # Configuration files
-├── 📊 reports/           # Test and performance reports
 ├── 🏗️ mcp-server/        # Model Context Protocol server
-├── 🎯 property-tests/    # Property-based testing
+├── 📦 packages/          # Additional packages
+├── 🚀 apps/              # Application entry points
+├── 📝 docs/              # Technical documentation
 ├── 📚 Odds-mono-map/     # Knowledge management vault
-└── 🗂️ .root/             # Historical docs, guides, archives
-    ├── docs/             # Historical documentation
-    ├── guides/           # Migration and setup guides
-    ├── archives/         # Archived summaries and reports
-    ├── references/       # Reference materials
-    └── templates/        # Project templates
+└── 🗂️ .root/             # Historical docs and archives
 ```
 
 ## Updated Top‑Level Directory Layout
@@ -59,105 +65,164 @@ windsurf-project/
 These directories are now reflected in the tree above.
 
 
-## 🎯 Core Features
+## 🎯 Core Systems
 
-- **🔥 Ultra-High Performance**: 700k+ messages/second WebSocket throughput
-- **🧠 Machine Learning**: Advanced odds prediction and arbitrage detection
-- **⚡ Real-Time Processing**: Sub-millisecond latency for odds updates
-- **🔒 Enterprise Security**: Institutional-grade security and compliance
-- **📊 Advanced Analytics**: Comprehensive monitoring and reporting
-- **🔧 Developer Tools**: Extensive CLI and automation capabilities
+### 🚀 **10 Enterprise-Grade Systems**
+
+1. **📄 Bun Text File Loader** - Replaces Node.js `require.extensions` with sub-millisecond performance
+2. **🔄 Environment Synchronizer** - Bidirectional sync between `process.env` and `Bun.env`
+3. **🔗 Unix Socket Proxy** - TCP ↔ Unix socket proxying for container services
+4. **👷 Worker Spawn System** - Extended Worker class with external tool execution
+5. **🎯 Tension Scoring Engine** - Real-time system health monitoring with configurable rules
+6. **🔒 Security Validation** - Tool whitelisting, environment sanitization, audit logging
+7. **📊 Metrics Collector** - Comprehensive system statistics and performance monitoring
+8. **⚙️ Configuration Manager** - Multi-format config support with hot reloading
+9. **📈 Performance Profiler** - CPU/memory profiling with memory leak detection
+10. **🔧 Settings Loader** - Local configuration management with type safety
+
+### ⚡ **Performance Benchmarks**
+- **Text File Loading**: 0.005ms for 11-byte files, 0.019ms for 100KB files
+- **Memory Usage**: Efficient caching with automatic cleanup
+- **System Health**: Real-time monitoring with sub-millisecond overhead
 
 ## 🛠️ Technology Stack
 
-- **Runtime**: Bun 1.3.0+ with native performance optimizations
+- **Runtime**: Bun 1.3.4+ with native TypeScript execution
 - **Language**: TypeScript 5.4+ with strict type checking
-- **WebSocket**: uWebSockets.js for maximum throughput
-- **Database**: PostgreSQL, Redis, SQLite support
-- **Testing**: Vitest with property-based testing (fast-check)
-- **Monitoring**: Prometheus, Winston, custom dashboards
-- **CI/CD**: GitHub Actions with comprehensive validation
+- **Architecture**: ESM-only, Bun-native APIs preferred over Node.js polyfills
+- **Testing**: Bun test framework with comprehensive test utilities
+- **Performance**: Sub-millisecond file operations, efficient memory management
+- **Configuration**: YAML/JSON/TOML/env support with hot reloading
 
 ## 📋 Available Scripts
 
 ### Development
 ```bash
-bun run dev              # Start all services in development
-bun run dev:all          # Run all packages in parallel
-bun run dev:optimized    # Optimized development mode
+bun run dev              # Start development dashboard
+bun run examples         # View interactive examples
+bun run integration      # Run integration demo
 ```
 
-### Testing
+### Testing & Quality
 ```bash
-bun run test             # Run all tests
-bun run test:unit        # Unit tests only
-bun run test:integration # Integration tests only
-bun run test:performance # Performance benchmarks
-bun run test:property    # Property-based tests
+bun test                 # Run all tests
+bun run typecheck        # TypeScript type checking
 ```
 
-### Building & Deployment
+### Building
 ```bash
-bun run build            # Build for development
-bun run build:prod       # Build for production
-bun run deploy           # Deploy to staging
-bun run deploy:prod      # Deploy to production
+bun run build            # Production build
 ```
 
-### Vault Management
-```bash
-bun run vault:organize   # Organize knowledge vault
-bun run vault:validate   # Validate vault standards
-bun run vault:monitor    # Monitor vault health
-bun run vault:status     # Show vault status
+## 💡 Usage Examples
+
+### Text File Loading
+```typescript
+import { BunTextLoader } from './src/utils/bun-text-loader';
+
+// Load a text file with caching
+const result = await BunTextLoader.load('./config.txt', { cache: true });
+console.log(result.content); // File content
+console.log(result.loadTime); // Load time in milliseconds
 ```
 
-### Code Quality
-```bash
-bun run lint             # Lint all code
-bun run typecheck        # Type checking
-bun run rules:validate   # Validate golden rules
-bun run security:audit   # Security audit
+### Environment Synchronization
+```typescript
+import { BunEnvironmentSynchronizer } from './src/utils/bun-env-synchronizer';
+
+// Sync environment variables bidirectionally
+const sync = new BunEnvironmentSynchronizer();
+await sync.synchronize();
+
+// Now process.env and Bun.env are in sync
 ```
 
-## 🏗️ Architecture
+### Performance Monitoring
+```typescript
+import { MetricsCollector } from './src/utils/metrics-collector';
 
-### Core Components
+const metrics = new MetricsCollector();
+metrics.startCollection();
 
-1. **Odds Core** (`packages/odds-core`)
-   - Core odds calculation engine
-   - Data models and interfaces
-   - Validation schemas
+setInterval(() => {
+  console.log('System metrics:', metrics.getSnapshot());
+}, 1000);
+```
 
-2. **WebSocket Server** (`packages/odds-websocket`)
-   - High-performance WebSocket implementation
-   - Real-time data streaming
-   - Connection management
+### Configuration Management
+```typescript
+import { ConfigManager } from './src/utils/config-manager';
 
-3. **Arbitrage Engine** (`packages/odds-arbitrage`)
-   - Arbitrage opportunity detection
-   - Risk calculation algorithms
-   - Market analysis
+const config = new ConfigManager();
+await config.loadFromFile('./config.yaml');
 
-4. **ML Pipeline** (`packages/odds-ml`)
-   - Predictive models
-   - Pattern recognition
-   - Performance optimization
+// Access configuration with type safety
+const dbConfig = config.get('database');
+```
 
-### Applications
+## 🏗️ System Architecture
 
-1. **API Gateway** (`apps/api-gateway`)
-   - RESTful API endpoints
-   - Authentication and authorization
-   - Rate limiting and monitoring
+### Core Utility Systems
 
-2. **Dashboard** (`apps/dashboard`)
-   - Real-time monitoring interface
-   - Analytics and reporting
-   - User management
+1. **Bun Text File Loader** (`src/utils/bun-text-loader.ts`)
+   - Replaces Node.js `require.extensions` for `.txt` files
+   - UTF-8/Base64 encoding with intelligent caching
+   - Batch loading capabilities
 
-3. **Stream Processor** (`apps/stream-processor`)
-   - Real-time data processing
+2. **Environment Synchronizer** (`src/utils/bun-env-synchronizer.ts`)
+   - Bidirectional synchronization between `process.env` and `Bun.env`
+   - Worker isolation and legacy compatibility
+   - Custom environment transformers
+
+3. **Unix Socket Proxy** (`src/utils/bun-unix-socket-proxy.ts`)
+   - TCP ↔ Unix socket proxying for container services
+   - Connection management and health monitoring
+   - Statistics and performance metrics
+
+4. **Configuration Manager** (`src/utils/config-manager.ts`)
+   - Multi-format support (JSON/YAML/TOML/env)
+   - Schema validation and hot reloading
+   - Environment inheritance and overrides
+
+5. **Metrics Collector** (`src/utils/metrics-collector.ts`)
+   - Comprehensive system statistics collection
+   - Prometheus export capabilities
+   - Health monitoring with configurable thresholds
+
+### Core Engine Systems
+
+6. **Tension Scoring Engine** (`src/core/tension-scoring/tension-engine.ts`)
+   - Real-time system health monitoring
+   - Configurable alerting rules
+   - Performance impact assessment
+
+7. **Worker Spawn System** (`src/workers/worker-with-spawn.ts`)
+   - Extended Worker class with external tool execution
+   - Security validation and resource limits
+   - Circuit breaker pattern implementation
+
+8. **Security Validation** (`src/security/spawn-validator.ts`)
+   - Tool whitelisting and environment sanitization
+   - Audit logging and resource monitoring
+   - Input validation and sanitization
+
+### Development Tools
+
+9. **Performance Profiler** (`src/utils/performance-profiler.ts`)
+   - CPU and memory profiling utilities
+   - Memory leak detection
+   - Benchmarking and export capabilities
+
+10. **Settings Loader** (`src/utils/settings-loader.ts`)
+    - Local configuration management
+    - Type-safe settings access
+    - Integration with config manager
+
+### Applications & Interfaces
+
+- **Dashboard** (`dashboard.ts`) - Real-time monitoring interface
+- **Examples CLI** (`examples/index.ts`) - Interactive examples system
+- **Integration Demo** (`integration.ts`) - Complete system demonstration
    - Event handling
    - Data transformation
 

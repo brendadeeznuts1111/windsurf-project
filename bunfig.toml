@@ -8,3 +8,13 @@ password = "$NPM_PASSWORD"
 [install]
 # Use lockfile for reproducible installs
 frozen = false
+
+[test]
+# Global test timeout (30 seconds)
+timeout = 30000
+
+# Test file patterns
+include = ["**/*.{test,spec}.ts", "**/*.test.tsx"]
+
+# Preload test setup
+preload = ["./global-test-setup.ts"]

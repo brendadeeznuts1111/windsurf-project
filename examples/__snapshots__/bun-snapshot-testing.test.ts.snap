@@ -1,0 +1,236 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Bun Snapshot Testing Examples basic object snapshot 1`] = `
+{
+  "createdAt": 2024-01-01T00:00:00.000Z,
+  "email": "john@example.com",
+  "id": 1,
+  "name": "John Doe",
+  "preferences": {
+    "language": "en",
+    "notifications": true,
+    "theme": "dark",
+  },
+}
+`;
+
+exports[`Bun Snapshot Testing Examples array snapshot 1`] = `
+[
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+]
+`;
+
+exports[`Bun Snapshot Testing Examples array snapshot 2`] = `
+[
+  1,
+  1,
+  2,
+  3,
+  5,
+  8,
+  13,
+  21,
+  34,
+  55,
+]
+`;
+
+exports[`Bun Snapshot Testing Examples complex nested structure 1`] = `
+{
+  "data": {
+    "metadata": {
+      "filters": {
+        "active": true,
+        "verified": true,
+      },
+      "limit": 10,
+      "page": 1,
+      "total": 3,
+    },
+    "users": [
+      {
+        "id": 1,
+        "name": "Alice",
+        "role": "admin",
+      },
+      {
+        "id": 2,
+        "name": "Bob",
+        "role": "user",
+      },
+      {
+        "id": 3,
+        "name": "Charlie",
+        "role": "moderator",
+      },
+    ],
+  },
+  "requestId": "req-12345",
+  "success": true,
+  "timestamp": "2024-01-01T12:00:00Z",
+}
+`;
+
+exports[`Bun Snapshot Testing Examples function output snapshot 1`] = `
+{
+  "avg": 5.5,
+  "count": 10,
+  "max": 10,
+  "median": 5.5,
+  "min": 1,
+  "sum": 55,
+}
+`;
+
+exports[`Bun Snapshot Testing Examples error object snapshot 1`] = `[Error: Something went wrong]`;
+
+exports[`Bun Snapshot Testing Examples date and time snapshots 1`] = `
+{
+  "future": "2025-12-13T10:00:51.555Z",
+  "now": "2025-12-12T10:00:51.555Z",
+  "timestamp": 1765533651555,
+  "timezone": "UTC",
+}
+`;
+
+exports[`Bun Snapshot Testing Examples regular expression snapshot 1`] = `
+{
+  "patterns": "[object Object]",
+  "testResults": {
+    "email": true,
+    "phone": true,
+    "url": true,
+    "uuid": true,
+  },
+}
+`;
+
+exports[`Bun Snapshot Testing Examples Map and Set snapshots 1`] = `
+{
+  "permissions": [
+    "read",
+    "write",
+    "execute",
+  ],
+  "userMap": {
+    "alice": {
+      "id": 1,
+      "role": "admin",
+    },
+    "bob": {
+      "id": 2,
+      "role": "user",
+    },
+    "charlie": {
+      "id": 3,
+      "role": "moderator",
+    },
+  },
+}
+`;
+
+exports[`Bun Snapshot Testing Examples component-like structure snapshot 1`] = `
+{
+  "metadata": {
+    "author": "Component Library",
+    "lastModified": "2024-01-01",
+    "version": "1.0.0",
+  },
+  "props": {
+    "children": "Click me",
+    "disabled": false,
+    "onClick": "handleClick",
+    "size": "medium",
+    "style": {
+      "backgroundColor": "#007bff",
+      "borderRadius": "4px",
+      "color": "white",
+      "padding": "8px 16px",
+    },
+    "variant": "primary",
+  },
+  "type": "Button",
+}
+`;
+
+exports[`Bun Snapshot Testing Examples API response simulation 1`] = `
+{
+  "data": {
+    "pagination": {
+      "hasNext": false,
+      "hasPrev": false,
+      "limit": 20,
+      "page": 1,
+      "total": 1,
+    },
+    "users": [
+      {
+        "email": "john@example.com",
+        "id": "user_123",
+        "profile": {
+          "avatar": "https://example.com/avatar.jpg",
+          "bio": "Software developer passionate about Bun",
+          "firstName": "John",
+          "lastName": "Doe",
+        },
+        "stats": {
+          "followers": 1234,
+          "following": 567,
+          "posts": 42,
+        },
+        "username": "johndoe",
+      },
+    ],
+  },
+  "headers": {
+    "cache-control": "max-age=300",
+    "content-type": "application/json",
+    "x-api-version": "v1.2.3",
+  },
+  "request": {
+    "method": "GET",
+    "timestamp": "2024-01-01T12:00:00Z",
+    "url": "/api/users",
+  },
+  "status": 200,
+  "statusText": "OK",
+}
+`;
+
+exports[`Bun Snapshot Testing Examples performance metrics snapshot 1`] = `
+{
+  "cache": {
+    "evictions": 45,
+    "hitRate": 0.89,
+    "size": 1024,
+  },
+  "cpuUsage": {
+    "system": 3.2,
+    "total": 15.7,
+    "user": 12.5,
+  },
+  "database": {
+    "connections": 8,
+    "queryTime": 23.4,
+    "slowQueries": 2,
+  },
+  "errorRate": 0.02,
+  "memoryUsage": {
+    "external": 8.5,
+    "heapTotal": 64,
+    "heapUsed": 32.1,
+    "rss": 45.2,
+  },
+  "responseTime": 145,
+  "throughput": 1250,
+}
+`;

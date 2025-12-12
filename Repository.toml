@@ -1,0 +1,795 @@
+# ============================================================================
+# COMPLETE BUN-NATIVE API SPECS - Pattern: [D][S][T][M:{P}][C][#R:*]
+# ============================================================================
+
+# ========================================
+# DOMAIN: http.server
+# ========================================
+
+[http.server.bun-serve-advanced]
+[http.server.bun-serve-advanced.TYPE]
+specification = "EX021"
+validation = "@HTTP_SERVER"
+implementation = "enterprise-grade"
+
+[http.server.bun-serve-advanced.META:{PROPERTY}]
+tls = { version = "1.3", cipher_suites = ["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384"], require_client_cert = false }
+http2 = { enabled = true, allow_http1 = true, server_push = true }
+websocket = { upgrade_timeout_ms = 5000, max_payload_size_mb = 10, ping_interval_ms = 30000 }
+cors = { allowed_origins = ["https://trusted-domain.com"], max_age_seconds = 86400 }
+rate_limiting = { requests_per_minute = 100, ip_whitelist = ["127.0.0.1"] }
+security_headers = { hsts = "max-age=63072000", x_frame_options = "DENY", x_content_type_options = "nosniff" }
+
+[http.server.bun-serve-advanced.CLASS]
+class = "BunServeAdvanced"
+methods = ["start", "stop", "handleRequest", "isRateLimited"]
+implements = ["GracefulShutdown", "MetricsCollector"]
+
+[http.server.bun-serve-advanced.#REF:*]
+references = ["EX022", "EX031", "EX050"]
+dependencies = ["validation.@HTTP_SERVER", "logger.bun-native-logger"]
+benchmarks = ["benchmarks/http-server.bench.ts"]
+
+# ========================================
+# DOMAIN: build.bundler
+# ========================================
+
+[build.bundler.bun-build-pipeline]
+[build.bundler.bun-build-pipeline.TYPE]
+specification = "EX022"
+validation = "@BUILD"
+implementation = "production"
+
+[build.bundler.bun-build-pipeline.META:{PROPERTY}]
+entry_points = ["src/index.ts", "src/secondary.ts"]
+output_dir = "dist/"
+target = { environment = "browser", compatibility = ["chrome60", "firefox60", "safari12"] }
+minification = { enabled = true, keep_names = false, drop_console = true }
+source_maps = { enabled = true, type = "external", inline_sources = false }
+splitting = { enabled = true, chunk_size_threshold_kb = 50 }
+plugins = ["define-env", "css-import", "svg-inline"]
+define = { "process.env.NODE_ENV": '"production"', "__VERSION__": '"1.0.0"' }
+
+[build.bundler.bun-build-pipeline.CLASS]
+class = "BunBuildPipeline"
+methods = ["build", "watch", "getStats", "applyPlugins"]
+extends = "EventEmitter"
+
+[build.bundler.bun-build-pipeline.#REF:*]
+references = ["EX023", "EX047", "EX049"]
+dependencies = ["loader.bun-plugin-system", "cache.bun-build-cache"]
+benchmarks = ["benchmarks/bundler-speed.bench.ts"]
+
+# ========================================
+# DOMAIN: transpiler.javascript
+# ========================================
+
+[transpiler.javascript.bun-transpiler-enterprise]
+[transpiler.javascript.bun-transpiler-enterprise.TYPE]
+specification = "EX023"
+validation = "@TRANSPILER"
+implementation = "high-performance"
+
+[transpiler.javascript.bun-transpiler-enterprise.META:{PROPERTY}]
+jsx = { factory = "React.createElement", fragment = "React.Fragment", import_source = "react" }
+typescript = { decorators = true, enums = true, namespace = false }
+target = "es2017"
+loader = { ".svg" = "dataurl", ".css" = "text", ".toml" = "json" }
+transforms = ["jsx", "decorators", "typescript"]
+source_map = { inline = false, content = true }
+
+[transpiler.javascript.bun-transpiler-enterprise.CLASS]
+class = "BunTranspilerEnterprise"
+methods = ["transformSync", "transform", "getAST", "transpileFile"]
+implements = ["Cacheable", "Measurable"]
+
+[transpiler.javascript.bun-transpiler-enterprise.#REF:*]
+references = ["EX024", "EX047"]
+dependencies = ["exhtml.bun-rewriter"]
+benchmarks = ["benchmarks/transpiler-kilocode.bench.ts"]
+
+# ========================================
+# DOMAIN: routing.filesystem
+# ========================================
+
+[routing.filesystem.bun-filesystem-router]
+[routing.filesystem.bun-filesystem-router.TYPE]
+specification = "EX024"
+validation = "@ROUTER"
+implementation = "dynamic"
+
+[routing.filesystem.bun-filesystem-router.META:{PROPERTY}]
+routes_dir = "src/routes"
+patterns = { dynamic = "[id]", catch_all = "[...path]", optional = "[[slug]]" }
+middleware = ["auth", "rate-limit", "cors"]
+caching = { enabled = true, ttl_seconds = 300, max_entries = 1000 }
+params_validation = { coerce_types = true, required_params = true }
+
+[routing.filesystem.bun-filesystem-router.CLASS]
+class = "BunFileSystemRouter"
+methods = ["match", "getRoutes", "invalidateCache", "addMiddleware"]
+implements = ["Router", "Cacheable"]
+
+[routing.filesystem.bun-filesystem-router.#REF:*]
+references = ["EX021", "EX031"]
+dependencies = ["middleware.auth-guard", "cache.route-cache"]
+benchmarks = ["benchmarks/router-matching.bench.ts"]
+
+# ========================================
+# DOMAIN: html.streaming
+# ========================================
+
+[html.streaming.html-rewriter-advanced]
+[html.streaming.html-rewriter-advanced.TYPE]
+specification = "EX025"
+validation = "@HTML"
+implementation = "streaming"
+
+[html.streaming.html-rewriter-advanced.META:{PROPERTY}]
+element_handlers = { script = "inline", style = "minify", img = "lazy-load" }
+attribute_modifiers = { "data-*" = "remove", "class" = "dedupe" }
+streaming = { chunk_size_kb = 64, backpressure = true }
+transformation_pipeline = ["element", "comment", "text", "doctype"]
+
+[html.streaming.html-rewriter-advanced.CLASS]
+class = "HTMLRewriterAdvanced"
+methods = ["transform", "addElementHandler", "addAttributeModifier"]
+implements = ["TransformStream"]
+
+[html.streaming.html-rewriter-advanced.#REF:*]
+references = ["EX049"]
+dependencies = ["minifier.css-minifier", "minifier.js-minifier"]
+benchmarks = ["benchmarks/html-rewriter-1mb.bench.ts"]
+
+# ========================================
+# DOMAIN: security.password
+# ========================================
+
+[security.password.bun-password-advanced]
+[security.password.bun-password-advanced.TYPE]
+specification = "EX026"
+validation = "@PASSWORD"
+implementation = "cryptographically-secure"
+
+[security.password.bun-password-advanced.META:{PROPERTY}]
+algorithms = { argon2id = { memory_cost = 65536, time_cost = 3, parallelism = 1 }, bcrypt = { cost = 12 }, scrypt = { cost = 16384 } }
+default_algorithm = "argon2id"
+salt_generation = { bytes = 16, method = "crypto.randomBytes" }
+verification = { constant_time = true, timing_attack_protection = true }
+
+[security.password.bun-password-advanced.CLASS]
+class = "BunPasswordAdvanced"
+methods = ["hash", "verify", "needsRehash", "compare"]
+implements = ["PasswordHasher"]
+
+[security.password.bun-password-advanced.#REF:*]
+references = ["EX027"]
+dependencies = ["crypto.bun-crypto-suite", "validation.@PASSWORD"]
+benchmarks = ["benchmarks/password-hash.bench.ts"]
+
+# ========================================
+# DOMAIN: hashing.cryptographic
+# ========================================
+
+[hashing.cryptographic.bun-hash-suite]
+[hashing.cryptographic.bun-hash-suite.TYPE]
+specification = "EX027"
+validation = "@HASH"
+implementation = "high-throughput"
+
+[hashing.cryptographic.bun-hash-suite.META:{PROPERTY}]
+algorithms = ["xxHash64", "murmur32", "sha1", "sha256", "sha512", "md5", "blake2b", "blake2s"]
+streaming = { enabled = true, chunk_size = 65536 }
+output_formats = ["hex", "base64", "base64url", "buffer"]
+performance = { target_mbps = 1000 }
+
+[hashing.cryptographic.bun-hash-suite.CLASS]
+class = "BunHashSuite"
+methods = ["hash", "hashSync", "createHasher", "verifyChecksum"]
+implements = ["StreamingHash", "Checksum"]
+
+[hashing.cryptographic.bun-hash-suite.#REF:*]
+references = ["EX026", "EX036"]
+dependencies = ["streaming.bun-stream-conversion"]
+benchmarks = ["benchmarks/hash-throughput.bench.ts"]
+
+# ========================================
+# DOMAIN: database.sql
+# ========================================
+
+[database.sql.bun-postgres]
+[database.sql.bun-postgres.TYPE]
+specification = "EX028"
+validation = "@SQL"
+implementation = "connection-pooled"
+
+[database.sql.bun-postgres.META:{PROPERTY}]
+pool = { min = 5, max = 20, idle_timeout_seconds = 30, acquire_timeout_ms = 5000 }
+transactions = { isolation_level = "read_committed", deferrable = true }
+prepared_statements = { cache_size = 1000, auto_prepare = true }
+tls = { enabled = true, verify_ca = true, client_cert = "optional" }
+failover = { enabled = true, retry_attempts = 3, retry_delay_ms = 1000 }
+
+[database.sql.bun-postgres.CLASS]
+class = "BunPostgres"
+methods = ["query", "transaction", "stream", "acquire", "release"]
+implements = ["SQLClient", "ConnectionPool", "Observable"]
+
+[database.sql.bun-postgres.#REF:*]
+references = ["EX046", "EX050"]
+dependencies = ["config.database-credentials", "ssl.bun-tls-config"]
+benchmarks = ["benchmarks/postgres-pool.bench.ts"]
+
+# ========================================
+# DOMAIN: cache.redis
+# ========================================
+
+[cache.redis.bun-redis]
+[cache.redis.bun-redis.TYPE]
+specification = "EX029"
+validation = "@REDIS"
+implementation = "cluster-aware"
+
+[cache.redis.bun-redis.META:{PROPERTY}]
+cluster = { enabled = false, nodes = ["localhost:6379"], retry_attempts = 5 }
+pubsub = { enabled = true, buffer_size = 1000, message_timeout_ms = 5000 }
+pipeline = { enabled = true, max_batch_size = 1000, flush_interval_ms = 10 }
+lua = { enabled = true, cache_scripts = true, script_timeout_ms = 5000 }
+persistence = { rdb = true, aof = false }
+
+[cache.redis.bun-redis.CLASS]
+class = "BunRedisClient"
+methods = ["get", "set", "publish", "subscribe", "pipeline", "executeLua"]
+implements = ["CacheClient", "PubSub", "Scriptable"]
+
+[cache.redis.bun-redis.#REF:*]
+references = ["EX046"]
+dependencies = ["config.redis-cluster"]
+benchmarks = ["benchmarks/redis-pubsub.bench.ts"]
+
+# ========================================
+# DOMAIN: filesystem.glob
+# ========================================
+
+[filesystem.glob.bun-glob-advanced]
+[filesystem.glob.bun-glob-advanced.TYPE]
+specification = "EX030"
+validation = "@GLOB"
+implementation = "concurrent"
+
+[filesystem.glob.bun-glob-advanced.META:{PROPERTY}]
+patterns = { include = ["**/*.ts", "**/*.tsx"], exclude = ["node_modules/**", "**/*.test.ts"], dotfiles = false }
+concurrency = { workers = 4, queue_size = 100 }
+streaming = { enabled = true, batch_size = 100 }
+caching = { enabled = true, ttl_seconds = 60, max_entries = 10000 }
+symlinks = { follow = false, max_depth = 10 }
+
+[filesystem.glob.bun-glob-advanced.CLASS]
+class = "BunGlobAdvanced"
+methods = ["scan", "scanSync", "stream", "match", "addPattern"]
+implements = ["FileScanner", "Streamable"]
+
+[filesystem.glob.bun-glob-advanced.#REF:*]
+references = ["EX047"]
+dependencies = ["fs.bun-file-watcher"]
+benchmarks = ["benchmarks/glob-scan.bench.ts"]
+
+# ========================================
+# DOMAIN: http.cookies
+# ========================================
+
+[http.cookies.bun-cookies-advanced]
+[http.cookies.bun-cookies-advanced.TYPE]
+specification = "EX031"
+validation = "@COOKIE"
+implementation = "secure-by-default"
+
+[http.cookies.bun-cookies-advanced.META:{PROPERTY}]
+signing = { algorithm = "sha256", secret_env = "COOKIE_SECRET", rotation_enabled = true }
+attributes = { samesite = "lax", httponly = true, secure = true, partitioned = true }
+encryption = { enabled = true, algorithm = "aes-256-gcm", key_derivation = "pbkdf2" }
+jar = { max_size = 4096, eviction_policy = "lru" }
+
+[http.cookies.bun-cookies-advanced.CLASS]
+class = "BunCookiesAdvanced"
+methods = ["set", "get", "delete", "sign", "verify", "encrypt", "decrypt"]
+implements = ["CookieStore", "SignedJar"]
+
+[http.cookies.bun-cookies-advanced.#REF:*]
+references = ["EX021", "EX024", "EX048"]
+dependencies = ["crypto.bun-cookie-signing", "security.bun-encryption"]
+benchmarks = ["benchmarks/cookie-sign.bench.ts"]
+
+# ========================================
+# DOMAIN: utils.uuid
+# ========================================
+
+[utils.uuid.bun-uuid]
+[utils.uuid.bun-uuid.TYPE]
+specification = "EX032"
+validation = "@UUID"
+implementation = "v7-focused"
+
+[utils.uuid.bun-uuid.META:{PROPERTY}]
+version = 7
+generation = { method = "Bun.randomUUIDv7", bulk_size = 1000, cache_size = 10000 }
+sorting = { time_ordered = true, lexicographically_sortable = true }
+collision_rate = { max_attempts = 1000000, expected_collisions = 0 }
+encoding = { format = "hex", uppercase = false, with_dashes = true }
+
+[utils.uuid.bun-uuid.CLASS]
+class = "BunUUIDGenerator"
+methods = ["generate", "generateBulk", "parse", "extractTimestamp"]
+implements = ["IDGenerator", "TimeBased"]
+
+[utils.uuid.bun-uuid.#REF:*]
+references = ["EX028", "EX041"]
+dependencies = ["crypto.bun-rng"]
+benchmarks = ["benchmarks/uuid-generation.bench.ts"]
+
+# ========================================
+# DOMAIN: cli.which
+# ========================================
+
+[cli.which.bun-which]
+[cli.which.bun-which.TYPE]
+specification = "EX033"
+validation = "@WHICH"
+implementation = "cached"
+
+[cli.which.bun-which.META:{PROPERTY}]
+caching = { enabled = true, ttl_seconds = 300, max_entries = 100 }
+path_resolution = { platform_specific = true, follow_symlinks = true }
+fallback = { enabled = true, check_cwd = true, check_bundled = false }
+validation = { check_executable = true, check_readable = true }
+
+[cli.which.bun-which.CLASS]
+class = "BunWhichResolver"
+methods = ["resolve", "resolveSync", "clearCache", "getPath"]
+implements = ["BinaryResolver", "Cacheable"]
+
+[cli.which.bun-which.#REF:*]
+references = ["EX033"]
+dependencies = ["fs.bun-stat"]
+benchmarks = ["benchmarks/which-resolution.bench.ts"]
+
+# ========================================
+# DOMAIN: debugging.peek
+# ========================================
+
+[debugging.peek.bun-peek]
+[debugging.peek.bun-peek.TYPE]
+specification = "EX034"
+validation = "@PEEK"
+implementation = "non-invasive"
+
+[debugging.peek.bun-peek.META:{PROPERTY}]
+inspection = { depth = 5, show_hidden = false, show_prototype = false }
+circular = { detection = true, replacement = "[Circular]" }
+performance = { max_object_size = 10000, max_array_length = 1000 }
+output = { colors = true, max_string_length = 100 }
+
+[debugging.peek.bun-peek.CLASS]
+class = "BunPeekInspector"
+methods = ["inspect", "getShape", "circularCheck", "sizeOf"]
+implements = ["ObjectInspector"]
+
+[debugging.peek.bun-peek.#REF:*]
+references = ["EX035"]
+dependencies = ["utils.bun-inspect"]
+benchmarks = ["benchmarks/peek-large-object.bench.ts"]
+
+# ========================================
+# DOMAIN: testing.deepequals
+# ========================================
+
+[testing.deepequals.bun-deepequals]
+[testing.deepequals.bun-deepequals.TYPE]
+specification = "EX035"
+validation = "@DEEPEQUALS"
+implementation = "optimized"
+
+[testing.deepequals.bun-deepequals.META:{PROPERTY}]
+comparison = { strict = true, check_prototype = false, check_descriptor = false }
+performance = { early_exit = true, cache_comparisons = true, max_depth = 100 }
+custom_comparators = { enabled = true, registry = "global" }
+circular = { detection = true, compare_circular_refs = true }
+
+[testing.deepequals.bun-deepequals.CLASS]
+class = "BunDeepEquals"
+methods = ["compare", "strictEqual", "deepMatch", "registerComparator"]
+implements = ["Comparator", "Cacheable"]
+
+[testing.deepequals.bun-deepequals.#REF:*]
+references = ["EX034"]
+dependencies = ["utils.bun-deepmatch"]
+benchmarks = ["benchmarks/deepequals-nested.bench.ts"]
+
+# ========================================
+# DOMAIN: text.string
+# ========================================
+
+[text.string.bun-string-processing]
+[text.string.bun-string-processing.TYPE]
+specification = "EX036"
+validation = "@STRING"
+implementation = "unicode-aware"
+
+[text.string.bun-string-processing.META:{PROPERTY}]
+html_escaping = { entities = ["&", "<", ">", "\"", "'"], escape_slash = false }
+unicode_width = { version = "15.0", grapheme_clusters = true, emoji_variation = true }
+performance = { ascii_fast_path = true, simd_enabled = true }
+
+[text.string.bun-string-processing.CLASS]
+class = "BunStringProcessor"
+methods = ["escapeHTML", "unescapeHTML", "stringWidth", "graphemeSplit"]
+implements = ["StringSanitizer", "UnicodeAware"]
+
+[text.string.bun-string-processing.#REF:*]
+references = ["EX027", "EX025"]
+dependencies = ["validation.xss-detection"]
+benchmarks = ["benchmarks/escapehtml-xss.bench.ts"]
+
+# ========================================
+# DOMAIN: filesystem.urlpath
+# ========================================
+
+[filesystem.urlpath.bun-url-path]
+[filesystem.urlpath.bun-url-path.TYPE]
+specification = "EX037"
+validation = "@URLPATH"
+implementation = "platform-normalized"
+
+[filesystem.urlpath.bun-url-path.META:{PROPERTY}]
+conversion = { file_url_to_path = true, path_to_file_url = true, platform_specific = true }
+normalization = { resolve_dots = true, trailing_slash = false, windows_backslash = false }
+validation = { check_exists = false, max_length = 4096 }
+
+[filesystem.urlpath.bun-url-path.CLASS]
+class = "BunURLPathConverter"
+methods = ["fileURLToPath", "pathToFileURL", "normalize", "resolve"]
+implements = ["PathConverter", "PlatformAware"]
+
+[filesystem.urlpath.bun-url-path.#REF:*]
+references = ["EX030"]
+dependencies = ["fs.bun-realpath"]
+benchmarks = ["benchmarks/url-conversion.bench.ts"]
+
+# ========================================
+# DOMAIN: streaming.compression
+# ========================================
+
+[streaming.compression.bun-compression]
+[streaming.compression.bun-compression.TYPE]
+specification = "EX038"
+validation = "@COMPRESSION"
+implementation = "streaming"
+
+[streaming.compression.bun-compression.META:{PROPERTY}]
+algorithms = { gzip = { levels = [1, 6, 9] }, zstd = { levels = [1, 3, 6, 6, 9, 12, 19, 22] }, deflate = true }
+streaming = { chunk_size_kb = 64, backpressure_handling = true }
+auto_selection = { enabled = true, threshold_kb = 1, text_heuristic = true }
+memory_limit = { max_window_mb = 100, pooled_allocators = true }
+
+[streaming.compression.bun-compression.CLASS]
+class = "BunCompressionManager"
+methods = ["compressStream", "decompressStream", "autoCompress", "selectAlgorithm"]
+implements = ["TransformStream", "AutoSelectable"]
+
+[streaming.compression.bun-compression.#REF:*]
+references = ["EX040"]
+dependencies = ["stream.bun-stream-conversion", "memory.bun-buffer-pool"]
+benchmarks = ["benchmarks/compress-1gb.bench.ts"]
+
+# ========================================
+# DOMAIN: streaming.conversion
+# ========================================
+
+[streaming.conversion.bun-stream-conversion]
+[streaming.conversion.bun-stream-conversion.TYPE]
+specification = "EX039"
+validation = "@STREAMCONVERT"
+implementation = "zero-copy"
+
+[streaming.conversion.bun-stream-conversion.META:{PROPERTY}]
+conversions = { to_bytes = true, to_blob = true, to_json = true, to_arraybuffer = true, to_formdata = true, to_text = true }
+streaming = { async = true, chunk_size_kb = 64, backpressure = true }
+zero_copy = { enabled = true, threshold_kb = 256 }
+
+[streaming.conversion.bun-stream-conversion.CLASS]
+class = "BunStreamConverter"
+methods = ["toBytes", "toBlob", "toJSON", "toArrayBuffer", "toFormData", "toText"]
+implements = ["StreamConsumer"]
+
+[streaming.conversion.bun-stream-conversion.#REF:*]
+references = ["EX038", "EX040"]
+dependencies = ["buffer.bun-arraybuffer-sink"]
+benchmarks = ["benchmarks/stream-convert-10mb.bench.ts"]
+
+# ========================================
+# DOMAIN: memory.buffer
+# ========================================
+
+[memory.buffer.bun-buffers]
+[memory.buffer.bun-buffers.TYPE]
+specification = "EX040"
+validation = "@BUFFER"
+implementation = "pooled"
+
+[memory.buffer.bun-buffers.META:{PROPERTY}]
+pooling = { enabled = true, max_pools = 8, pool_size_mb = 64 }
+operations = { concat = true, alloc_unsafe = true, copy = true }
+zero_copy = { threshold_kb = 64, direct_transfer = true }
+alignment = { cache_line = 64, page_size = 4096 }
+
+[memory.buffer.bun-buffers.CLASS]
+class = "BunBufferManager"
+methods = ["alloc", "concat", "copy", "free", "getPoolStats"]
+implements = ["MemoryPool", "ZeroCopy"]
+
+[memory.buffer.bun-buffers.#REF:*]
+references = ["EX038", "EX039", "EX045"]
+dependencies = ["gc.bun-jsc-tuning"]
+benchmarks = ["benchmarks/buffer-allocation.bench.ts"]
+
+# ========================================
+# DOMAIN: module.resolution
+# ========================================
+
+[module.resolution.bun-resolve]
+[module.resolution.bun-resolve.TYPE]
+specification = "EX041"
+validation = "@RESOLVE"
+implementation = "cached"
+
+[module.resolution.bun-resolve.META:{PROPERTY}]
+cache = { enabled = true, ttl_seconds = 300, max_entries = 1000 }
+resolution = { extensions = [".ts", ".tsx", ".mts", ".cts", ".js"], index_file = "index.ts" }
+conditions = ["bun", "node", "import", "require", "default"]
+symlinks = { follow = true, max_depth = 10 }
+package_json = { exports_field = true, imports_field = true }
+
+[module.resolution.bun-resolve.CLASS]
+class = "BunResolve"
+methods = ["resolveSync", "resolve", "clearCache", "getResolutionStack"]
+implements = ["ModuleResolver", "Cacheable"]
+
+[module.resolution.bun-resolve.#REF:*]
+references = ["EX023", "EX024"]
+dependencies = ["fs.bun-realpath", "package.bun-package-json-parser"]
+benchmarks = ["benchmarks/resolve-deep-tree.bench.ts"]
+
+# ========================================
+# DOMAIN: versioning.semver
+# ========================================
+
+[versioning.semver.bun-semver]
+[versioning.semver.bun-semver.TYPE]
+specification = "EX042"
+validation = "@SEMVER"
+implementation = "spec-compliant"
+
+[versioning.semver.bun-semver.META:{PROPERTY}]
+operations = { compare = true, satisfy = true, intersect = true, coerce = true }
+range_formats = ["^1.2.3", "~1.2.3", ">=1.0.0", "1.x", "*", ""]
+prerelease = { supported = true, sort_order = "numeric" }
+build_metadata = { preserved = true, ignored_in_comparison = true }
+performance = { parse_cache_size = 1000 }
+
+[versioning.semver.bun-semver.CLASS]
+class = "BunSemver"
+methods = ["compare", "satisfies", "intersects", "coerce", "parseRange"]
+implements = ["VersionComparator", "Cacheable"]
+
+[versioning.semver.bun-semver.#REF:*]
+references = ["EX041"]
+dependencies = ["utils.bun-semver-cache"]
+benchmarks = ["benchmarks/semver-satifies.bench.ts"]
+
+# ========================================
+# DOMAIN: color.terminal
+# ========================================
+
+[color.terminal.bun-color]
+[color.terminal.bun-color.TYPE]
+specification = "EX043"
+validation = "@COLOR"
+implementation = "auto-detect"
+
+[color.terminal.bun-color.META:{PROPERTY}]
+detection = { forced = false, env_check = ["NO_COLOR", "FORCE_COLOR"], stream_check = true }
+formats = { 256 = true, truecolor = true, hex = true, rgb = true }
+styles = { bold = "\x1b[1m", italic = "\x1b[3m", underline = "\x1b[4m", strikethrough = "\x1b[9m" }
+theme = { dark = "dracula", light = "github-light", auto = true }
+
+[color.terminal.bun-color.CLASS]
+class = "BunColor"
+methods = ["supportsColor", "applyStyle", "stripColor", "getTheme"]
+implements = ["Colorizer", "Themeable"]
+
+[color.terminal.bun-color.#REF:*]
+references = ["EX036"]
+dependencies = ["env.terminal-detection"]
+benchmarks = ["benchmarks/color-apply.bench.ts"]
+
+# ========================================
+# DOMAIN: internals.javascriptcore
+# ========================================
+
+[internals.javascriptcore.bun-jsc]
+[internals.javascriptcore.bun-jsc.TYPE]
+specification = "EX044"
+validation = "@JSC"
+implementation = "memory-optimized"
+
+[internals.javascriptcore.bun-jsc.META:{PROPERTY}]
+gc = { type = "generational", full_gc_threshold = 0.85, incremental = true }
+heap = { max_size_mb = 4096, growth_factor = 2.0, min_size_mb = 16 }
+snapshots = { enabled = true, on_oom = true, on_signal = "SIGUSR2" }
+metrics = { collection_interval_ms = 5000, leak_detection = true }
+
+[internals.javascriptcore.bun-jsc.CLASS]
+class = "BunJSCManager"
+methods = ["monitorMemoryPressure", "generateSnapshot", "analyzeHeap", "forceGC"]
+implements = ["MemoryManager", "Observable"]
+
+[internals.javascriptcore.bun-jsc.#REF:*]
+references = ["EX040", "EX045", "EX050"]
+dependencies = ["metrics.heap-analyzer", "alerts.memory-pressure"]
+benchmarks = ["benchmarks/gc-pause-time.bench.ts"]
+
+# ========================================
+# DOMAIN: memory.mmap
+# ========================================
+
+[memory.mmap.bun-mmap]
+[memory.mmap.bun-mmap.TYPE]
+specification = "EX045"
+validation = "@MMAP"
+implementation = "zero-copy-io"
+
+[memory.mmap.bun-mmap.META:{PROPERTY}]
+mode = { read = true, write = true, private = false, populate = false }
+size = { page_aligned = true, max_size_gb = 10 }
+cleanup = { unmap_on_exit = true, munmap_on_error = true }
+performance = { lazy_loading = true, madvise = true }
+
+[memory.mmap.bun-mmap.CLASS]
+class = "BunMmapManager"
+methods = ["mapFile", "unmap", "sync", "advise", "getStats"]
+implements = ["FileMapper", "ZeroCopy"]
+
+[memory.mmap.bun-mmap.#REF:*]
+references = ["EX040", "EX044"]
+dependencies = ["fs.bun-large-file"]
+benchmarks = ["benchmarks/mmap-read-1gb.bench.ts"]
+
+# ========================================
+# DOMAIN: integration.database
+# ========================================
+
+[integration.database.sql-redis-pipeline]
+[integration.database.sql-redis-pipeline.TYPE]
+specification = "EX046"
+validation = "@INTEGRATION"
+implementation = "transactional"
+
+[integration.database.sql-redis-pipeline.META:{PROPERTY}]
+pattern = "cache-aside"
+consistency = { model = "eventual", invalidation = "write-through" }
+fallback = { enabled = true, circuit_breaker_threshold = 5, timeout_ms = 1000 }
+metrics = { hit_rate = 0.95, latency_p99_ms = 50 }
+
+[integration.database.sql-redis-pipeline.CLASS]
+class = "SQLRedisPipeline"
+methods = ["getCached", "setCached", "invalidate", "transactionalUpdate"]
+implements = ["CacheAside", "Observable"]
+
+[integration.database.sql-redis-pipeline.#REF:*]
+references = ["EX028", "EX029", "EX050"]
+dependencies = ["database.bun-postgres", "cache.bun-redis", "validation.@INTEGRATION"]
+benchmarks = ["benchmarks/cache-pipeline.bench.ts"]
+
+# ========================================
+# DOMAIN: build.watch
+# ========================================
+
+[build.watch.glob-transpile-watch]
+[build.watch.glob-transpile-watch.TYPE]
+specification = "EX047"
+validation = "@WATCH"
+implementation = "incremental"
+
+[build.watch.glob-transpile-watch.META:{PROPERTY}]
+watch = { debounce_ms = 100, persistent = true, recursive = true }
+transpile = { on_change = true, cache_asts = true, incremental = true }
+patterns = { include = ["src/**/*.ts"], exclude = ["**/*.test.ts", "**/node_modules/**"] }
+rebuild = { dependency_graph = true, affected_only = true }
+
+[build.watch.glob-transpile-watch.CLASS]
+class = "GlobTranspileWatcher"
+methods = ["start", "stop", "onFileChange", "transpileFile"]
+implements = ["FileWatcher", "BuildTrigger"]
+
+[build.watch.glob-transpile-watch.#REF:*]
+references = ["EX022", "EX023", "EX030"]
+dependencies = ["transpiler.bun-transpiler-enterprise", "filesystem.bun-glob-advanced"]
+benchmarks = ["benchmarks/watch-rebuild.bench.ts"]
+
+# ========================================
+# DOMAIN: http.session
+# ========================================
+
+[http.session.bun-http-session]
+[http.session.bun-http-session.TYPE]
+specification = "EX048"
+validation = "@SESSION"
+implementation = "encrypted"
+
+[http.session.bun-http-session.META:{PROPERTY}]
+storage = { backend = "redis", key_prefix = "sess:", ttl_seconds = 3600 }
+encryption = { algorithm = "aes-256-gcm", key_rotation_days = 30 }
+cookie = { name = "session_id", http_only = true, secure = true, same_site = "lax" }
+concurrency = { atomic_operations = true, optimistic_locking = false }
+
+[http.session.bun-http-session.CLASS]
+class = "BunHTTPSession"
+methods = ["create", "load", "save", "destroy", "rotate"]
+implements = ["SessionStore", "EncryptedStore"]
+
+[http.session.bun-http-session.#REF:*]
+references = ["EX021", "EX031"]
+dependencies = ["cache.bun-redis", "crypto.bun-session-encryption"]
+benchmarks = ["benchmarks/session-creation.bench.ts"]
+
+# ========================================
+# DOMAIN: bundler.html
+# ========================================
+
+[bundler.html.bun-html-bundle]
+[bundler.html.bun-html-bundle.TYPE]
+specification = "EX049"
+validation = "@HTMLBUNDLE"
+implementation = "inlined"
+
+[bundler.html.bun-html-bundle.META:{PROPERTY}]
+inlining = { css = true, js = true, images = "base64", threshold_kb = 10 }
+optimization = { minify = true, remove_comments = true, collapse_whitespace = true }
+processing = { script_async = true, defer_non_critical = true, preload_resources = true }
+rewriting = { urls = true, imports = true, workers = true }
+
+[bundler.html.bun-html-bundle.CLASS]
+class = "BunHTMLBundler"
+methods = ["bundle", "inline", "optimize", "rewrite"]
+implements = ["Bundler", "HTMLProcessor"]
+
+[bundler.html.bun-html-bundle.#REF:*]
+references = ["EX022", "EX025", "EX023"]
+dependencies = ["bundler.bun-build-pipeline", "html.html-rewriter-advanced"]
+benchmarks = ["benchmarks/html-bundle.bench.ts"]
+
+# ========================================
+# DOMAIN: lifecycle.shutdown
+# ========================================
+
+[lifecycle.shutdown.bun-shutdown-metrics]
+[lifecycle.shutdown.bun-shutdown-metrics.TYPE]
+specification = "EX050"
+validation = "@SHUTDOWN"
+implementation = "graceful"
+
+[lifecycle.shutdown.bun-shutdown-metrics.META:{PROPERTY}]
+shutdown = { signal_timeout_ms = 5000, grace_period_ms = 30000, force_exit_delay_ms = 5000 }
+cleanup = { callbacks = [], database_flush = true, log_flush = true, connection_close = true }
+metrics = { persist_on_shutdown = true, sqlite_path = "logs/shutdown.db", retention_days = 30 }
+health = { final_check = true, report_generation = true }
+
+[lifecycle.shutdown.bun-shutdown-metrics.CLASS]
+class = "BunShutdownMetrics"
+methods = ["registerCallback", "shutdown", "persistMetrics", "generateReport"]
+implements = ["ShutdownHandler", "MetricsCollector"]
+
+[lifecycle.shutdown.bun-shutdown-metrics.#REF:*]
+references = ["EX028", "EX044"]
+dependencies = ["database.bun-sqlite-shutdown", "logger.bun-native-logger"]
+benchmarks = ["benchmarks/shutdown-time.bench.ts"]

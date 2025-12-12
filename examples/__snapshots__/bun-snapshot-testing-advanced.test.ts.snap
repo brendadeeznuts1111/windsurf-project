@@ -1,0 +1,272 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Advanced Bun Snapshot Testing custom object serialization 1`] = `
+{
+  "handler": "[Function: process]",
+  "id": "obj-123",
+  "metadata": {
+    "created": 2024-01-01T00:00:00.000Z,
+    "tags": [
+      "test",
+      "complex",
+      "snapshot",
+    ],
+  },
+  "name": "Complex Object",
+  "nested": {
+    "data": [
+      1,
+      2,
+      {
+        "nested": true,
+      },
+    ],
+    "self": "[Circular Reference]",
+  },
+}
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing with dynamic data 1`] = `
+{
+  "hasArch": true,
+  "hasNodeVersion": true,
+  "hasPlatform": true,
+  "hasProcessId": true,
+  "hasRandomId": true,
+  "hasTimestamp": true,
+}
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing for data transformations 1`] = `
+{
+  "displayName": "John Doe",
+  "email": "john.doe@example.com",
+  "id": "user_123",
+  "isActive": true,
+  "lastLogin": "2024-01-01T10:30:00.000Z",
+  "permissions": [
+    "admin",
+    "delete",
+    "read",
+    "write",
+  ],
+  "role": "ADMIN",
+}
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing for API responses 1`] = `
+{
+  "data": {
+    "email": "john@example.com",
+    "id": 1,
+    "profile": {
+      "avatar": "https://example.com/avatar.jpg",
+      "firstName": "John",
+      "lastName": "Doe",
+    },
+    "username": "johndoe",
+  },
+  "requestId": "[DYNAMIC_REQUEST_ID]",
+  "status": 200,
+  "success": true,
+  "timestamp": "[DYNAMIC_TIMESTAMP]",
+  "version": "v1.0.0",
+}
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing for error states 1`] = `
+{
+  "error": {
+    "code": "INVALID_FORMAT",
+    "field": "email",
+    "message": "Email address format is invalid",
+    "name": "ValidationError",
+    "stack": [
+      "[STACK_FRAME]",
+      "[STACK_FRAME]",
+    ],
+  },
+  "success": false,
+  "timestamp": "[DYNAMIC_TIMESTAMP]",
+}
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing for configuration objects 1`] = `
+{
+  "development": {
+    "cache": {
+      "enabled": true,
+      "maxSize": 1000,
+      "ttl": 300,
+    },
+    "database": {
+      "host": "localhost",
+      "poolSize": 5,
+      "port": 5432,
+      "ssl": false,
+    },
+    "environment": "development",
+    "features": {
+      "experimental": true,
+      "newFeature": false,
+    },
+    "logging": {
+      "format": "json",
+      "level": "debug",
+      "outputs": [
+        "console",
+      ],
+    },
+  },
+  "production": {
+    "cache": {
+      "enabled": true,
+      "maxSize": 10000,
+      "ttl": 3600,
+    },
+    "database": {
+      "host": "prod-db.example.com",
+      "poolSize": 20,
+      "port": 5432,
+      "ssl": true,
+    },
+    "environment": "production",
+    "features": {
+      "experimental": false,
+      "newFeature": false,
+    },
+    "logging": {
+      "format": "json",
+      "level": "warn",
+      "outputs": [
+        "file",
+        "remote",
+      ],
+    },
+  },
+  "staging": {
+    "cache": {
+      "enabled": true,
+      "maxSize": 1000,
+      "ttl": 300,
+    },
+    "database": {
+      "host": "localhost",
+      "poolSize": 5,
+      "port": 5432,
+      "ssl": false,
+    },
+    "environment": "staging",
+    "features": {
+      "experimental": false,
+      "newFeature": true,
+    },
+    "logging": {
+      "format": "json",
+      "level": "debug",
+      "outputs": [
+        "console",
+      ],
+    },
+  },
+}
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing for HTML generation 1`] = `
+"<div class="user-card" data-user-id="123">
+        <img src="https://example.com/avatar.jpg" alt="Jane Smith's avatar" class="avatar">
+        <div class="user-info">
+          <h3 class="name">Jane Smith</h3>
+          <p class="email">jane@example.com</p>
+          <span class="role admin">admin</span>
+        </div>
+        <div class="stats">
+          <span class="posts">42 posts</span>
+          <span class="followers">1234 followers</span>
+        </div>
+      </div>"
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing for CSS generation 1`] = `
+{
+  "primaryMedium": {
+    "alignItems": "center",
+    "backgroundColor": "#007bff",
+    "border": "1px solid #007bff",
+    "borderRadius": "6px",
+    "color": "white",
+    "cursor": "pointer",
+    "display": "inline-flex",
+    "fontSize": "16px",
+    "fontWeight": "500",
+    "justifyContent": "center",
+    "padding": "8px 16px",
+    "transition": "all 0.2s ease",
+  },
+  "primarySmall": {
+    "alignItems": "center",
+    "backgroundColor": "#007bff",
+    "border": "1px solid #007bff",
+    "borderRadius": "6px",
+    "color": "white",
+    "cursor": "pointer",
+    "display": "inline-flex",
+    "fontSize": "14px",
+    "fontWeight": "500",
+    "justifyContent": "center",
+    "padding": "6px 12px",
+    "transition": "all 0.2s ease",
+  },
+  "secondaryLarge": {
+    "alignItems": "center",
+    "backgroundColor": "transparent",
+    "border": "1px solid #007bff",
+    "borderRadius": "6px",
+    "color": "#007bff",
+    "cursor": "pointer",
+    "display": "inline-flex",
+    "fontSize": "18px",
+    "fontWeight": "500",
+    "justifyContent": "center",
+    "padding": "12px 24px",
+    "transition": "all 0.2s ease",
+  },
+}
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing for SQL queries 1`] = `
+{
+  "count": "SELECT COUNT(*) FROM users",
+  "delete": "DELETE FROM users WHERE id = $1",
+  "insert": "INSERT INTO users (name, email, created_at) VALUES ($1, $2, NOW()) RETURNING id",
+  "selectActive": "SELECT * FROM users WHERE active = true ORDER BY created_at DESC LIMIT $1",
+  "selectByEmail": "SELECT * FROM users WHERE email = $1",
+  "selectById": "SELECT * FROM users WHERE id = $1",
+  "update": "UPDATE users SET name = $1, email = $2, updated_at = NOW() WHERE id = $3",
+}
+`;
+
+exports[`Advanced Bun Snapshot Testing snapshot testing for file system structures 1`] = `
+{
+  "my-bun-project": {
+    "bun.lock": "lockfile contents",
+    "docs": {
+      "API.md": "# API Reference",
+      "README.md": "# Project Documentation",
+    },
+    "package.json": {
+      "name": "my-bun-project",
+      "version": "1.0.0",
+    },
+    "src": {
+      "index.ts": "// Main entry point",
+      "types.ts": "// Type definitions",
+      "utils.ts": "// Utility functions",
+    },
+    "tests": {
+      "index.test.ts": "// Test suite",
+      "utils.test.ts": "// Utility tests",
+    },
+  },
+}
+`;

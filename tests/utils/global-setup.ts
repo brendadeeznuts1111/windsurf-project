@@ -1,24 +1,11 @@
 // global-setup.ts
 // Global Setup/Teardown with Resource Budgeting for Phase V Advanced Testing
 
-import { ResourceMonitor } from './packages/testing/src/resource-budget';
-import { TestDurationOracle } from './src/agents/testDurationOracle';
+import { ResourceMonitor } from '../utils/resource-monitor';
+import { TestDurationOracle } from '../agents/testDurationOracle';
 
-// Mock ResourceAwareMCP for demonstration
-const ResourceAwareMCP = {
-    executeWithResources: async (
-        resourceConfig: any,
-        input: any,
-        fn: () => Promise<any>
-    ) => {
-        console.log(`[ResourceAwareMCP] Executing with config: ${resourceConfig.name}`);
-        return await fn();
-    },
-
-    getPressureScore: () => {
-        return ResourceMonitor.getPressureScore();
-    }
-};
+// Import real ResourceAwareMCP
+import { ResourceAwareMCP } from '../mcp/resource-aware';
 
 // Mock consciousness ledger
 const ConsciousLedger = {

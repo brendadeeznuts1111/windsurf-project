@@ -1,0 +1,32 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Bun Official Testing Patterns Snapshot Testing (Bun Guidelines) should match snapshot for complex object 1`] = `
+{
+  "metadata": {
+    "features": [
+      "auth",
+      "api",
+      "dashboard",
+    ],
+    "timestamp": "2025-01-01T00:00:00Z",
+    "version": "1.0.0",
+  },
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "roles": [
+        "admin",
+        "user",
+      ],
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "roles": [
+        "user",
+      ],
+    },
+  ],
+}
+`;

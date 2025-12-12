@@ -18,7 +18,6 @@
 import { BunTextLoader } from '../src/utils/bun-text-loader';
 import { BunEnvSynchronizer } from '../src/utils/bun-env-synchronizer';
 import { BunUnixSocketProxy } from '../src/utils/bun-unix-socket-proxy';
-import { WorkerWithSpawn } from '../src/workers/worker-with-spawn';
 import { TensionScoringEngine } from '../src/core/tension-scoring/tension-engine';
 
 // ============================================================================

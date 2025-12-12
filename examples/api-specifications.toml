@@ -1,0 +1,143 @@
+# STATUS: pr-merged #1234
+# TAGS: critical, production-ready, v1.3.4, security, performance
+[http.server.bun-serve-advanced]
+[http.server.bun-serve-advanced.TYPE]
+specification = "EX001"
+validation = "@VALIDATION_HTTP_SERVER"
+implementation = "TYPE_LEVEL"
+
+[http.server.bun-serve-advanced.META:{PROPERTY}]
+server = {
+  port = 8443, # Default secure port for TLS termination
+  hostname = "0.0.0.0", # Bind to all interfaces for container deployment
+  max_request_body_size = 10485760, # 10MB - prevents DoS via large uploads
+  idle_timeout = 30, # 30s - balances performance vs resource usage
+  development = false, # Production defaults prioritize security over convenience
+}
+
+websocket = {
+  upgrade_path = "/ws", # Standard WebSocket endpoint for composability
+  client_id_generation = "uuidv7", # Cryptographically secure client tracking
+  message_buffering = true, # Prevents backpressure issues in high-throughput scenarios
+}
+
+security = {
+  cors_origins = ["https://trusted-domain.com"], # Explicit allowlist prevents CSRF
+  hsts_max_age = 63072000, # 2 years - industry standard for HTTPS enforcement
+  security_headers = ["strict-transport-security", "x-content-type-options", "x-frame-options", "x-xss-protection"], # OWASP recommended headers
+  rate_limiting_enabled = true, # Prevents abuse but allows legitimate traffic
+}
+
+observability = {
+  request_logging = true, # Essential for debugging distributed systems
+  performance_metrics = true, # P99 latency tracking for SLA compliance
+  health_endpoint = "/health", # Kubernetes readiness/liveness probes
+  metrics_endpoint = "/metrics", # Prometheus scraping integration
+}
+
+[http.server.bun-serve-advanced.CLASS]
+class = "BunServeAdvanced"
+methods = ["start", "stop", "isRateLimited", "handleRequest", "collectMetrics"]
+implements = ["ServerLifecycle", "WebSocketHandler", "MetricsProvider"]
+# Core HTTP/2 server with WebSocket upgrade, security headers, and observability. Manages request lifecycle from TLS termination through response generation, ensuring sub-millisecond routing and comprehensive security controls.
+
+[http.server.bun-serve-advanced.#REF:*]
+references = ["EX002", "EX003", "EX004", "EX005", "EX006", "EX007"]
+dependencies = ["logging.bun-logger", "websocket.upgrade-handler", "metrics.prometheus-client"]
+benchmarks = ["benchmarks/bun-http-server.bench.ts", "benchmarks/bun-websocket-throughput.bench.ts"]
+
+# STATUS: pr-blocked #1240
+# TAGS: security-pending, audited, blocking-release, critical
+# AUDIT: PENDING - @security-audit-team review due 2024-12-20
+[security.cryptography.crypto-suite]
+[security.cryptography.crypto-suite.TYPE]
+specification = "EX008"
+validation = "@VALIDATION_CRYPTO_SECURITY"
+implementation = "TYPE_LEVEL"
+
+[security.cryptography.crypto-suite.META:{PROPERTY}]
+password_hashing = {
+  algorithm = "argon2id", # OWASP recommended for password storage
+  memory_cost = 65536, # 64MB - balances security vs performance
+  time_cost = 3, # Iterations - prevents brute force attacks
+  parallelism = 1, # Single-threaded for server environments
+}
+
+hmac_signing = {
+  algorithm = "sha256", # NIST approved for integrity protection
+  key_rotation_interval = 86400, # 24 hours - prevents key compromise impact
+  signature_format = "hex", # URL-safe for HTTP headers
+}
+
+certificate_validation = {
+  supported_formats = ["PEM", "DER"], # Industry standard certificate formats
+  revocation_checking = true, # OCSP/CRL validation for certificate integrity
+  trust_store_path = "/etc/ssl/certs", # System CA certificates for validation
+}
+
+secure_tokens = {
+  default_length = 32, # 256-bit entropy for cryptographic security
+  encoding = "base64url", # URL-safe for web applications
+  randomness_source = "crypto_secure", # FIPS-compliant random generation
+}
+
+[security.cryptography.crypto-suite.CLASS]
+class = "BunSecuritySuite"
+methods = ["hashPassword", "generateHmac", "generateKeyPair", "signLogEntry", "generateSecureToken", "validateCertificate"]
+implements = ["PasswordHasher", "HMACSigner", "CertificateValidator", "SecureTokenGenerator"]
+# Cryptographic operations suite providing enterprise-grade security primitives. Handles password storage, message integrity, certificate validation, and secure token generation with comprehensive audit logging.
+
+[security.cryptography.crypto-suite.#REF:*]
+references = ["EX009", "EX010", "EX011", "EX012"]
+dependencies = ["logging.bun-logger", "file.bun-file-system", "crypto.bun-crypto-hasher"]
+benchmarks = ["benchmarks/bun-crypto-performance.bench.ts", "benchmarks/bun-password-hashing.bench.ts"]
+
+# STATUS: pr-review #1245
+# TAGS: performance, production-ready, v1.3.4, experimental
+[streaming.compression.bun-compression]
+[streaming.compression.bun-compression.TYPE]
+specification = "EX013"
+validation = "@VALIDATION_COMPRESSION_PERFORMANCE"
+implementation = "TYPE_LEVEL"
+
+[streaming.compression.bun-compression.META:{PROPERTY}]
+algorithms = {
+  zstd = {
+    default_level = 6, # Balanced compression ratio vs speed
+    max_level = 22, # Maximum compression for archival use cases
+    min_level = 1, # Fast compression for real-time scenarios
+  },
+  gzip = {
+    default_level = 6, # Compatible with HTTP compression standards
+    strategy = "default", # Balanced for general-purpose compression
+  }
+}
+
+streaming = {
+  chunk_size = 65536, # 64KB - optimizes memory usage vs throughput
+  backpressure_handling = true, # Prevents memory exhaustion under load
+  concurrent_streams = 4, # Balances CPU utilization across cores
+}
+
+auto_compression = {
+  min_size_threshold = 1024, # Skip compression for small payloads
+  text_detection_ratio = 0.7, # Heuristic for content-type selection
+  algorithm_preference = "zstd", # Better ratio for compressible data
+}
+
+performance_targets = {
+  p99_latency_ms = 10, # Sub-10ms compression for real-time use cases
+  throughput_mbps = 100, # 100MB/s minimum for high-volume processing
+  memory_overhead_mb = 50, # Memory usage cap for server environments
+}
+
+[streaming.compression.bun-compression.CLASS]
+class = "BunCompressionManager"
+methods = ["compressStream", "autoCompress", "decompress", "isTextContent"]
+implements = ["StreamCompressor", "AutoCompressor", "Decompressor"]
+# High-performance streaming compression manager with automatic algorithm selection. Provides zero-copy compression for large files and real-time data streams with intelligent content-type detection.
+
+[streaming.compression.bun-compression.#REF:*]
+references = ["EX014", "EX015", "EX016"]
+dependencies = ["logging.bun-logger", "file.bun-file-system", "stream.bun-readable-stream"]
+benchmarks = ["benchmarks/bun-compression-throughput.bench.ts", "benchmarks/bun-zstd-performance.bench.ts", "benchmarks/bun-streaming-compression.bench.ts"]

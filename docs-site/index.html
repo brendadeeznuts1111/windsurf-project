@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bun-Native API Ecosystem Documentation</title>
+    <meta name="description" content="Comprehensive guide to Bun runtime with 51+ interactive examples, benchmarks, and production-ready APIs">
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/prism.css">
+    <script src="https://unpkg.com/marked@4.3.0/lib/marked.umd.js"></script>
+    <script src="assets/search.js" defer></script>
+    <script src="assets/interactive.js" defer></script>
+    <script src="assets/terminal.js" defer></script>
+    <script src="assets/learning-paths.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-top">
+                <div class="theme-toggle">
+                    <button id="theme-toggle" aria-label="Toggle theme">
+                        <span id="theme-icon">🌙</span>
+                    </button>
+                </div>
+                <nav class="header-nav">
+                    <a href="#api-endpoints">API Endpoints</a>
+                    <a href="#benchmarks">Benchmarks</a>
+                    <a href="performance-dashboard.html">Performance</a>
+                    <a href="#examples">Examples</a>
+                </nav>
+            </div>
+
+            <h1 class="site-title">🚀 Bun-Native API Ecosystem</h1>
+            <p class="site-description">51+ Production-Ready APIs with Interactive Examples, Benchmarks & Enterprise Features</p>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-number">51</span>
+                    <span class="stat-label">Examples</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">18</span>
+                    <span class="stat-label">Performance</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50x</span>
+                    <span class="stat-label">Concurrent</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6-57x</span>
+                    <span class="stat-label">SIMD Speed</span>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search examples, APIs, tags...">
+                <button id="search-button">🔍 Search</button>
+                <button id="clear-search" style="display: none;">✕ Clear</button>
+            </div>
+
+            <div class="quick-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="performance">Performance</button>
+                <button class="filter-btn" data-filter="security">Security</button>
+                <button class="filter-btn" data-filter="testing">Testing</button>
+                <button class="filter-btn" data-filter="build">Build</button>
+                <button class="filter-btn" data-filter="database">Database</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul>
+                <li><a href="#api-endpoints">API Endpoints</a></li>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#benchmarks">Benchmarks</a></li>
+                <li><a href="#learning-paths">Learning Paths</a></li>
+                <li><a href="performance-dashboard.html">Performance</a></li>
+                <li><a href="search.html">Advanced Search</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- API Endpoints Section -->
+        <section id="api-endpoints" class="api-endpoints-section">
+            <h2>🔌 API Endpoints</h2>
+            <p class="section-description">Interactive API documentation with live examples and testing capabilities</p>
+
+            <div class="endpoints-grid">
+                <div class="endpoint-card">
+                    <h3>🚀 Bun Runtime APIs</h3>
+                    <div class="endpoint-list">
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">Bun.serve()</code>
+                            <span class="endpoint-desc">HTTP/WebSocket server</span>
+                            <button class="try-endpoint" data-endpoint="serve">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">Bun.file()</code>
+                            <span class="endpoint-desc">High-performance file I/O</span>
+                            <button class="try-endpoint" data-endpoint="file">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">Bun.spawn()</code>
+                            <span class="endpoint-desc">Process spawning</span>
+                            <button class="try-endpoint" data-endpoint="spawn">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">Bun.build()</code>
+                            <span class="endpoint-desc">Cross-platform compilation</span>
+                            <button class="try-endpoint" data-endpoint="build">Try It</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint-card">
+                    <h3>⚡ Performance APIs</h3>
+                    <div class="endpoint-list">
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">Bun.stripANSI()</code>
+                            <span class="endpoint-desc">SIMD-accelerated ANSI removal</span>
+                            <button class="try-endpoint" data-endpoint="strip-ansi">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">ReadableStream.text()</code>
+                            <span class="endpoint-desc">Stream to string conversion</span>
+                            <button class="try-endpoint" data-endpoint="stream-text">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">Bun.SQL</code>
+                            <span class="endpoint-desc">Database operations</span>
+                            <button class="try-endpoint" data-endpoint="sql">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">Bun.password.hash()</code>
+                            <span class="endpoint-desc">Cryptographic hashing</span>
+                            <button class="try-endpoint" data-endpoint="password">Try It</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint-card">
+                    <h3>🧪 Testing APIs</h3>
+                    <div class="endpoint-list">
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">test.concurrent()</code>
+                            <span class="endpoint-desc">Concurrent test execution</span>
+                            <button class="try-endpoint" data-endpoint="concurrent-test">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">expect().toMatchSnapshot()</code>
+                            <span class="endpoint-desc">Snapshot testing</span>
+                            <button class="try-endpoint" data-endpoint="snapshot">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">--seed</code>
+                            <span class="endpoint-desc">Deterministic randomization</span>
+                            <button class="try-endpoint" data-endpoint="seed">Try It</button>
+                        </div>
+                        <div class="endpoint-item">
+                            <code class="endpoint-method">test.failing()</code>
+                            <span class="endpoint-desc">Expected failure tests</span>
+                            <button class="try-endpoint" data-endpoint="failing">Try It</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Terminal -->
+            <div class="interactive-terminal">
+                <h3>💻 Interactive Terminal</h3>
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <span class="terminal-title">Bun Runtime Terminal</span>
+                        <div class="terminal-controls">
+                            <span class="terminal-btn red"></span>
+                            <span class="terminal-btn yellow"></span>
+                            <span class="terminal-btn green"></span>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="terminal-output">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">$</span>
+                            <span class="terminal-command">bun --version</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-output">1.3.4</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">$</span>
+                            <span class="terminal-command" id="current-command">echo "Welcome to Bun!"</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="terminal-output" id="current-output">Welcome to Bun!</span>
+                        </div>
+                        <div class="terminal-line active">
+                            <span class="terminal-prompt">$</span>
+                            <input type="text" id="terminal-input" placeholder="Type a command..." autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="overview" class="overview-section">
+            <h2>📊 Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>54</h3>
+                    <p>Total Examples</p>
+                </div>
+                <div class="stat-card">
+                    <h3>1</h3>
+                    <p>Categories</p>
+                </div>
+                <div class="stat-card">
+                    <h3>0</h3>
+                    <p>Learning Paths</p>
+                </div>
+                <div class="stat-card">
+                    <h3>3</h3>
+                    <p>Performance Tracked</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="examples" class="examples-section">
+            <h2>🚀 Examples by Category</h2>
+            
+        <div class="category-section">
+            <h3>📚 Examples by Category (54 examples)</h3>
+            <div class="examples-grid">
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Catalogs Advanced</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-inspect</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-0.html" class="btn btn-primary">View Example</a>
+                            <a href="advanced/workspaces/bun-catalogs-advanced.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Catalogs Basic</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-inspect</span><span class="tag">bun-file</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-1.html" class="btn btn-primary">View Example</a>
+                            <a href="advanced/workspaces/bun-catalogs-basic.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Performance Benchmark Comprehensive</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">bun-write</span><span class="tag">bun-file</span><span class="tag">bun-inspect</span><span class="tag">bun-deepequals</span><span class="tag">bun-hash</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-2.html" class="btn btn-primary">View Example</a>
+                            <a href="benchmarks/bun-performance-benchmark-comprehensive.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Glob Transpile Watch</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-mkdir</span><span class="tag">bun-watch</span><span class="tag">bun-nanoseconds</span><span class="tag">bun-hash</span><span class="tag">bun-transpiler</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-3.html" class="btn btn-primary">View Example</a>
+                            <a href="build/glob-transpile-watch.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Blue Green Deploy</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">bun-sleep</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-4.html" class="btn btn-primary">View Example</a>
+                            <a href="build/blue-green-deploy.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Chaos Test</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">bun-sleep</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">testing</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-5.html" class="btn btn-primary">View Example</a>
+                            <a href="build/chaos-test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Build</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">bun-filewatcher</span><span class="tag">bun-write</span><span class="tag">bun-cryptohasher</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-6.html" class="btn btn-primary">View Example</a>
+                            <a href="build/build.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Shell Advanced</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-shell</span><span class="tag">bun-nanoseconds</span><span class="tag">bun-env</span><span class="tag">async</span><span class="tag">oop</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-7.html" class="btn btn-primary">View Example</a>
+                            <a href="cli/bun-shell-advanced.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Serve Advanced</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">bun-randomuuidv7</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-8.html" class="btn btn-primary">View Example</a>
+                            <a href="core/bun-serve-advanced.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 File System Advanced</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-file</span><span class="tag">bun-glob</span><span class="tag">bun-write</span><span class="tag">bun-hash</span><span class="tag">bun-spawn</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-9.html" class="btn btn-primary">View Example</a>
+                            <a href="core/file-system-advanced.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Demonstrate Plugin Websocket Security Integration</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-10.html" class="btn btn-primary">View Example</a>
+                            <a href="demonstrate/demonstrate-plugin-websocket-security-integration.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Demonstrate Pattern Performance Optimization Cycle</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">performance</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-11.html" class="btn btn-primary">View Example</a>
+                            <a href="demonstrate/demonstrate-pattern-performance-optimization-cycle.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Index</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">performance</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-12.html" class="btn btn-primary">View Example</a>
+                            <a href="demonstrate/index.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Demonstrate Server Db Analytics Flow</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">testing</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-13.html" class="btn btn-primary">View Example</a>
+                            <a href="demonstrate/demonstrate-server-db-analytics-flow.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Blue Green Manager</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">bun-serve</span><span class="tag">bun-sleep</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-14.html" class="btn btn-primary">View Example</a>
+                            <a href="deployment/blue-green-manager.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="beginner | **Time**: 10 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun File Mime Demo.Test</h4>
+                            <span class="difficulty-badge difficulty-beginner | **Time**: 10 minutes | **Bun**: >=1.3.0">beginner | **Time**: 10 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-file</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-15.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-file-mime-demo.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Error Tracker</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">oop</span><span class="tag">performance</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-16.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-error-tracker.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Error Tracker Demo.Test</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">performance</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-17.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-error-tracker-demo.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Tcp Socket Demo.Test</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">async</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-18.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-tcp-socket-demo.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Snapshot Testing.Test</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-19.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-snapshot-testing.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Uuid Demo.Test</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-sleepsync</span><span class="tag">async</span><span class="tag">performance</span><span class="tag">testing</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-20.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-uuid-demo.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Testing Demo</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">async</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-21.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-testing-demo.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Env Synchronizer Demo</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-env</span><span class="tag">async</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-22.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-env-synchronizer-demo.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Patch System Demonstration</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-file</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-23.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-patch-system-demonstration.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Worker Config Example</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">async</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-24.html" class="btn btn-primary">View Example</a>
+                            <a href="worker-config-example.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Api Server Demo</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-25.html" class="btn btn-primary">View Example</a>
+                            <a href="api-server-demo.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Practical Bun Patch Workflow</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-file</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-26.html" class="btn btn-primary">View Example</a>
+                            <a href="practical-bun-patch-workflow.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun File Sink Demo.Test</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-write</span><span class="tag">bun-file</span><span class="tag">async</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-27.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-file-sink-demo.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Complete Api Showcase</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-serve</span><span class="tag">bun-file</span><span class="tag">bun-write</span><span class="tag">bun-sql</span><span class="tag">bun-password</span><span class="tag">bun-cryptohasher</span><span class="tag">bun-gzip</span><span class="tag">bun-zstdcompress</span><span class="tag">bun-randomuuidv7</span><span class="tag">bun-deepequals</span><span class="tag">bun-nanoseconds</span><span class="tag">bun-websocket</span><span class="tag">bun-compression</span><span class="tag">bun-crypto</span><span class="tag">bun-uuid</span><span class="tag">bun-timing</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-28.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-complete-api-showcase.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 15 minutes | **Bun**: v1.1.37+ | **Tags**: `errors`, `troubleshooting`, `debugging`, `cli`, `runtime`">
+                        <div class="example-header">
+                            <h4>🟡 Bun Error Codes & Troubleshooting Guide</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 15 minutes | **Bun**: v1.1.37+ | **Tags**: `errors`, `troubleshooting`, `debugging`, `cli`, `runtime`">intermediate | **Time**: 15 minutes | **Bun**: v1.1.37+ | **Tags**: `errors`, `troubleshooting`, `debugging`, `cli`, `runtime`</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-29.html" class="btn btn-primary">View Example</a>
+                            <a href="examples/bun-error-codes-troubleshooting.md" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 20 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `jest`, `typescript`, `tdd`, `quality`">
+                        <div class="example-header">
+                            <h4>🟡 🧪 Bun Testing Guide</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 20 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `jest`, `typescript`, `tdd`, `quality`">intermediate | **Time**: 20 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `jest`, `typescript`, `tdd`, `quality`</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-30.html" class="btn btn-primary">View Example</a>
+                            <a href="examples/bun-testing-guide.md" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `harness`, `utilities`, `infrastructure`, `ci`">
+                        <div class="example-header">
+                            <h4>🟡 🧰 Bun Test Harness Reference</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `harness`, `utilities`, `infrastructure`, `ci`">advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `harness`, `utilities`, `infrastructure`, `ci`</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-31.html" class="btn btn-primary">View Example</a>
+                            <a href="examples/bun-test-harness-guide.md" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `cli`, `commands`, `automation`, `integration`">
+                        <div class="example-header">
+                            <h4>🟡 🖥️ Bun CLI Testing Guide</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `cli`, `commands`, `automation`, `integration`">advanced | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `cli`, `commands`, `automation`, `integration`</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-32.html" class="btn btn-primary">View Example</a>
+                            <a href="examples/bun-cli-testing-guide.md" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `plugins`, `build`, `hooks`, `development`">
+                        <div class="example-header">
+                            <h4>🟡 🔌 Bun Plugin Testing Guide</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `plugins`, `build`, `hooks`, `development`">advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `plugins`, `build`, `hooks`, `development`</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-33.html" class="btn btn-primary">View Example</a>
+                            <a href="examples/bun-plugin-testing-guide.md" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `development`, `internal`, `apis`, `highlighting`, `utilities`">
+                        <div class="example-header">
+                            <h4>🟡 🎨 Bun Syntax Highlighting & Internal APIs</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `development`, `internal`, `apis`, `highlighting`, `utilities`">advanced | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `development`, `internal`, `apis`, `highlighting`, `utilities`</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-34.html" class="btn btn-primary">View Example</a>
+                            <a href="examples/bun-syntax-highlighting-guide.md" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `http`, `server`, `client`, `node-compat`">
+                        <div class="example-header">
+                            <h4>🟡 🌐 Bun HTTP Testing Guide</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `http`, `server`, `client`, `node-compat`">advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `http`, `server`, `client`, `node-compat`</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-35.html" class="btn btn-primary">View Example</a>
+                            <a href="examples/bun-http-testing-guide.md" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `benchmarking`, `performance`, `profiling`, `testing`, `metrics`">
+                        <div class="example-header">
+                            <h4>🟡 🏎️ Bun Benchmarking Guide</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `benchmarking`, `performance`, `profiling`, `testing`, `metrics`">intermediate | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `benchmarking`, `performance`, `profiling`, `testing`, `metrics`</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-36.html" class="btn btn-primary">View Example</a>
+                            <a href="examples/bun-benchmarking-guide.md" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun File Mime Advanced Demo.Test</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-file</span><span class="tag">async</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-37.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-file-mime-advanced-demo.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Complete Integration Example</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-file</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-38.html" class="btn btn-primary">View Example</a>
+                            <a href="complete-integration-example.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Worker Spawn System Demo</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">async</span><span class="tag">oop</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-39.html" class="btn btn-primary">View Example</a>
+                            <a href="worker-spawn-system-demo.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Text File Loader Demo</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-write</span><span class="tag">bun-file</span><span class="tag">bun-tofixed</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-40.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-text-file-loader-demo.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Index</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-file</span><span class="tag">bun-env</span><span class="tag">bun-serve</span><span class="tag">bun-hash</span><span class="tag">bun-randomuuidv7</span><span class="tag">bun-deepequals</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-41.html" class="btn btn-primary">View Example</a>
+                            <a href="index.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Snapshot Testing Advanced.Test</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">oop</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-42.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-snapshot-testing-advanced.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Advanced Testing.Test</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">performance</span><span class="tag">testing</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-43.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-advanced-testing.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Unix Socket Proxy Demo</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">async</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-44.html" class="btn btn-primary">View Example</a>
+                            <a href="bun-unix-socket-proxy-demo.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Http Session</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-randomuuidv7</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-45.html" class="btn btn-primary">View Example</a>
+                            <a href="http/bun-http-session.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Logger</h4>
+                            <span class="difficulty-badge difficulty-intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0">intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">oop</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-46.html" class="btn btn-primary">View Example</a>
+                            <a href="logging/bun-logger.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 System Monitor</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-spawn</span><span class="tag">bun-nanoseconds</span><span class="tag">async</span><span class="tag">oop</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-47.html" class="btn btn-primary">View Example</a>
+                            <a href="monitoring/system-monitor.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Network Native</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">bun-udpsocket</span><span class="tag">bun-connect</span><span class="tag">bun-deepequals</span><span class="tag">bun-inspect</span><span class="tag">bun-resolve</span><span class="tag">bun-resolvesync</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-48.html" class="btn btn-primary">View Example</a>
+                            <a href="network/bun-network-native.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Crypto Suite</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-password</span><span class="tag">bun-nanoseconds</span><span class="tag">bun-cryptohasher</span><span class="tag">bun-randomuuidv7</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-49.html" class="btn btn-primary">View Example</a>
+                            <a href="security/crypto-suite.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Bun Compression</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-nanoseconds</span><span class="tag">async</span><span class="tag">oop</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-50.html" class="btn btn-primary">View Example</a>
+                            <a href="streaming/bun-compression.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Observability</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-randomuuidv7</span><span class="tag">bun-nanoseconds</span><span class="tag">oop</span><span class="tag">testing</span><span class="tag">http</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-51.html" class="btn btn-primary">View Example</a>
+                            <a href="TYPES/observability.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 Quality Validation.Test</h4>
+                            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description"></p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-file</span><span class="tag">bun-write</span><span class="tag">async</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-52.html" class="btn btn-primary">View Example</a>
+                            <a href="tests/quality-validation.test.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+                    <div class="example-card" data-difficulty="expert | **Time**: 60 minutes | **Bun**: >=1.3.0">
+                        <div class="example-header">
+                            <h4>🟡 examples/utilities/bun</h4>
+                            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+                        </div>
+                        <p class="example-description">### Difficulty Distribution</p>
+                        <div class="example-meta">
+                            <span class="time">⏱️ </span>
+                            <span class="version">📦 </span>
+                        </div>
+                        
+                            <div class="example-tags">
+                                <span class="tag">bun-version</span><span class="tag">bun-revision</span><span class="tag">bun-main</span><span class="tag">bun-nanoseconds</span><span class="tag">bun-randomuuidv7</span><span class="tag">bun-hash</span><span class="tag">bun-ismainthread</span><span class="tag">bun-env</span><span class="tag">bun-argv</span><span class="tag">bun-file</span><span class="tag">bun-password</span><span class="tag">bun-hrtime_bigint</span><span class="tag">bun-compress</span><span class="tag">bun-write</span><span class="tag">oop</span><span class="tag">performance</span><span class="tag">testing</span><span class="tag">http</span><span class="tag">filesystem</span>
+                            </div>
+                        
+                        <div class="example-actions">
+                            <a href="examples/example-53.html" class="btn btn-primary">View Example</a>
+                            <a href="utilities/bun-constants-dictionary.ts" class="btn btn-secondary">View Source</a>
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+      
+        </section>
+
+        
+        <section id="learning-paths" class="learning-paths-section">
+            <h2>🛣️ Learning Paths</h2>
+            
+        <div class="learning-paths-grid">
+            
+        </div>
+    
+        </section>
+        
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Generated with ❤️ for the Bun community</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple theme toggle
+        const theme = 'auto';
+        if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified API Hub - api.example.com</title>
+    <link rel="stylesheet" href="./hub-styles.css" />
+    <script src="./hub-client.ts" type="module"></script>
+</head>
+<body>
+    <div id="app">
+        <header class="hub-header">
+            <div class="header-content">
+                <h1 class="hub-title">
+                    <span class="hub-icon">🔗</span>
+                    Unified API Hub
+                </h1>
+                <p class="hub-subtitle">Your gateway to the complete Bun ecosystem at <strong>api.example.com</strong></p>
+                <div class="hub-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-services">0</span>
+                        <span class="stat-label">Services</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value healthy" id="healthy-services">0</span>
+                        <span class="stat-label">Healthy</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="response-time">--</span>
+                        <span class="stat-label">Avg Response</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="hub-nav">
+            <div class="nav-controls">
+                <button class="nav-btn active" data-view="overview">Overview</button>
+                <button class="nav-btn" data-view="services">Services</button>
+                <button class="nav-btn" data-view="health">Health</button>
+                <button class="nav-btn" data-view="performance">Performance</button>
+                <button class="nav-btn" data-view="logs">Logs</button>
+            </div>
+            <div class="nav-actions">
+                <button class="action-btn" id="refresh-btn">🔄 Refresh</button>
+                <button class="action-btn" id="settings-btn">⚙️ Settings</button>
+            </div>
+        </nav>
+
+        <main class="hub-main">
+            <!-- Overview View -->
+            <section class="view overview-view active" id="overview-view">
+                <div class="services-grid" id="services-grid">
+                    <!-- Services will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Services View -->
+            <section class="view services-view" id="services-view">
+                <div class="services-table-container">
+                    <table class="services-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Status</th>
+                                <th>Path</th>
+                                <th>Port</th>
+                                <th>Response Time</th>
+                                <th>Last Check</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="services-table-body">
+                            <!-- Services will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Health View -->
+            <section class="view health-view" id="health-view">
+                <div class="health-dashboard">
+                    <div class="health-summary">
+                        <div class="health-card">
+                            <h3>System Health</h3>
+                            <div class="health-metrics">
+                                <div class="metric">
+                                    <span class="metric-value" id="hub-status">Unknown</span>
+                                    <span class="metric-label">Hub Status</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value" id="uptime">0s</span>
+                                    <span class="metric-label">Uptime</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value" id="total-requests">0</span>
+                                    <span class="metric-label">Total Requests</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="health-details">
+                        <h3>Service Health Details</h3>
+                        <div class="health-list" id="health-list">
+                            <!-- Health details will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance View -->
+            <section class="view performance-view" id="performance-view">
+                <div class="performance-dashboard">
+                    <div class="performance-charts">
+                        <div class="chart-container">
+                            <h3>Response Times</h3>
+                            <canvas id="response-time-chart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Service Status Distribution</h3>
+                            <canvas id="status-chart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="performance-metrics">
+                        <div class="metric-card">
+                            <h4>Fastest Service</h4>
+                            <div class="metric-value" id="fastest-service">--</div>
+                            <div class="metric-detail" id="fastest-time">--</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Slowest Service</h4>
+                            <div class="metric-value" id="slowest-service">--</div>
+                            <div class="metric-detail" id="slowest-time">--</div>
+                        </div>
+                        <div class="metric-card">
+                            <h4>Average Response</h4>
+                            <div class="metric-value" id="avg-response">--</div>
+                            <div class="metric-detail">Across all services</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logs View -->
+            <section class="view logs-view" id="logs-view">
+                <div class="logs-container">
+                    <div class="logs-header">
+                        <h3>System Logs</h3>
+                        <div class="logs-controls">
+                            <select id="log-level">
+                                <option value="all">All Levels</option>
+                                <option value="info">Info</option>
+                                <option value="warn">Warnings</option>
+                                <option value="error">Errors</option>
+                            </select>
+                            <button class="action-btn" id="clear-logs">🗑️ Clear</button>
+                        </div>
+                    </div>
+                    <div class="logs-content" id="logs-content">
+                        <!-- Logs will be populated by JavaScript -->
+                        <div class="log-entry" data-level="info">
+                            <span class="log-time">00:00:00</span>
+                            <span class="log-level info">INFO</span>
+                            <span class="log-message">Unified API Hub initialized</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="hub-footer">
+            <p>Built with ❤️ using Bun runtime | Self-optimizing, pattern-based architecture | Version Ω.∞.φ.∞.7</p>
+        </footer>
+    </div>
+
+    <!-- Service Card Template -->
+    <template id="service-card-template">
+        <div class="service-card" data-service-id="">
+            <div class="service-header">
+                <h3 class="service-name"></h3>
+                <div class="service-status">
+                    <span class="status-indicator"></span>
+                    <span class="status-text"></span>
+                </div>
+            </div>
+            <div class="service-path"></div>
+            <div class="service-metrics">
+                <div class="metric">
+                    <span class="metric-value response-time">--</span>
+                    <span class="metric-label">Response</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value last-check">--</span>
+                    <span class="metric-label">Last Check</span>
+                </div>
+            </div>
+            <div class="service-actions">
+                <button class="service-btn test-btn">Test</button>
+                <button class="service-btn logs-btn">Logs</button>
+                <button class="service-btn config-btn">Config</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Service Row Template -->
+    <template id="service-row-template">
+        <tr class="service-row" data-service-id="">
+            <td class="service-name-cell"></td>
+            <td class="service-status-cell">
+                <span class="status-indicator"></span>
+                <span class="status-text"></span>
+            </td>
+            <td class="service-path-cell"></td>
+            <td class="service-port-cell"></td>
+            <td class="service-response-cell">--</td>
+            <td class="service-lastcheck-cell">--</td>
+            <td class="service-actions-cell">
+                <button class="action-btn test-btn">Test</button>
+                <button class="action-btn restart-btn">Restart</button>
+            </td>
+        </tr>
+    </template>
+</body>
+</html>

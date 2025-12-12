@@ -3,12 +3,7 @@
 import { test, describe } from 'bun:test';
 import * as fc from 'fast-check';
 import { expect } from 'bun:test';
-import {
-    parseRotationNumber,
-    validateRotationNumber,
-    getSportFromRotation,
-    searchRotationNumbers
-} from '../../odds-core/src/types/rotation-numbers';
+import { RotationNumberUtils } from '../../../../../odds-core/src/utils/rotation-utils';
 import { rotationArbitraries } from '../arbitraries/rotation-arbitraries';
 
 // Helper to build large rotation registry for testing

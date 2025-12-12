@@ -1,29 +1,184 @@
 version: '3.8'
 
 services:
-  windsurf:
-    build: .
+  # ========================================
+  # Main Application Service
+  # ========================================
+  windsurf-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
     ports:
-      - "3000:3000"
+      - "3000:3000"    # Main API port
+      - "3001:3001"    # Health check port
+      - "9090:9090"    # Metrics port
     environment:
       - NODE_ENV=production
       - BUN_DEBUG=0
+      - PORT=3000
+      - HEALTH_CHECK_PORT=3001
+      - METRICS_PORT=9090
+      - LOG_LEVEL=info
+      - METRICS_ENABLED=true
+      # Database
+      - DATABASE_URL=postgresql://user:password@postgres:5432/windsurf
+      - REDIS_URL=redis://redis:6379
+      # Security
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
+      - API_KEY=${API_KEY}
+      # External services
+      - PROMETHEUS_URL=http://prometheus:9090
+      - GRAFANA_URL=http://grafana:3000
     volumes:
-      - ./settings.local.json:/app/settings.local.json:ro
+      - ./config/production.yaml:/app/config/production.yaml:ro
+      - ./logs:/app/logs
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bun", "run", "examples/index.ts", "--health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 40s
+    networks:
+      - windsurf-network
 
-  # Optional: Add a reverse proxy
+  # ========================================
+  # Database Services
+  # ========================================
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=windsurf
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d windsurf"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - windsurf-network
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - windsurf-network
+
+  # ========================================
+  # Monitoring Stack
+  # ========================================
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    networks:
+      - windsurf-network
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - windsurf-network
+
+  # ========================================
+  # Reverse Proxy
+  # ========================================
   nginx:
     image: nginx:alpine
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
     depends_on:
-      - windsurf
+      - windsurf-api
     restart: unless-stopped
+    networks:
+      - windsurf-network
+
+  # ========================================
+  # Log Aggregation
+  # ========================================
+  loki:
+    image: grafana/loki:latest
+    volumes:
+      - ./monitoring/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+    networks:
+      - windsurf-network
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /app/logs:/var/log/app:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    restart: unless-stopped
+    networks:
+      - windsurf-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  nginx_logs:
+  loki_data:
+
+networks:
+  windsurf-network:
+    driver: bridge

@@ -6,7 +6,7 @@
  * Focused benchmark comparing Bun text file loading approaches.
  */
 
-import { bench, describe } from 'bun:test';
+import { test, describe, expect } from 'bun:test';
 
 // Create test files
 const testFile = './benchmark-test.txt';
@@ -15,14 +15,23 @@ const testContent = 'Hello World! This is a test file for benchmarking text load
 await Bun.write(testFile, testContent);
 
 describe('Text File Loading Performance', () => {
-  bench('Bun.file().text()', async () => {
+  test('Bun.file().text() performance', async () => {
+    const start = performance.now();
     const content = await Bun.file(testFile).text();
-    return content.length;
+    const end = performance.now();
+    const duration = end - start;
+    console.log(`Bun.file().text() took ${duration.toFixed(2)}ms`);
+    expect(content.length).toBeGreaterThan(0);
   });
 
-  bench('Bun.file().textSync()', () => {
-    const content = Bun.file(testFile).textSync();
-    return content.length;
+  test('fs.readFileSync() performance', () => {
+    const fs = require('fs');
+    const start = performance.now();
+    const content = fs.readFileSync(testFile, 'utf8');
+    const end = performance.now();
+    const duration = end - start;
+    console.log(`fs.readFileSync() took ${duration.toFixed(2)}ms`);
+    expect(content.length).toBeGreaterThan(0);
   });
 });
 

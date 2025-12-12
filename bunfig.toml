@@ -18,3 +18,19 @@ include = ["**/*.{test,spec}.ts", "**/*.test.tsx"]
 
 # Preload test setup
 preload = ["./global-test-setup.ts"]
+
+# Concurrent testing configuration
+# Run integration and API tests concurrently for better performance
+concurrentTestGlob = [
+  "**/integration/**/*.test.ts",
+  "**/api/**/*.test.ts",
+  "**/*-concurrent.test.ts",
+  "**/benchmarks/**/*.test.ts"
+]
+
+# Maximum concurrent tests (default: 20, increase for I/O heavy tests)
+maxConcurrency = 50
+
+[run]
+# Console inspection depth for debugging (default: 2)
+console.depth = 4

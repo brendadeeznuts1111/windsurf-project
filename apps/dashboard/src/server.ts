@@ -75,7 +75,7 @@ const server = Bun.serve<WSClient>({
       }
 
       // Route HTTP requests through API router
-      const response = handleAPIRequest(request);
+      const response = await handleAPIRequest(request);
 
       // Add CORS and timing headers
       const headers = new Headers(response.headers);

@@ -3,7 +3,7 @@
 
 import { test, describe, expect, beforeAll, afterAll } from "bun:test";
 import { WebSocketMessage } from '../../packages/core/src/types/common';
-import { createLogger } from '../../packages/core/src/utils/logger';
+import { createLogger } from '../packages/core/src/utils/logger';
 
 const logger = createLogger('WebSocketDemo');
 
@@ -65,7 +65,7 @@ const mockOddsData = {
 
 describe.concurrent("WebSocket Concurrent Testing Demo", () => {
 
-    test.concurrent("handles multiple concurrent connections", async () => {
+    test("handles multiple concurrent connections", async () => {
         console.log("🚀 Testing concurrent connections...");
 
         const connections = Array.from({ length: 5 }, (_, i) =>
@@ -92,7 +92,7 @@ describe.concurrent("WebSocket Concurrent Testing Demo", () => {
         connections.forEach(ws => ws.close());
     });
 
-    test.concurrent("concurrent message broadcasting", async () => {
+    test("concurrent message broadcasting", async () => {
         console.log("📡 Testing concurrent message broadcasting...");
 
         const client1 = new MockWebSocket(`ws://${SERVER_CONFIG.host}:${SERVER_CONFIG.port}`);
@@ -150,7 +150,7 @@ describe.concurrent("WebSocket Concurrent Testing Demo", () => {
         client3.close();
     });
 
-    test.concurrent("concurrent subscription management", async () => {
+    test("concurrent subscription management", async () => {
         console.log("📋 Testing concurrent subscription management...");
 
         const clients = Array.from({ length: 3 }, () =>
@@ -188,7 +188,7 @@ describe.concurrent("WebSocket Concurrent Testing Demo", () => {
         clients.forEach(ws => ws.close());
     });
 
-    test.concurrent("high-frequency message processing", async () => {
+    test("high-frequency message processing", async () => {
         console.log("⚡ Testing high-frequency message processing...");
 
         const client = new MockWebSocket(`ws://${SERVER_CONFIG.host}:${SERVER_CONFIG.port}`);
@@ -222,7 +222,7 @@ describe.concurrent("WebSocket Concurrent Testing Demo", () => {
         }
     });
 
-    test.concurrent("handles connection drops gracefully", async () => {
+    test("handles connection drops gracefully", async () => {
         console.log("🔌 Testing connection drop handling...");
 
         const clients = Array.from({ length: 3 }, () =>
@@ -256,9 +256,9 @@ describe.concurrent("WebSocket Concurrent Testing Demo", () => {
     });
 });
 
-describe.concurrent("Performance Benchmarks", () => {
+describe("Performance Benchmarks", () => {
 
-    test.concurrent("concurrent client stress test", async () => {
+    test("concurrent client stress test", async () => {
         console.log("💪 Running concurrent client stress test...");
 
         const clientCount = 10;

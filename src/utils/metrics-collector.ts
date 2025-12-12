@@ -24,6 +24,10 @@ export interface SystemMetrics {
   timestamp: number;
   system: string;
   metrics: Record<string, number | string | boolean>;
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export interface PerformanceMetrics {
@@ -32,6 +36,10 @@ export interface PerformanceMetrics {
   success: boolean;
   timestamp: number;
   metadata?: Record<string, any>;
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export interface HealthMetrics {
@@ -44,6 +52,10 @@ export interface HealthMetrics {
     passed: number;
     failed: number;
   };
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export interface ResourceMetrics {

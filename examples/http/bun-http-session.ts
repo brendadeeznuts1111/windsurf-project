@@ -127,7 +127,7 @@ export class BunHTTPSessionServer {
   start(port: number = 3000): void {
     this.server = serve({
       port,
-      async fetch(req) {
+      fetch: async (req) => {
         const session = this.sessionManager.getSession(req.headers.get('cookie'));
         const url = new URL(req.url);
 
@@ -152,7 +152,7 @@ export class BunHTTPSessionServer {
           default:
             return new Response('Not Found', { status: 404 });
         }
-      }.bind(this),
+      }
     });
 
     logger.info('Session server started', {

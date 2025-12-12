@@ -182,6 +182,15 @@ function App() {
         >
           Azure DevOps
         </button>
+        <a
+          href="/docs"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="nav-link-docs"
+          title="Open Bun Documentation in new tab"
+        >
+          📚 Documentation
+        </a>
       </nav>
 
       <main className="app-main">
@@ -190,24 +199,42 @@ function App() {
         {activeTab === 'overview' && (
           <div className="overview-panel">
             <h2>System Overview</h2>
-            <div className="metrics-grid">
-              <div className="metric-card">
-                <h3>WebSocket Status</h3>
-                <p>{isConnected ? 'Connected' : 'Disconnected'}</p>
-              </div>
-              <div className="metric-card">
-                <h3>Active Opportunities</h3>
-                <p>0</p>
-              </div>
-              <div className="metric-card">
-                <h3>Messages/sec</h3>
-                <p>0</p>
-              </div>
-              <div className="metric-card">
-                <h3>Latency</h3>
-                <p>0ms</p>
-              </div>
-            </div>
+             <div className="metrics-grid">
+               <div className="metric-card">
+                 <h3>WebSocket Status</h3>
+                 <p>{isConnected ? 'Connected' : 'Disconnected'}</p>
+               </div>
+               <div className="metric-card">
+                 <h3>Active Opportunities</h3>
+                 <p>0</p>
+               </div>
+               <div className="metric-card">
+                 <h3>Messages/sec</h3>
+                 <p>0</p>
+               </div>
+               <div className="metric-card">
+                 <h3>Latency</h3>
+                 <p>0ms</p>
+               </div>
+             </div>
+
+             <div className="quick-access-panel">
+               <h3>Quick Access</h3>
+               <div className="quick-links">
+                 <a href="/docs" target="_blank" rel="noopener noreferrer" className="quick-link">
+                   📚 Bun Documentation
+                   <span className="link-description">Complete guides for Bun development</span>
+                 </a>
+                 <a href="/api/health" target="_blank" rel="noopener noreferrer" className="quick-link">
+                   🏥 API Health Check
+                   <span className="link-description">Check server status and metrics</span>
+                 </a>
+                 <a href="/api/metrics" target="_blank" rel="noopener noreferrer" className="quick-link">
+                   📊 Prometheus Metrics
+                   <span className="link-description">View system performance metrics</span>
+                 </a>
+               </div>
+             </div>
           </div>
         )}
 

@@ -1,0 +1,449 @@
+# 🎨 Bun Syntax Highlighting & Internal APIs
+
+*Generated on 2025-12-12T15:00:00.000Z*
+
+## 📋 Overview
+
+Bun provides powerful internal APIs for syntax highlighting, code formatting, and development utilities. These APIs are primarily used internally but can be accessed for advanced development workflows.
+
+## 🎨 Syntax Highlighting
+
+### Manual Syntax Highlighting Utility
+
+Bun includes a built-in syntax highlighter that can be used programmatically:
+
+```typescript
+// helper utility for manually running the syntax highlighter on a file
+import { readFileSync } from "fs";
+
+// @ts-expect-error
+// don't actually use this API!!
+const highlighter: (code: string) => string = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+
+console.write(highlighter(readFileSync(process.argv[2], "utf8")));
+```
+
+**Usage:**
+```bash
+# Highlight a TypeScript file
+bun run highlighter.ts myfile.ts
+
+# Highlight a JavaScript file
+bun run highlighter.ts script.js
+```
+
+### Key Features
+
+- **Multi-language Support**: TypeScript, JavaScript, JSX, TSX, and more
+- **Theme Integration**: Works with terminal color schemes
+- **Performance Optimized**: Fast highlighting for large codebases
+- **Error Recovery**: Graceful handling of malformed syntax
+
+## 🔧 Internal API Access
+
+### Lazy Loading System
+
+Bun uses a lazy loading system for internal APIs:
+
+```typescript
+// Access internal APIs using the lazy loader
+const apiName = "internal_api_name";
+const apiFunction = globalThis[Symbol.for("Bun.lazy")](apiName);
+
+// Use the loaded API
+const result = apiFunction(parameters);
+```
+
+**Available Internal APIs:**
+- `unstable_syntaxHighlight`: Code syntax highlighting
+- `unstable_prettyPrint`: Object pretty printing
+- `unstable_transpile`: Code transpilation
+- `unstable_minify`: Code minification
+
+### TypeScript Integration
+
+Internal APIs often require TypeScript ignore comments:
+
+```typescript
+// @ts-expect-error - Internal API usage
+const highlighter = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+
+// @ts-ignore - Suppress type checking for internal usage
+highlighter("const x = 1;");
+```
+
+## 🛠️ Development Utilities
+
+### Code Formatting Tools
+
+```typescript
+// Access code formatting utilities
+// @ts-expect-error
+const formatter = globalThis[Symbol.for("Bun.lazy")]("unstable_formatCode");
+
+const formatted = formatter(`
+function messy(){
+const x=1;return x}
+`, {
+  language: "typescript",
+  indent: "  ",
+  maxWidth: 80
+});
+
+console.log(formatted);
+```
+
+### AST Analysis
+
+```typescript
+// Access AST parsing and analysis
+// @ts-expect-error
+const parser = globalThis[Symbol.for("Bun.lazy")]("unstable_parseAST");
+
+const ast = parser("const x = 1 + 2;", {
+  language: "typescript",
+  includeSource: true
+});
+
+console.log(JSON.stringify(ast, null, 2));
+```
+
+### Bundle Analysis
+
+```typescript
+// Analyze bundle composition
+// @ts-expect-error
+const analyzer = globalThis[Symbol.for("Bun.lazy")]("unstable_analyzeBundle");
+
+const analysis = analyzer("dist/bundle.js", {
+  includeSizes: true,
+  includeDependencies: true
+});
+
+console.log("Bundle Analysis:", analysis);
+```
+
+## 🚨 Important Warnings
+
+### API Stability
+
+**⚠️ WARNING: Internal APIs are unstable and may change without notice.**
+
+- Internal APIs are prefixed with `unstable_`
+- They may be removed or modified in future versions
+- Use at your own risk in production code
+- Prefer public APIs when available
+
+### Type Safety
+
+```typescript
+// Always use @ts-expect-error or @ts-ignore with internal APIs
+// @ts-expect-error - Internal API without type definitions
+const internalAPI = globalThis[Symbol.for("Bun.lazy")]("some_api");
+
+// This will cause TypeScript errors without suppressions
+// const api = globalThis[Symbol.for("Bun.lazy")]("some_api"); // ❌
+```
+
+### Error Handling
+
+```typescript
+try {
+  // @ts-expect-error
+  const api = globalThis[Symbol.for("Bun.lazy")]("unstable_api");
+  const result = api(parameters);
+} catch (error) {
+  console.error("Internal API failed:", error);
+  // Fallback to stable APIs
+}
+```
+
+## 🧪 Testing Internal APIs
+
+### Unit Testing
+
+```typescript
+import { describe, test, expect } from "bun:test";
+
+describe("internal API testing", () => {
+  test("syntax highlighting works", () => {
+    // @ts-expect-error
+    const highlighter = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+
+    const code = "const x = 1;";
+    const highlighted = highlighter(code);
+
+    expect(highlighted).toContain("const"); // Should contain original code
+    expect(highlighted).toContain("\x1b["); // Should contain ANSI color codes
+  });
+
+  test("handles invalid input gracefully", () => {
+    // @ts-expect-error
+    const highlighter = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+
+    const invalidCode = "const x = ;"; // Syntax error
+    const highlighted = highlighter(invalidCode);
+
+    expect(typeof highlighted).toBe("string");
+    expect(highlighted.length).toBeGreaterThan(0);
+  });
+});
+```
+
+### Integration Testing
+
+```typescript
+describe("internal API integration", () => {
+  test("works with file system", async () => {
+    const tempFile = "temp-highlight.ts";
+    await Bun.write(tempFile, "export const x = 42;");
+
+    // @ts-expect-error
+    const highlighter = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+
+    const content = await Bun.file(tempFile).text();
+    const highlighted = highlighter(content);
+
+    expect(highlighted).toBeDefined();
+
+    // Cleanup
+    await Bun.unlink(tempFile);
+  });
+});
+```
+
+## 📚 Practical Examples
+
+### Syntax Highlighting CLI Tool
+
+```typescript
+#!/usr/bin/env bun
+// syntax-highlight.ts - CLI tool for syntax highlighting
+
+// @ts-expect-error
+const highlighter = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+
+const filePath = process.argv[2];
+if (!filePath) {
+  console.error("Usage: bun run syntax-highlight.ts <file>");
+  process.exit(1);
+}
+
+try {
+  const content = await Bun.file(filePath).text();
+  const highlighted = highlighter(content);
+  console.log(highlighted);
+} catch (error) {
+  console.error(`Error highlighting ${filePath}:`, error);
+  process.exit(1);
+}
+```
+
+### Code Analysis Tool
+
+```typescript
+// code-analyzer.ts - Analyze code using internal APIs
+
+// @ts-expect-error
+const highlighter = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+// @ts-expect-error
+const analyzer = globalThis[Symbol.for("Bun.lazy")]("unstable_analyzeCode");
+
+export async function analyzeFile(filePath: string) {
+  const content = await Bun.file(filePath).text();
+
+  const highlighted = highlighter(content);
+  const analysis = analyzer(content, {
+    includeComplexity: true,
+    includeDependencies: true
+  });
+
+  return {
+    highlighted,
+    analysis,
+    filePath,
+    size: content.length
+  };
+}
+
+// Usage
+const result = await analyzeFile("src/index.ts");
+console.log("Analysis:", result.analysis);
+console.log("Highlighted code:");
+console.log(result.highlighted);
+```
+
+### Development Helper Scripts
+
+```typescript
+// dev-helpers.ts - Collection of development utilities
+
+export class DevHelpers {
+  // @ts-expect-error
+  private highlighter = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+
+  // @ts-expect-error
+  private formatter = globalThis[Symbol.for("Bun.lazy")]("unstable_formatCode");
+
+  async highlightFile(filePath: string): Promise<string> {
+    const content = await Bun.file(filePath).text();
+    return this.highlighter(content);
+  }
+
+  formatCode(code: string, options = {}): string {
+    return this.formatter(code, {
+      language: "typescript",
+      indent: "  ",
+      ...options
+    });
+  }
+
+  async processFile(inputPath: string, outputPath: string): Promise<void> {
+    const content = await Bun.file(inputPath).text();
+    const formatted = this.formatCode(content);
+    const highlighted = this.highlighter(formatted);
+
+    await Bun.write(outputPath, highlighted);
+  }
+}
+
+// Usage
+const helpers = new DevHelpers();
+await helpers.processFile("input.ts", "output.html");
+```
+
+## 🔧 Advanced Usage Patterns
+
+### Custom Highlighter Integration
+
+```typescript
+class CustomHighlighter {
+  // @ts-expect-error
+  private bunHighlighter = globalThis[Symbol.for("Bun.lazy")]("unstable_syntaxHighlight");
+
+  highlight(code: string, language = "typescript"): string {
+    // Pre-process code
+    const processed = this.preprocess(code, language);
+
+    // Use Bun's highlighter
+    const highlighted = this.bunHighlighter(processed);
+
+    // Post-process result
+    return this.postprocess(highlighted);
+  }
+
+  private preprocess(code: string, language: string): string {
+    // Add language-specific preprocessing
+    return code;
+  }
+
+  private postprocess(highlighted: string): string {
+    // Add custom styling or modifications
+    return highlighted;
+  }
+}
+```
+
+### Performance Monitoring
+
+```typescript
+class PerformanceMonitor {
+  // @ts-expect-error
+  private analyzer = globalThis[Symbol.for("Bun.lazy")]("unstable_performanceAnalyzer");
+
+  async analyzePerformance(code: string): Promise<PerformanceReport> {
+    const start = performance.now();
+
+    // Execute code with performance monitoring
+    const result = await this.executeWithMonitoring(code);
+
+    const end = performance.now();
+
+    const analysis = this.analyzer(code, {
+      includeMemory: true,
+      includeTiming: true
+    });
+
+    return {
+      executionTime: end - start,
+      memoryUsage: analysis.memory,
+      performance: analysis.performance,
+      result
+    };
+  }
+
+  private async executeWithMonitoring(code: string): Promise<any> {
+    // Implementation for monitored code execution
+    return eval(code); // ⚠️ Use with caution!
+  }
+}
+```
+
+## ⚠️ Best Practices & Caveats
+
+### Safety Guidelines
+
+1. **Never use in production**: Internal APIs are for development only
+2. **Always add type suppressions**: Use `@ts-expect-error` or `@ts-ignore`
+3. **Test thoroughly**: Internal APIs may have unexpected behavior
+4. **Have fallbacks**: Always provide stable API alternatives
+5. **Monitor for changes**: APIs may be removed in future versions
+
+### Error Handling
+
+```typescript
+function safeInternalAPIUsage(apiName: string, fallback: Function) {
+  try {
+    // @ts-expect-error
+    const api = globalThis[Symbol.for("Bun.lazy")](apiName);
+    return api;
+  } catch (error) {
+    console.warn(`Internal API ${apiName} not available, using fallback`);
+    return fallback;
+  }
+}
+```
+
+### Version Compatibility
+
+```typescript
+function checkAPIAvailability(apiName: string): boolean {
+  try {
+    // @ts-expect-error
+    const api = globalThis[Symbol.for("Bun.lazy")](apiName);
+    return typeof api === "function";
+  } catch {
+    return false;
+  }
+}
+
+// Usage
+if (checkAPIAvailability("unstable_syntaxHighlight")) {
+  // Safe to use
+} else {
+  // Fallback to external highlighter
+}
+```
+
+## 🔗 Related Examples
+
+- [Custom Development Tools](./custom-dev-tools.md)
+- [Build System Internals](./build-system-internals.md)
+- [TypeScript Integration](./typescript-integration.md)
+- [Performance Monitoring](./performance-monitoring.md)
+
+## 📚 Key Concepts
+
+1. **Lazy Loading**: Internal APIs loaded on-demand using `Symbol.for("Bun.lazy")`
+2. **Type Suppression**: Always use `@ts-expect-error` for internal API usage
+3. **Instability**: Internal APIs may change without notice
+4. **Development Focus**: Primarily for development tools and debugging
+5. **Fallback Strategy**: Always provide stable API alternatives
+6. **Testing Required**: Thorough testing needed due to API instability
+
+Internal APIs provide powerful capabilities for advanced development workflows but require careful usage and thorough testing.
+
+---
+
+*For stable APIs, see Bun's [public API documentation](https://bun.sh/docs). Internal APIs are subject to change without notice.*</content>
+<parameter name="filePath">examples/bun-syntax-highlighting-guide.md

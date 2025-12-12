@@ -152,7 +152,7 @@ afterEach(() => {
 });
 
 describe.concurrent("Memory Leak Detection Tests", () => {
-    test.concurrent("websocket connection doesn't leak", async () => {
+    test.serial("websocket connection doesn't leak", async () => {
         // Test actual WebSocket connections if available
         const connections: any[] = [];
         const serverUrl = 'ws://localhost:8080'; // Use test server
@@ -228,7 +228,7 @@ describe.concurrent("Memory Leak Detection Tests", () => {
         expect(true).toBe(true); // Test passes if no leak detected
     });
 
-    test.concurrent("large array processing doesn't leak", async () => {
+    test.serial("large array processing doesn't leak", async () => {
         const processor = {
             data: [] as number[],
             process: (size: number) => {
@@ -259,7 +259,7 @@ describe.concurrent("Memory Leak Detection Tests", () => {
         expect(true).toBe(true);
     });
 
-    test.concurrent("database connection pool doesn't leak", async () => {
+    test.serial("database connection pool doesn't leak", async () => {
         const connectionPool = {
             connections: [] as Array<{ id: string; close: () => void }>,
             acquire: () => {
@@ -294,7 +294,7 @@ describe.concurrent("Memory Leak Detection Tests", () => {
         expect(connectionPool.connections.length).toBe(0);
     });
 
-    test.concurrent("event listeners don't leak", async () => {
+    test.serial("event listeners don't leak", async () => {
         const eventEmitter = {
             listeners: new Map<string, Function[]>(),
             on: (event: string, listener: Function) => {
@@ -354,7 +354,7 @@ describe.concurrent("Memory Leak Detection Tests", () => {
         expect(leakedData.length).toBeGreaterThan(0);
     });
 
-    test.concurrent("rapidhash processing doesn't leak", async () => {
+    test.serial("rapidhash processing doesn't leak", async () => {
         // Mock rapidhash function for testing
         const rapidHash = (data: string): bigint => {
             // Simple mock hash function for testing memory leak detection
@@ -405,13 +405,13 @@ describe.concurrent("Memory Leak Detection Tests", () => {
         }
     });
 
-    test.concurrent("websocket server lifecycle doesn't leak", async () => {
+    test.serial("websocket server lifecycle doesn't leak", async () => {
         let server: any = null;
         const connections: any[] = [];
 
         try {
             // Import WebSocket server
-            const { BunV13WebSocketServer } = await import('odds-websocket/src/server-v13-enhanced.ts');
+            const { BunV13WebSocketServer } = await import('../packages/odds-websocket/src/server-v13-enhanced');
 
             // Create server
             server = new BunV13WebSocketServer({

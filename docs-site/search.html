@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - Bun Examples Documentation</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/search.js" defer></script>
+</head>
+<body>
+    <header class="page-header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a> > <span>Search</span>
+            </nav>
+            <h1>🔍 Search Examples</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="search-interface">
+            <div class="search-input-container">
+                <input type="text" id="search-input" placeholder="Search examples, tags, categories..." autofocus>
+                <button id="search-button">Search</button>
+            </div>
+
+            <div class="search-filters">
+                <div class="filter-group">
+                    <label>Difficulty:</label>
+                    <select id="difficulty-filter">
+                        <option value="">All</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Category:</label>
+                    <select id="category-filter">
+                        <option value="">All</option>
+                        <option value="📚 Examples by Category">📚 Examples by Category</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="search-results" class="search-results">
+                <p class="search-placeholder">Enter a search term to find examples...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Search index data
+        const searchIndex = {"examples":[{"id":"example-0","title":"Bun Catalogs Advanced","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-inspect","async","oop","performance","testing","filesystem"],"path":"advanced/workspaces/bun-catalogs-advanced.ts","content":"bun catalogs advanced  bun-inspect async oop performance testing filesystem"},{"id":"example-1","title":"Bun Catalogs Basic","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-inspect","bun-file","async","oop","filesystem"],"path":"advanced/workspaces/bun-catalogs-basic.ts","content":"bun catalogs basic  bun-inspect bun-file async oop filesystem"},{"id":"example-2","title":"Bun Performance Benchmark Comprehensive","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","bun-write","bun-file","bun-inspect","bun-deepequals","bun-hash","async","oop","performance","testing","http","filesystem"],"path":"benchmarks/bun-performance-benchmark-comprehensive.ts","content":"bun performance benchmark comprehensive  bun-nanoseconds bun-write bun-file bun-inspect bun-deepequals bun-hash async oop performance testing http filesystem"},{"id":"example-3","title":"Glob Transpile Watch","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-mkdir","bun-watch","bun-nanoseconds","bun-hash","bun-transpiler","async","oop","filesystem"],"path":"build/glob-transpile-watch.ts","content":"glob transpile watch  bun-mkdir bun-watch bun-nanoseconds bun-hash bun-transpiler async oop filesystem"},{"id":"example-4","title":"Blue Green Deploy","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","bun-sleep","async","oop","testing","filesystem"],"path":"build/blue-green-deploy.ts","content":"blue green deploy  bun-nanoseconds bun-sleep async oop testing filesystem"},{"id":"example-5","title":"Chaos Test","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","bun-sleep","async","oop","testing","http"],"path":"build/chaos-test.ts","content":"chaos test  bun-nanoseconds bun-sleep async oop testing http"},{"id":"example-6","title":"Build","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","bun-filewatcher","bun-write","bun-cryptohasher","async","oop","performance","filesystem"],"path":"build/build.ts","content":"build  bun-nanoseconds bun-filewatcher bun-write bun-cryptohasher async oop performance filesystem"},{"id":"example-7","title":"Bun Shell Advanced","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-shell","bun-nanoseconds","bun-env","async","oop"],"path":"cli/bun-shell-advanced.ts","content":"bun shell advanced  bun-shell bun-nanoseconds bun-env async oop"},{"id":"example-8","title":"Bun Serve Advanced","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","bun-randomuuidv7","async","oop","http","filesystem"],"path":"core/bun-serve-advanced.ts","content":"bun serve advanced  bun-nanoseconds bun-randomuuidv7 async oop http filesystem"},{"id":"example-9","title":"File System Advanced","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-file","bun-glob","bun-write","bun-hash","bun-spawn","async","oop","filesystem"],"path":"core/file-system-advanced.ts","content":"file system advanced  bun-file bun-glob bun-write bun-hash bun-spawn async oop filesystem"},{"id":"example-10","title":"Demonstrate Plugin Websocket Security Integration","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0","tags":["http"],"path":"demonstrate/demonstrate-plugin-websocket-security-integration.ts","content":"demonstrate plugin websocket security integration  http"},{"id":"example-11","title":"Demonstrate Pattern Performance Optimization Cycle","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0","tags":["performance","http"],"path":"demonstrate/demonstrate-pattern-performance-optimization-cycle.ts","content":"demonstrate pattern performance optimization cycle  performance http"},{"id":"example-12","title":"Index","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0","tags":["performance","http"],"path":"demonstrate/index.ts","content":"index  performance http"},{"id":"example-13","title":"Demonstrate Server Db Analytics Flow","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0","tags":["testing","http"],"path":"demonstrate/demonstrate-server-db-analytics-flow.ts","content":"demonstrate server db analytics flow  testing http"},{"id":"example-14","title":"Blue Green Manager","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","bun-serve","bun-sleep","async","oop","performance","testing","http","filesystem"],"path":"deployment/blue-green-manager.ts","content":"blue green manager  bun-nanoseconds bun-serve bun-sleep async oop performance testing http filesystem"},{"id":"example-15","title":"Bun File Mime Demo.Test","description":"","category":"📚 Examples by Category","difficulty":"beginner | **Time**: 10 minutes | **Bun**: >=1.3.0","tags":["bun-file","testing","filesystem"],"path":"bun-file-mime-demo.test.ts","content":"bun file mime demo.test  bun-file testing filesystem"},{"id":"example-16","title":"Bun Error Tracker","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0","tags":["oop","performance"],"path":"bun-error-tracker.ts","content":"bun error tracker  oop performance"},{"id":"example-17","title":"Bun Error Tracker Demo.Test","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["performance","testing","filesystem"],"path":"bun-error-tracker-demo.test.ts","content":"bun error tracker demo.test  performance testing filesystem"},{"id":"example-18","title":"Bun Tcp Socket Demo.Test","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["async","performance","testing","http"],"path":"bun-tcp-socket-demo.test.ts","content":"bun tcp socket demo.test  async performance testing http"},{"id":"example-19","title":"Bun Snapshot Testing.Test","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["performance","testing","http","filesystem"],"path":"bun-snapshot-testing.test.ts","content":"bun snapshot testing.test  performance testing http filesystem"},{"id":"example-20","title":"Bun Uuid Demo.Test","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-sleepsync","async","performance","testing"],"path":"bun-uuid-demo.test.ts","content":"bun uuid demo.test  bun-sleepsync async performance testing"},{"id":"example-21","title":"Bun Testing Demo","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["async","performance","testing","filesystem"],"path":"bun-testing-demo.ts","content":"bun testing demo  async performance testing filesystem"},{"id":"example-22","title":"Bun Env Synchronizer Demo","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-env","async","testing","filesystem"],"path":"bun-env-synchronizer-demo.ts","content":"bun env synchronizer demo  bun-env async testing filesystem"},{"id":"example-23","title":"Bun Patch System Demonstration","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-file","async","oop","performance","testing","http","filesystem"],"path":"bun-patch-system-demonstration.ts","content":"bun patch system demonstration  bun-file async oop performance testing http filesystem"},{"id":"example-24","title":"Worker Config Example","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["async","performance","testing","filesystem"],"path":"worker-config-example.ts","content":"worker config example  async performance testing filesystem"},{"id":"example-25","title":"Api Server Demo","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","async","oop","performance","testing","http","filesystem"],"path":"api-server-demo.ts","content":"api server demo  bun-nanoseconds async oop performance testing http filesystem"},{"id":"example-26","title":"Practical Bun Patch Workflow","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-file","async","oop","performance","testing","http","filesystem"],"path":"practical-bun-patch-workflow.ts","content":"practical bun patch workflow  bun-file async oop performance testing http filesystem"},{"id":"example-27","title":"Bun File Sink Demo.Test","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-write","bun-file","async","testing","filesystem"],"path":"bun-file-sink-demo.test.ts","content":"bun file sink demo.test  bun-write bun-file async testing filesystem"},{"id":"example-28","title":"Bun Complete Api Showcase","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-serve","bun-file","bun-write","bun-sql","bun-password","bun-cryptohasher","bun-gzip","bun-zstdcompress","bun-randomuuidv7","bun-deepequals","bun-nanoseconds","bun-websocket","bun-compression","bun-crypto","bun-uuid","bun-timing","async","oop","performance","testing","http","filesystem"],"path":"bun-complete-api-showcase.ts","content":"bun complete api showcase  bun-serve bun-file bun-write bun-sql bun-password bun-cryptohasher bun-gzip bun-zstdcompress bun-randomuuidv7 bun-deepequals bun-nanoseconds bun-websocket bun-compression bun-crypto bun-uuid bun-timing async oop performance testing http filesystem"},{"id":"example-29","title":"Bun Error Codes & Troubleshooting Guide","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 15 minutes | **Bun**: v1.1.37+ | **Tags**: `errors`, `troubleshooting`, `debugging`, `cli`, `runtime`","tags":[],"path":"examples/bun-error-codes-troubleshooting.md","content":"bun error codes & troubleshooting guide  "},{"id":"example-30","title":"🧪 Bun Testing Guide","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 20 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `jest`, `typescript`, `tdd`, `quality`","tags":[],"path":"examples/bun-testing-guide.md","content":"🧪 bun testing guide  "},{"id":"example-31","title":"🧰 Bun Test Harness Reference","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `harness`, `utilities`, `infrastructure`, `ci`","tags":[],"path":"examples/bun-test-harness-guide.md","content":"🧰 bun test harness reference  "},{"id":"example-32","title":"🖥️ Bun CLI Testing Guide","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `cli`, `commands`, `automation`, `integration`","tags":[],"path":"examples/bun-cli-testing-guide.md","content":"🖥️ bun cli testing guide  "},{"id":"example-33","title":"🔌 Bun Plugin Testing Guide","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `plugins`, `build`, `hooks`, `development`","tags":[],"path":"examples/bun-plugin-testing-guide.md","content":"🔌 bun plugin testing guide  "},{"id":"example-34","title":"🎨 Bun Syntax Highlighting & Internal APIs","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `development`, `internal`, `apis`, `highlighting`, `utilities`","tags":[],"path":"examples/bun-syntax-highlighting-guide.md","content":"🎨 bun syntax highlighting & internal apis  "},{"id":"example-35","title":"🌐 Bun HTTP Testing Guide","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `http`, `server`, `client`, `node-compat`","tags":[],"path":"examples/bun-http-testing-guide.md","content":"🌐 bun http testing guide  "},{"id":"example-36","title":"🏎️ Bun Benchmarking Guide","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 25 minutes | **Bun**: v1.0.0+ | **Tags**: `benchmarking`, `performance`, `profiling`, `testing`, `metrics`","tags":[],"path":"examples/bun-benchmarking-guide.md","content":"🏎️ bun benchmarking guide  "},{"id":"example-37","title":"Bun File Mime Advanced Demo.Test","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-file","async","testing","http","filesystem"],"path":"bun-file-mime-advanced-demo.test.ts","content":"bun file mime advanced demo.test  bun-file async testing http filesystem"},{"id":"example-38","title":"Complete Integration Example","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-file","async","oop","performance","testing","http","filesystem"],"path":"complete-integration-example.ts","content":"complete integration example  bun-file async oop performance testing http filesystem"},{"id":"example-39","title":"Worker Spawn System Demo","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["async","oop","testing","http","filesystem"],"path":"worker-spawn-system-demo.ts","content":"worker spawn system demo  async oop testing http filesystem"},{"id":"example-40","title":"Bun Text File Loader Demo","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-write","bun-file","bun-tofixed","async","oop","performance","testing","filesystem"],"path":"bun-text-file-loader-demo.ts","content":"bun text file loader demo  bun-write bun-file bun-tofixed async oop performance testing filesystem"},{"id":"example-41","title":"Index","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-file","bun-env","bun-serve","bun-hash","bun-randomuuidv7","bun-deepequals","async","oop","performance","testing","http","filesystem"],"path":"index.ts","content":"index  bun-file bun-env bun-serve bun-hash bun-randomuuidv7 bun-deepequals async oop performance testing http filesystem"},{"id":"example-42","title":"Bun Snapshot Testing Advanced.Test","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["oop","testing","http","filesystem"],"path":"bun-snapshot-testing-advanced.test.ts","content":"bun snapshot testing advanced.test  oop testing http filesystem"},{"id":"example-43","title":"Bun Advanced Testing.Test","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["performance","testing","filesystem"],"path":"bun-advanced-testing.test.ts","content":"bun advanced testing.test  performance testing filesystem"},{"id":"example-44","title":"Bun Unix Socket Proxy Demo","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["async","performance","testing","http"],"path":"bun-unix-socket-proxy-demo.ts","content":"bun unix socket proxy demo  async performance testing http"},{"id":"example-45","title":"Bun Http Session","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-randomuuidv7","async","oop","http"],"path":"http/bun-http-session.ts","content":"bun http session  bun-randomuuidv7 async oop http"},{"id":"example-46","title":"Bun Logger","description":"","category":"📚 Examples by Category","difficulty":"intermediate | **Time**: 20 minutes | **Bun**: >=1.3.0","tags":["oop"],"path":"logging/bun-logger.ts","content":"bun logger  oop"},{"id":"example-47","title":"System Monitor","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-spawn","bun-nanoseconds","async","oop"],"path":"monitoring/system-monitor.ts","content":"system monitor  bun-spawn bun-nanoseconds async oop"},{"id":"example-48","title":"Bun Network Native","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","bun-udpsocket","bun-connect","bun-deepequals","bun-inspect","bun-resolve","bun-resolvesync","async","oop","performance","http"],"path":"network/bun-network-native.ts","content":"bun network native  bun-nanoseconds bun-udpsocket bun-connect bun-deepequals bun-inspect bun-resolve bun-resolvesync async oop performance http"},{"id":"example-49","title":"Crypto Suite","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-password","bun-nanoseconds","bun-cryptohasher","bun-randomuuidv7","async","oop","filesystem"],"path":"security/crypto-suite.ts","content":"crypto suite  bun-password bun-nanoseconds bun-cryptohasher bun-randomuuidv7 async oop filesystem"},{"id":"example-50","title":"Bun Compression","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-nanoseconds","async","oop","filesystem"],"path":"streaming/bun-compression.ts","content":"bun compression  bun-nanoseconds async oop filesystem"},{"id":"example-51","title":"Observability","description":"","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-randomuuidv7","bun-nanoseconds","oop","testing","http"],"path":"TYPES/observability.ts","content":"observability  bun-randomuuidv7 bun-nanoseconds oop testing http"},{"id":"example-52","title":"Quality Validation.Test","description":"","category":"📚 Examples by Category","difficulty":"advanced | **Time**: 45 minutes | **Bun**: >=1.3.0","tags":["bun-file","bun-write","async","performance","testing","http","filesystem"],"path":"tests/quality-validation.test.ts","content":"quality validation.test  bun-file bun-write async performance testing http filesystem"},{"id":"example-53","title":"examples/utilities/bun","description":"### Difficulty Distribution","category":"📚 Examples by Category","difficulty":"expert | **Time**: 60 minutes | **Bun**: >=1.3.0","tags":["bun-version","bun-revision","bun-main","bun-nanoseconds","bun-randomuuidv7","bun-hash","bun-ismainthread","bun-env","bun-argv","bun-file","bun-password","bun-hrtime_bigint","bun-compress","bun-write","oop","performance","testing","http","filesystem"],"path":"utilities/bun-constants-dictionary.ts","content":"examples/utilities/bun ### difficulty distribution bun-version bun-revision bun-main bun-nanoseconds bun-randomuuidv7 bun-hash bun-ismainthread bun-env bun-argv bun-file bun-password bun-hrtime_bigint bun-compress bun-write oop performance testing http filesystem"}],"categories":["📚 Examples by Category"],"tags":["bun-inspect","async","oop","performance","testing","filesystem","bun-file","bun-nanoseconds","bun-write","bun-deepequals","bun-hash","http","bun-mkdir","bun-watch","bun-transpiler","bun-sleep","bun-filewatcher","bun-cryptohasher","bun-shell","bun-env","bun-randomuuidv7","bun-glob","bun-spawn","bun-serve","bun-sleepsync","bun-sql","bun-password","bun-gzip","bun-zstdcompress","bun-websocket","bun-compression","bun-crypto","bun-uuid","bun-timing","bun-tofixed","bun-udpsocket","bun-connect","bun-resolve","bun-resolvesync","bun-version","bun-revision","bun-main","bun-ismainthread","bun-argv","bun-hrtime_bigint","bun-compress"],"learningPaths":[]};
+
+        // Initialize search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const difficultyFilter = document.getElementById('difficulty-filter');
+            const categoryFilter = document.getElementById('category-filter');
+            const resultsContainer = document.getElementById('search-results');
+
+            function performSearch() {
+                const query = searchInput.value.toLowerCase().trim();
+                const difficulty = difficultyFilter.value;
+                const category = categoryFilter.value;
+
+                if (!query && !difficulty && !category) {
+                    resultsContainer.innerHTML = '<p class="search-placeholder">Enter a search term to find examples...</p>';
+                    return;
+                }
+
+                let results = searchIndex.examples;
+
+                // Filter by search query
+                if (query) {
+                    results = results.filter(example =>
+                        example.title.toLowerCase().includes(query) ||
+                        example.description.toLowerCase().includes(query) ||
+                        example.tags.some(tag => tag.toLowerCase().includes(query)) ||
+                        example.category.toLowerCase().includes(query) ||
+                        example.content.includes(query)
+                    );
+                }
+
+                // Filter by difficulty
+                if (difficulty) {
+                    results = results.filter(example => example.difficulty === difficulty);
+                }
+
+                // Filter by category
+                if (category) {
+                    results = results.filter(example => example.category === category);
+                }
+
+                displayResults(results);
+            }
+
+            function displayResults(results) {
+                if (results.length === 0) {
+                    resultsContainer.innerHTML = '<p class="no-results">No examples found matching your criteria.</p>';
+                    return;
+                }
+
+                const resultsHtml = results.map(example => {
+                    const exampleIndex = searchIndex.examples.indexOf(example);
+                    return `
+                        <div class="search-result">
+                            <div class="result-header">
+                                <h3><a href="examples/example-${exampleIndex}.html">${example.title}</a></h3>
+                                <span class="difficulty-badge difficulty-${example.difficulty}">${example.difficulty}</span>
+                            </div>
+                            <p class="result-description">${example.description}</p>
+                            <div class="result-meta">
+                                <span class="category">${example.category}</span>
+                                ${example.tags.length > 0 ? `<div class="result-tags">${example.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                resultsContainer.innerHTML = `
+                    <div class="search-summary">
+                        <p>Found ${results.length} example${results.length === 1 ? '' : 's'}</p>
+                    </div>
+                    <div class="search-results-list">
+                        ${resultsHtml}
+                    </div>
+                `;
+            }
+
+            // Event listeners
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('input', performSearch);
+            difficultyFilter.addEventListener('change', performSearch);
+            categoryFilter.addEventListener('change', performSearch);
+
+            // Search on Enter key
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

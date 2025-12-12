@@ -13,11 +13,11 @@
  */
 
 import { serve } from 'bun';
-import { BunTextLoader } from '../src/utils/bun-text-loader';
-import { BunEnvSynchronizer } from '../src/utils/bun-env-synchronizer';
-import { BunUnixSocketProxy, BunSocketManager } from '../src/utils/bun-unix-socket-proxy';
-import { TensionScoringEngine } from '../src/core/tension-scoring/tension-engine';
-import { createSecurityValidator } from '../src/security/spawn-validator';
+import { BunTextLoader } from './src/utils/bun-text-loader';
+import { BunEnvSynchronizer } from './src/utils/bun-env-synchronizer';
+import { BunUnixSocketProxy, BunSocketManager } from './src/utils/bun-unix-socket-proxy';
+import { TensionScoringEngine } from './src/core/tension-scoring/tension-engine';
+import { createSecurityValidator } from './src/security/spawn-validator';
 
 // ============================================================================
 // DASHBOARD STATE MANAGEMENT
@@ -750,8 +750,8 @@ export async function startDashboard(): Promise<{ server: any; port: number; url
 
   return {
     server,
-    port: server.port,
-    url: `http://localhost:${server.port}`
+    port: server.port || 3000,
+    url: `http://localhost:${server.port || 3000}`
   };
 }
 

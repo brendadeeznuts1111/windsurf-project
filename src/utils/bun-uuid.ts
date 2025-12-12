@@ -4,11 +4,15 @@
  */
 
 export interface UUIDInfo {
+  uuid: string;
   version: number;
-  timestamp: Date;
-  sequence: number;
-  nodeId: string;
-  raw: string;
+  timestamp?: number;
+  nodeId?: string;
+  clockSequence?: number;
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export interface IDGenerator {

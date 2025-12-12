@@ -23,19 +23,17 @@ export interface HealthMonitorConfig {
 
 export interface WorkerHealthStatus {
   workerId: string;
-  isHealthy: boolean;
-  tensionScore: number;
-  spawnMetrics: {
-    count: number;
-    failures: number;
-    failureRate: number;
-    averageExecutionTime: number;
-  };
-  circuitBreakerState: 'closed' | 'open' | 'half-open';
-  lastHealthCheck: number;
-  respawnAttempts: number;
-  lastRespawnTime: number;
-  consecutiveFailures: number;
+  status: 'healthy' | 'unhealthy' | 'unknown';
+  lastHeartbeat: number;
+  uptime: number;
+  memoryUsage?: number;
+  cpuUsage?: number;
+  errorCount: number;
+  lastError?: string;
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export interface HealthMonitorMetrics {

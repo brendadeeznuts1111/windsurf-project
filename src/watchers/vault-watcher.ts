@@ -16,11 +16,16 @@ export interface WatcherConfig {
 }
 
 export interface WatcherEvent {
-    type: 'change' | 'add' | 'unlink';
-    filePath: string;
-    timestamp: string;
-    affectedNodes: string[];
-    validationResults?: any;
+  type: 'file_created' | 'file_modified' | 'file_deleted' | 'file_renamed';
+  path: string;
+  oldPath?: string;
+  timestamp: number;
+  size?: number;
+  mtime?: number;
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export class VaultWatcher {

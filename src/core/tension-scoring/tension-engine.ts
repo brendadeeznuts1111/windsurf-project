@@ -26,6 +26,10 @@ export interface TensionEvent {
   remedy: string;
   timestamp: number;
   metadata?: Record<string, any>;
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export interface TensionConfig {

@@ -1,0 +1,146 @@
+# Production Configuration for Bun-Native API Ecosystem
+# Environment: production
+# Version: 1.0.0
+
+# ========================================
+# Application Configuration
+# ========================================
+app:
+  name: "windsurf-api"
+  version: "1.0.0"
+  environment: "production"
+  port: 3000
+  healthPort: 3001
+  metricsPort: 9090
+
+# ========================================
+# Security Configuration
+# ========================================
+security:
+  jwtSecret: "${JWT_SECRET}"
+  apiKey: "${API_KEY}"
+  corsOrigins: ["https://yourdomain.com"]
+  rateLimit:
+    windowMs: 900000  # 15 minutes
+    max: 100          # limit each IP to 100 requests per windowMs
+  helmet:
+    contentSecurityPolicy: true
+    hsts: true
+
+# ========================================
+# Database Configuration
+# ========================================
+database:
+  postgresql:
+    host: "postgres"
+    port: 5432
+    database: "windsurf"
+    username: "user"
+    password: "${DB_PASSWORD}"
+    ssl: true
+    connectionTimeoutMillis: 2000
+    idleTimeoutMillis: 30000
+    max: 20
+
+  redis:
+    host: "redis"
+    port: 6379
+    password: "${REDIS_PASSWORD}"
+    db: 0
+    retryDelayOnFailover: 100
+    enableReadyCheck: false
+    maxRetriesPerRequest: 3
+
+# ========================================
+# Monitoring & Observability
+# ========================================
+monitoring:
+  prometheus:
+    enabled: true
+    endpoint: "/metrics"
+    collectDefaultMetrics: true
+
+  logging:
+    level: "info"
+    format: "json"
+    file: "/app/logs/app.log"
+    maxSize: "10m"
+    maxFiles: 5
+
+  tracing:
+    enabled: true
+    serviceName: "windsurf-api"
+    jaeger:
+      endpoint: "http://jaeger:14268/api/traces"
+
+# ========================================
+# Performance Configuration
+# ========================================
+performance:
+  bun:
+    debug: false
+    gc: true
+    maxMemory: "1gb"
+
+  server:
+    maxRequestBodySize: "50mb"
+    idleTimeout: 30000
+    maxConnections: 1000
+
+  cache:
+    ttl: 3600  # 1 hour
+    maxSize: 1000
+
+# ========================================
+# External Services
+# ========================================
+services:
+  email:
+    provider: "sendgrid"
+    apiKey: "${SENDGRID_API_KEY}"
+
+  storage:
+    s3:
+      bucket: "windsurf-storage"
+      region: "us-east-1"
+      accessKeyId: "${AWS_ACCESS_KEY_ID}"
+      secretAccessKey: "${AWS_SECRET_ACCESS_KEY}"
+
+  cdn:
+    cloudflare:
+      zoneId: "${CLOUDFLARE_ZONE_ID}"
+      apiToken: "${CLOUDFLARE_API_TOKEN}"
+
+# ========================================
+# Feature Flags
+# ========================================
+features:
+  websocket: true
+  graphql: true
+  metrics: true
+  caching: true
+  rateLimiting: true
+  authentication: true
+  authorization: true
+
+# ========================================
+# Deployment Configuration
+# ========================================
+deployment:
+  replicas: 3
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  healthCheck:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3

@@ -45,8 +45,13 @@ export interface SpawnValidationRequest {
 export interface SpawnValidationResult {
   allowed: boolean;
   reason?: string;
-  warnings: string[];
-  sanitizedOptions?: Partial<SpawnOptions>;
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  recommendations?: string[];
+  auditEntry: SecurityAuditEntry;
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export interface SecurityAuditEntry {

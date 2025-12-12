@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bun Error Codes & Troubleshooting Guide - Bun Examples Documentation</title>
+    <meta name="description" content="">
+     <link rel="stylesheet" href="../assets/styles.css">
+     <script src="../assets/prism.js"></script>
+     <link rel="stylesheet" href="../assets/prism.css">
+     <script src="../assets/learning-paths.js"></script>
+     <script src="../assets/terminal.js"></script>
+</head>
+<body>
+    <header class="page-header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="../index.html">Home</a> >
+                <a href="../index.html#examples">Examples</a> >
+                <span>Bun Error Codes & Troubleshooting Guide</span>
+            </nav>
+            <h1>🟡 Bun Error Codes & Troubleshooting Guide</h1>
+            <p class="example-description"></p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="example-content">
+            <aside class="example-sidebar">
+                <div class="example-meta">
+                    <h3>Example Info</h3>
+                    <dl>
+                        <dt>Difficulty:</dt>
+                        <dd><span class="difficulty-badge difficulty-intermediate | **Time**: 15 minutes | **Bun**: v1.1.37+ | **Tags**: `errors`, `troubleshooting`, `debugging`, `cli`, `runtime`">intermediate | **Time**: 15 minutes | **Bun**: v1.1.37+ | **Tags**: `errors`, `troubleshooting`, `debugging`, `cli`, `runtime`</span></dd>
+                        <dt>Time:</dt>
+                        <dd></dd>
+                        <dt>Bun Version:</dt>
+                        <dd></dd>
+                        <dt>Category:</dt>
+                        <dd>📚 Examples by Category</dd>
+                        
+                    </dl>
+                </div>
+
+                
+
+                
+            </aside>
+
+            <div class="example-main">
+                 
+                 <div class="code-section">
+                     <div class="code-header">
+                         <h2>Source Code</h2>
+                         <button id="run-example-btn" class="run-example-btn">
+                             🚀 Run This Example
+                         </button>
+                     </div>
+                     <div class="code-container">
+                         <pre><code class="language-typescript"># 🚨 Bun Error Codes & Troubleshooting Guide
+
+*Generated on 2025-12-12T14:30:00.000Z*
+
+## 📋 Overview
+
+Bun, as a JavaScript runtime, bundler, test runner, and package manager, doesn't maintain a centralized, exhaustive list of numeric "error codes" like some traditional tools (e.g., Node.js's ERR_* prefixes or npm's E* codes). Instead, errors are primarily descriptive messages with stack traces, often including exit codes (numeric values returned by CLI commands) for scripting and automation.
+
+These are influenced by JavaScriptCore (Bun's JS engine) and Web APIs, so many errors mirror standard JS exceptions (e.g., TypeError, ReferenceError) but with Bun-specific enhancements like faster stack traces and source code snippets.
+
+**Key Features:**
+- Helpful diagnostics with truncated source code (up to 1024 bytes/line)
+- Real-time error reporting in VS Code
+- Fast stack traces with syntax highlighting
+- Exit codes for automation (0 = success, 1+ = failure)
+
+## 🔧 Error Categories
+
+### 1. Runtime Errors (Bun as JS Runtime)
+
+Bun's runtime throws standard JS errors but adds Bun-specific ones for its APIs (e.g., `Bun.file`, `Bun.serve`). Errors include stack traces with source code highlights.
+
+**Format:**
+```
+Error: &lt;message&gt;
+    at &lt;file&gt;:&lt;line&gt;:&lt;col&gt;
+&lt;Source code snippet with ^ pointer&gt;
+```
+
+**Exit Codes:** Typically 1 for unhandled exceptions; 0 for success.
+
+#### Common Runtime Errors
+
+| Error Type/Message | When It Occurs | Example | Fix/Workaround |
+|-------------------|----------------|---------|----------------|
+| `TypeError: Cannot read properties of undefined` | Accessing undefined properties | `console.log(undefined.prop);` | Add null checks: `if (obj?.prop) { ... }` |
+| `ReferenceError: &lt;var&gt; is not defined` | Undeclared variable in strict mode | Using var without let/const | Declare variables properly |
+| `BunFileError: ENOENT: no such file or directory` | `Bun.file(path)` where path doesn't exist | `Bun.file('/nonexistent.txt').text()` | Use `Bun.file(path).exists()` first |
+| `SyntaxError: Unexpected token` | Invalid JS/TS syntax | Malformed import or JSX | Fix syntax; Bun auto-transpiles |
+| `AggregateError: Multiple errors occurred` | Parallel ops fail | `Promise.all([fetch('/bad'), fetch('/bad2')])` | Handle with try/catch |
+| `AbortError: The operation was aborted` | Timeout or signal abort | Long-running `Bun.spawn` | Set timeouts: `{ timeout: 5000 }` |
+| `ModuleNotFoundError: Cannot resolve "&lt;module&gt;"` | Import non-existent module | `import 'missing-pkg'` | Install with `bun add &lt;pkg&gt;` |
+
+**Notes:**
+- Bun truncates long source code in errors to avoid terminal overflow
+- For `Bun.serve()`: Port conflicts return HTTP 500
+- Unhandled promise rejections are logged with stack traces
+
+### 2. Test Runner Errors (`bun test`)
+
+Bun's test runner uses Jest-like syntax with Bun's speed. It tracks errors between tests and exits with the count of unhandled errors.
+
+| Error Type/Exit Code | When It Occurs | Example | Fix/Workaround |
+|---------------------|----------------|---------|----------------|
+| Exit Code: `&lt;n&gt;` (n &gt; 0) | Unhandled rejections/errors between tests | Async code leaks promises | Wrap in test blocks |
+| `TestTimeoutError: Test did not finish before timeout` | Test exceeds timeout (default 5s) | Infinite loop in test | Set `test.timeout(10000)` |
+| `AssertionError: Expected ... to be ...` | Failed expect matcher | `expect(1).toBe(2)` | Review Bun Test API docs |
+| `SnapshotMismatchError` | Snapshot test fails | Output changed after code change | Update with `--update-snapshot` |
+| `ModuleResolutionError` | Missing file/module in test | `import './missing.ts'` | Ensure paths exist |
+
+**Notes:**
+- Global timeout: 2147483647ms (effectively infinite for suites)
+- Environment: Sets `NODE_ENV=test`
+- VS Code integration: Real-time errors in "Problems" tab
+
+### 3. CLI & Package Manager Errors
+
+Bun's package manager uses descriptive messages, often borrowing from npm/Yarn. Exit codes: 0 = success, 1 = general failure, 8 = auth/network.
+
+| Error Code/Message | When It Occurs | Example | Fix/Workaround |
+|-------------------|----------------|---------|----------------|
+| `ERESOLVE: unable to resolve dependency tree` | Conflicting dependency versions | Peer dep mismatch | Use overrides in package.json |
+| `ENOENT: no such file or directory` | Missing package.json/lockfile | `bun install` in empty dir | Run `bun init` first |
+| `EADDRINUSE: address already in use` | Port conflict | Multiple servers on same port | Change port with `--port` |
+| `ENOTFOUND: registry error` | Network/registry issue | Offline or bad mirror | Check connection |
+| Exit Code 1: Installation failed | Invalid semver in `bun add` | `bun add react@^999.0.0` | Verify versions |
+| SIGINT/SIGTERM (130/143) | Process interrupted | Ctrl+C during `bun run` | Handle signals gracefully |
+
+**Notes:**
+- Lockfile: `bun.lockb` (binary) prevents resolution errors
+- Windows: v1.1.1+ fixes native module installation
+- Publishing: Resolves catalog refs; fails on mismatches
+
+### 4. Build & Transpile Errors (`bun build`)
+
+Errors during bundling/transpiling with descriptive messages.
+
+| Error Type/Message | When It Occurs | Example | Fix/Workaround |
+|-------------------|----------------|---------|----------------|
+| `BuildError: Failed to bundle` | Circular deps or invalid syntax | Import cycle: A → B → A | Refactor imports |
+| `TranspileError: Unsupported syntax` | Experimental JS features | Top-level await in non-module | Enable with `--target bun` |
+| `MinifyError` | Code too large for minification | Huge bundle with `--minify` | Split code or disable |
+| Exit Code 1: Output path invalid | Bad `--outfile` path | Permission denied | Check directory permissions |
+
+## 🛠️ General Troubleshooting Tips
+
+### Debugging
+- Use `bun --inspect` for Chrome DevTools debugging
+- Add `console.trace()` for custom stack traces
+- Redirect stderr: `bun run script.ts 2&gt; errors.log`
+
+### Updates
+- Many errors are fixed in recent releases
+- Check `bun --help` and release notes
+- VS Code: Real-time error reporting in Problems tab
+
+### Community Resources
+- GitHub Issues: [oven-sh/bun](https://github.com/oven-sh/bun)
+- Stack Overflow: Search for `[bun]` tag
+- Discord: Official Bun community
+
+## 📚 Related Examples
+
+- [Error Handling Patterns](./examples/error-handling-patterns.ts)
+- [Custom Error Classes](./examples/custom-error-classes.ts)
+- [Async Error Handling](./examples/async-error-handling.ts)
+- [Testing Error Scenarios](./examples/testing-error-scenarios.test.ts)
+
+## 🔗 Quick Reference
+
+**Exit Codes:**
+- `0`: Success
+- `1`: General error / unhandled exception
+- `8`: Auth/network issues
+- `130`: SIGINT (Ctrl+C)
+- `143`: SIGTERM
+
+**Most Common Fixes:**
+1. Check file paths exist
+2. Verify package versions
+3. Add null/undefined checks
+4. Handle async operations properly
+5. Check network connectivity
+
+---
+
+*For the latest error information, run `bun --help` or check the [Bun Blog](https://bun.sh/blog) for release notes.*&lt;/content&gt;
+&lt;parameter name="filePath"&gt;docs/bun-error-codes-troubleshooting.md</code></pre>
+                     </div>
+                     <div id="terminal-container" class="terminal-container" style="display: none;">
+                         <div class="terminal-header">
+                             <span>Terminal Output</span>
+                             <button id="close-terminal-btn" class="close-terminal-btn">✕</button>
+                         </div>
+                         <div id="terminal-output" class="terminal-output">
+                             <div class="terminal-placeholder">
+                                 Click "Run This Example" to execute the code...
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 
+
+                <div class="related-section">
+                    <h2>Related Examples</h2>
+                    <div class="related-examples">
+                        
+        <div class="related-example">
+            <h4><a href="example-0.html">Bun Catalogs Advanced</a></h4>
+            <p></p>
+            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+        </div>
+    
+        <div class="related-example">
+            <h4><a href="example-1.html">Bun Catalogs Basic</a></h4>
+            <p></p>
+            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+        </div>
+    
+        <div class="related-example">
+            <h4><a href="example-2.html">Bun Performance Benchmark Comprehensive</a></h4>
+            <p></p>
+            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p><a href="../index.html">← Back to Examples</a></p>
+        </div>
+    </footer>
+</body>
+</html>

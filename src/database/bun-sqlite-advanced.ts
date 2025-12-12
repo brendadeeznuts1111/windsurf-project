@@ -10,6 +10,10 @@ interface LogEntry {
   error?: Error;
   pid: number;
   hostname: string;
+  // Common identifier properties
+  propterid?: string;
+  crossReferenceId?: string;
+  logId?: string;
 }
 
 export class BunSQLiteAdvanced {

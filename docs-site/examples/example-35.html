@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 Bun HTTP Testing Guide - Bun Examples Documentation</title>
+    <meta name="description" content="">
+     <link rel="stylesheet" href="../assets/styles.css">
+     <script src="../assets/prism.js"></script>
+     <link rel="stylesheet" href="../assets/prism.css">
+     <script src="../assets/learning-paths.js"></script>
+     <script src="../assets/terminal.js"></script>
+</head>
+<body>
+    <header class="page-header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="../index.html">Home</a> >
+                <a href="../index.html#examples">Examples</a> >
+                <span>🌐 Bun HTTP Testing Guide</span>
+            </nav>
+            <h1>🟡 🌐 Bun HTTP Testing Guide</h1>
+            <p class="example-description"></p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="example-content">
+            <aside class="example-sidebar">
+                <div class="example-meta">
+                    <h3>Example Info</h3>
+                    <dl>
+                        <dt>Difficulty:</dt>
+                        <dd><span class="difficulty-badge difficulty-advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `http`, `server`, `client`, `node-compat`">advanced | **Time**: 30 minutes | **Bun**: v1.0.0+ | **Tags**: `testing`, `http`, `server`, `client`, `node-compat`</span></dd>
+                        <dt>Time:</dt>
+                        <dd></dd>
+                        <dt>Bun Version:</dt>
+                        <dd></dd>
+                        <dt>Category:</dt>
+                        <dd>📚 Examples by Category</dd>
+                        
+                    </dl>
+                </div>
+
+                
+
+                
+            </aside>
+
+            <div class="example-main">
+                 
+                 <div class="code-section">
+                     <div class="code-header">
+                         <h2>Source Code</h2>
+                         <button id="run-example-btn" class="run-example-btn">
+                             🚀 Run This Example
+                         </button>
+                     </div>
+                     <div class="code-container">
+                         <pre><code class="language-typescript"># 🖥️ Bun HTTP Testing Guide
+
+*Generated on 2025-12-12T15:05:00.000Z*
+
+## 📋 Overview
+
+Bun's HTTP testing infrastructure provides comprehensive coverage of Node.js HTTP APIs with specialized test organization. Tests are broken down into focused, individual test files that cover specific HTTP functionality, behaviors, and edge cases.
+
+## 🗂️ HTTP Test Organization
+
+### Test Categories
+
+HTTP tests are organized by functionality and testing approach:
+
+#### Core HTTP Tests (`test/js/bun/test/parallel/`)
+- **`test-http-*.ts`** - Individual HTTP functionality tests
+- **`test-https-*.ts`** - HTTPS-specific functionality tests
+- **Issue-specific tests** - Named after GitHub issue numbers (e.g., `test-http-10177-*`)
+
+#### Node.js Compatibility Tests (`test/js/node/http/`)
+- **`node-http.test.ts`** - Main Node.js HTTP compatibility test suite
+- **`node-http-ref-fixture.js`** - Reference fixture for HTTP tests
+
+## 🔧 HTTP Test Patterns
+
+### Basic Server Testing
+
+```typescript
+import { createTest } from "node-harness";
+import { once } from "node:events";
+import { Server } from "node:http";
+const { expect } = createTest(import.meta.path);
+
+await using server = Server((req, res) =&gt; {
+  res.end("Hello World");
+});
+
+server.listen(0);
+await once(server, "listening");
+
+const response = await fetch(`http://localhost:${server.address().port}`);
+expect(response.status).toBe(200);
+expect(await response.text()).toBe("Hello World");
+```
+
+### Request/Response Lifecycle Testing
+
+```typescript
+// Test headersSent property
+await using server = createServer().listen(0);
+await once(server, "listening");
+
+fetch(`http://localhost:${server.address()!.port}`).then(res =&gt; res.text());
+const [req, res] = await once(server, "request");
+
+expect(res.headersSent).toBe(false);
+const { promise, resolve } = Promise.withResolvers();
+res.end("OK", resolve);
+await promise;
+expect(res.headersSent).toBe(true);
+```
+
+### Event Emission Testing
+
+```typescript
+// Test request completion events
+await using server = http.createServer().listen(0);
+await once(server, "listening");
+
+fetch(`http://localhost:${server.address().port}`)
+  .then(res =&gt; res.text())
+  .catch(() =&gt; {});
+
+const [req, res] = await once(server, "request");
+expect(req.complete).toBe(false);
+
+const closeEvent = once(req, "close");
+res.end("hi");
+await closeEvent;
+expect(req.complete).toBe(true);
+```
+
+### Encoding and Content Testing
+
+```typescript
+// Test chunked encoding
+await using server = Server((req, res) =&gt; {
+  res.write("chunk1");
+  res.write("chunk2");
+  res.end("final");
+});
+
+server.listen(0);
+await once(server, "listening");
+
+const response = await fetch(`http://localhost:${server.address().port}`);
+const text = await response.text();
+expect(text).toBe("chunk1chunk2final");
+expect(response.headers.get("transfer-encoding")).toBe("chunked");
+```
+
+### Error Handling Testing
+
+```typescript
+// Test client error emission
+await using server = Server((req, res) =&gt; {
+  // Send invalid response
+  res.writeHead(200, { "Content-Length": "invalid" });
+  res.end("test");
+});
+
+server.listen(0);
+await once(server, "listening");
+
+const response = await fetch(`http://localhost:${server.address().port}`);
+expect(response.status).toBe(200); // Should still work despite header
+```
+
+## 🧪 Specialized HTTP Tests
+
+### Constructor Testing
+
+```typescript
+// Test ES5-style constructor usage
+const im = Object.create(IncomingMessage.prototype);
+IncomingMessage.call(im, { url: "/foo" });
+expect(im.url).toBe("");
+
+function Subclass(...args) {
+  IncomingMessage.apply(this, args);
+}
+Object.setPrototypeOf(Subclass.prototype, IncomingMessage.prototype);
+Object.setPrototypeOf(Subclass, IncomingMessage);
+
+await using server = new Server({ IncomingMessage: Subclass }, (req, res) =&gt; {
+  if (req instanceof Subclass) {
+    expect(req.url).toBe("/foo");
+    res.end("success");
+  } else {
+    res.statusCode = 500;
+    res.end("failure");
+  }
+});
+
+server.listen(0);
+await once(server, "listening");
+
+const response = await fetch(`http://localhost:${server.address().port}/foo`);
+expect(response.status).toBe(200);
+```
+
+### Agent and Connection Testing
+
+```typescript
+// Test HTTP Agent configuration
+const agent = new Agent({
+  keepAlive: true,
+  maxSockets: 10,
+  timeout: 5000
+});
+
+await using server = createServer((req, res) =&gt; {
+  res.end("agent test");
+}).listen(0);
+
+await once(server, "listening");
+
+const response = await fetch(`http://localhost:${server.address().port}`, {
+  // @ts-ignore - Agent support may vary
+  agent: agent
+});
+
+expect(response.status).toBe(200);
+```
+
+### Compression Testing
+
+```typescript
+// Test brotli compression
+await using server = createServer((req, res) =&gt; {
+  res.setHeader('Content-Encoding', 'br');
+  res.end(brotliCompress('compressed content'));
+}).listen(0);
+
+await once(server, "listening");
+
+const response = await fetch(`http://localhost:${server.address().port}`, {
+  headers: { 'Accept-Encoding': 'br' }
+});
+
+expect(response.headers.get('content-encoding')).toBe('br');
+const decompressed = await response.text();
+// Verify decompression worked
+```
+
+### Timeout and Lifecycle Testing
+
+```typescript
+// Test request timeout behavior
+await using server = createServer((req, res) =&gt; {
+  // Delay response
+  setTimeout(() =&gt; res.end("delayed"), 2000);
+}).listen(0);
+
+await once(server, "listening");
+
+const controller = new AbortController();
+setTimeout(() =&gt; controller.abort(), 1000);
+
+try {
+  await fetch(`http://localhost:${server.address().port}`, {
+    signal: controller.signal
+  });
+} catch (error) {
+  expect(error.name).toBe('AbortError');
+}
+```
+
+## 🔒 HTTPS and Security Testing
+
+### Certificate Testing
+
+```typescript
+// Test custom certificate acceptance
+const httpsOptions = {
+  key: tls.key,
+  cert: tls.cert,
+  requestCert: true,
+  rejectUnauthorized: false
+};
+
+await using server = createServer(httpsOptions, (req, res) =&gt; {
+  res.end("secure response");
+}).listen(0);
+
+await once(server, "listening");
+
+const response = await fetch(`https://localhost:${server.address().port}`, {
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+
+expect(response.status).toBe(200);
+```
+
+### TLS Version Testing
+
+```typescript
+// Test TLS version compatibility
+const tlsVersions = ['TLSv1.2', 'TLSv1.3'];
+
+for (const version of tlsVersions) {
+  await using server = createServer({
+    key: tls.key,
+    cert: tls.cert,
+    secureProtocol: version
+  }).listen(0);
+
+  await once(server, "listening");
+
+  const response = await fetch(`https://localhost:${server.address().port}`, {
+    tls: { rejectUnauthorized: false }
+  });
+
+  expect(response.status).toBe(200);
+}
+```
+
+## 📊 Performance and Load Testing
+
+### Concurrent Request Testing
+
+```typescript
+// Test handling multiple concurrent requests
+await using server = createServer((req, res) =&gt; {
+  setTimeout(() =&gt; res.end(`response ${req.url}`), Math.random() * 100);
+}).listen(0);
+
+await once(server, "listening");
+
+const port = server.address().port;
+const requests = Array.from({ length: 100 }, (_, i) =&gt;
+  fetch(`http://localhost:${port}/${i}`)
+);
+
+const responses = await Promise.all(requests);
+expect(responses.every(r =&gt; r.ok)).toBe(true);
+
+// Verify all responses are unique
+const texts = await Promise.all(responses.map(r =&gt; r.text()));
+const uniqueTexts = new Set(texts);
+expect(uniqueTexts.size).toBe(100);
+```
+
+### Memory Leak Testing
+
+```typescript
+// Test for memory leaks in HTTP operations
+let requestCount = 0;
+
+await using server = createServer((req, res) =&gt; {
+  requestCount++;
+  res.end(`request ${requestCount}`);
+}).listen(0);
+
+await once(server, "listening");
+
+const port = server.address().port;
+const initialMemory = process.memoryUsage().heapUsed;
+
+// Make many requests
+for (let i = 0; i &lt; 1000; i++) {
+  await fetch(`http://localhost:${port}`);
+  if (i % 100 === 0) {
+    gc(); // Force garbage collection
+  }
+}
+
+const finalMemory = process.memoryUsage().heapUsed;
+const memoryIncrease = finalMemory - initialMemory;
+
+// Allow some memory increase but not excessive
+expect(memoryIncrease).toBeLessThan(1024 * 1024 * 10); // &lt; 10MB
+```
+
+## 🧰 HTTP Testing Utilities
+
+### Test Harness Integration
+
+```typescript
+import { createTest } from "node-harness";
+import { once } from "node:events";
+import { Server } from "node:http";
+
+const { expect } = createTest(import.meta.path);
+
+// Automatic test cleanup with using/dispose
+await using server = Server((req, res) =&gt; {
+  res.end("test response");
+});
+
+server.listen(0);
+await once(server, "listening");
+
+// Test logic here
+const response = await fetch(`http://localhost:${server.address().port}`);
+expect(response.status).toBe(200);
+```
+
+### Custom Test Helpers
+
+```typescript
+function createHTTPServer(handler: (req, res) =&gt; void) {
+  return new Promise&lt;Server&gt;((resolve) =&gt; {
+    const server = createServer(handler);
+    server.listen(0, () =&gt; resolve(server));
+  });
+}
+
+function makeRequest(port: number, path = "/", options = {}) {
+  return fetch(`http://localhost:${port}${path}`, options);
+}
+
+// Usage
+const server = await createHTTPServer((req, res) =&gt; {
+  res.end("custom handler");
+});
+
+const response = await makeRequest(server.address().port);
+expect(await response.text()).toBe("custom handler");
+```
+
+## 🔍 Common HTTP Testing Patterns
+
+### Header Testing
+```typescript
+// Test custom headers
+server = createServer((req, res) =&gt; {
+  expect(req.headers['x-custom']).toBe('test-value');
+  res.setHeader('x-response', 'server-value');
+  res.end();
+});
+
+// Client sends custom header
+const response = await fetch(url, {
+  headers: { 'x-custom': 'test-value' }
+});
+
+expect(response.headers.get('x-response')).toBe('server-value');
+```
+
+### Status Code Testing
+```typescript
+// Test various status codes
+const statusTests = [
+  { path: '/ok', expected: 200 },
+  { path: '/not-found', expected: 404 },
+  { path: '/error', expected: 500 },
+];
+
+for (const test of statusTests) {
+  const response = await fetch(`${baseUrl}${test.path}`);
+  expect(response.status).toBe(test.expected);
+}
+```
+
+### Content-Type Testing
+```typescript
+// Test different content types
+const contentTests = [
+  { path: '/json', type: 'application/json' },
+  { path: '/html', type: 'text/html' },
+  { path: '/text', type: 'text/plain' },
+];
+
+for (const test of contentTests) {
+  const response = await fetch(`${baseUrl}${test.path}`);
+  expect(response.headers.get('content-type')).toBe(test.type);
+}
+```
+
+## 📋 Best Practices
+
+### 1. **Resource Cleanup**
+```typescript
+// Always use await using for automatic cleanup
+await using server = createServer(handler).listen(0);
+await once(server, "listening");
+
+// Server automatically closes when test ends
+```
+
+### 2. **Isolation**
+```typescript
+// Use unique ports for each test
+const port = Math.floor(Math.random() * 10000) + 10000;
+await using server = createServer(handler).listen(port);
+```
+
+### 3. **Timing**
+```typescript
+// Account for async operations
+const [req, res] = await once(server, "request");
+// Wait for response to complete
+await new Promise(resolve =&gt; res.end("done", resolve));
+```
+
+### 4. **Error Testing**
+```typescript
+// Test both success and error paths
+test("successful request", async () =&gt; {
+  // Test happy path
+});
+
+test("handles errors gracefully", async () =&gt; {
+  // Test error conditions
+  try {
+    await makeRequest(invalidPort);
+  } catch (error) {
+    expect(error.code).toBe('ECONNREFUSED');
+  }
+});
+```
+
+## 🔗 Related Examples
+
+- [Node.js HTTP API Testing](./node-http-api-testing.md)
+- [WebSocket Testing](./websocket-testing.md)
+- [Fetch API Testing](./fetch-api-testing.md)
+- [Server Implementation Testing](./server-testing.md)
+
+## 📚 Key Concepts
+
+1. **Test Isolation**: Each test uses unique ports and resources
+2. **Automatic Cleanup**: `await using` ensures proper resource disposal
+3. **Event-Driven**: Tests wait for server events before making requests
+4. **Comprehensive Coverage**: Tests both client and server HTTP functionality
+5. **Performance Aware**: Tests include timing and resource usage validation
+6. **Cross-Version**: Tests ensure compatibility across Node.js versions
+
+HTTP testing in Bun ensures robust, performant, and compatible HTTP implementations across all supported APIs and use cases.
+
+---
+
+*For the complete HTTP test suite, see the [test/js/bun/test/parallel/](https://github.com/oven-sh/bun/tree/main/test/js/bun/test/parallel) and [test/js/node/http/](https://github.com/oven-sh/bun/tree/main/test/js/node/http) directories.*&lt;/content&gt;
+&lt;parameter name="filePath"&gt;examples/bun-http-testing-guide.md</code></pre>
+                     </div>
+                     <div id="terminal-container" class="terminal-container" style="display: none;">
+                         <div class="terminal-header">
+                             <span>Terminal Output</span>
+                             <button id="close-terminal-btn" class="close-terminal-btn">✕</button>
+                         </div>
+                         <div id="terminal-output" class="terminal-output">
+                             <div class="terminal-placeholder">
+                                 Click "Run This Example" to execute the code...
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 
+
+                <div class="related-section">
+                    <h2>Related Examples</h2>
+                    <div class="related-examples">
+                        
+        <div class="related-example">
+            <h4><a href="example-0.html">Bun Catalogs Advanced</a></h4>
+            <p></p>
+            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+        </div>
+    
+        <div class="related-example">
+            <h4><a href="example-1.html">Bun Catalogs Basic</a></h4>
+            <p></p>
+            <span class="difficulty-badge difficulty-advanced | **Time**: 45 minutes | **Bun**: >=1.3.0">advanced | **Time**: 45 minutes | **Bun**: >=1.3.0</span>
+        </div>
+    
+        <div class="related-example">
+            <h4><a href="example-2.html">Bun Performance Benchmark Comprehensive</a></h4>
+            <p></p>
+            <span class="difficulty-badge difficulty-expert | **Time**: 60 minutes | **Bun**: >=1.3.0">expert | **Time**: 60 minutes | **Bun**: >=1.3.0</span>
+        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p><a href="../index.html">← Back to Examples</a></p>
+        </div>
+    </footer>
+</body>
+</html>

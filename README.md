@@ -47,6 +47,7 @@ windsurf-project/
 ├── 🎯 examples/          # Usage examples and demos
 ├── 🧪 benchmarks/        # Performance benchmarks
 ├── 📊 reports/           # Test and benchmark reports
+├── 📝 docs/              # Technical documentation
 ├── ⚙️ scripts/           # Build and automation scripts
 ├── 🏗️ mcp-server/        # Model Context Protocol server
 ├── 📦 packages/          # Additional packages
@@ -277,6 +278,23 @@ const dbConfig = config.get('database');
 ## 📄 License
 
 MIT License - see [LICENSE](./LICENSE) file for details.
+
+## 📚 Documentation
+
+### Testing & Development
+- **[Bun Test Runtime Guide](docs/BUN_TEST_RUNTIME_GUIDE.md)** - Complete guide to Bun test's runtime behavior, environment variables, timeouts, and error handling
+- **[Advanced Bun Testing Features](docs/ADVANCED_BUN_TESTING_FEATURES.md)** - Advanced testing patterns and capabilities
+- **[CI Testing Guide](docs/CI_TESTING_GUIDE.md)** - Continuous integration testing strategies
+
+### Architecture & Implementation
+- **[Concurrent Testing Demo](docs/CONCURRENT_TESTING_DEMO.md)** - Concurrent testing patterns and implementation
+- **[Enhanced Transitive Links](docs/ENHANCED_TRANSITIVE_LINKS_GUIDE.md)** - Advanced dependency management
+- **[Git Workflow](docs/GIT_WORKFLOW.md)** - Development workflow and best practices
+
+### Examples & Benchmarks
+- **[Bun API Integration Master Suite](examples/README.md)** - 50 comprehensive Bun API examples
+- **[Performance Benchmarks](benchmarks/)** - Comprehensive performance testing suite
+- **[Pattern Analysis](examples/PATTERN_ANALYSIS.md)** - Deep analysis of Bun implementation patterns
 
 ## 🏆 Acknowledgments
 

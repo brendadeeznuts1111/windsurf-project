@@ -1,0 +1,9 @@
+Hello {{name}},
+
+Welcome to {{appName}} version {{version}}!
+
+Your account has been created successfully.
+Please verify your email at: {{email}}
+
+Best regards,
+The {{appName}} Team

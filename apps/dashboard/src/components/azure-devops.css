@@ -1,0 +1,373 @@
+/* Azure DevOps Dashboard Styles */
+
+.azure-dashboard {
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #0078d4 100%);
+  color: #e4e4e4;
+}
+
+/* Header */
+.azure-header {
+  margin-bottom: 30px;
+}
+
+.azure-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #0078d4, #00bcf2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.org-info {
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+.org-info .org {
+  color: #0078d4;
+}
+
+.org-info .separator {
+  color: #666;
+  margin: 0 8px;
+}
+
+.org-info .project {
+  color: #00bcf2;
+}
+
+/* Reuse refresh button from ORCA */
+.azure-dashboard .refresh-btn {
+  background: linear-gradient(90deg, #0078d4, #00bcf2);
+}
+
+/* Loading State */
+.azure-dashboard .loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  gap: 20px;
+}
+
+.azure-dashboard .spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 120, 212, 0.2);
+  border-top-color: #0078d4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Error Banner */
+.azure-dashboard .error-banner {
+  background: rgba(255, 71, 87, 0.1);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.azure-dashboard .error-banner button {
+  background: #ff4757;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Stats Grid */
+.azure-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.azure-dashboard .stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.azure-dashboard .stat-card.highlight {
+  background: rgba(0, 120, 212, 0.2);
+  border-color: #0078d4;
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: rgba(0, 120, 212, 0.2);
+}
+
+.work-items-icon { background: rgba(107, 169, 237, 0.3); }
+.pipelines-icon { background: rgba(0, 188, 242, 0.3); }
+.prs-icon { background: rgba(111, 217, 144, 0.3); }
+.active-prs-icon { background: rgba(255, 165, 2, 0.3); }
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.azure-dashboard .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+/* Tab Navigation */
+.azure-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.azure-tabs button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.azure-tabs button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.azure-tabs button.active {
+  background: rgba(0, 120, 212, 0.2);
+  border-color: #0078d4;
+  color: #00bcf2;
+}
+
+/* Tables */
+.azure-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.azure-table th,
+.azure-table td {
+  padding: 15px 20px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.azure-table th {
+  background: rgba(255, 255, 255, 0.05);
+  color: #00bcf2;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.azure-table td {
+  color: #ccc;
+}
+
+.azure-table code {
+  background: rgba(0, 120, 212, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  color: #00bcf2;
+}
+
+/* Work Item Types */
+.wi-type-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.wi-bug { background: rgba(255, 71, 87, 0.3); color: #ff4757; }
+.wi-task { background: rgba(0, 188, 242, 0.3); color: #00bcf2; }
+.wi-story { background: rgba(111, 217, 144, 0.3); color: #6fd990; }
+.wi-feature { background: rgba(165, 94, 234, 0.3); color: #a55eea; }
+.wi-epic { background: rgba(255, 165, 2, 0.3); color: #ffa502; }
+.wi-item { background: rgba(136, 136, 136, 0.3); color: #888; }
+
+/* State Badges */
+.state-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.state-badge.new { background: rgba(0, 188, 242, 0.3); color: #00bcf2; }
+.state-badge.active { background: rgba(111, 217, 144, 0.3); color: #6fd990; }
+.state-badge.resolved { background: rgba(165, 94, 234, 0.3); color: #a55eea; }
+.state-badge.closed { background: rgba(136, 136, 136, 0.3); color: #888; }
+
+/* Status Badges */
+.status-badge, .result-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-success { background: rgba(111, 217, 144, 0.3); color: #6fd990; }
+.status-active { background: rgba(0, 188, 242, 0.3); color: #00bcf2; }
+.status-error { background: rgba(255, 71, 87, 0.3); color: #ff4757; }
+.status-pending { background: rgba(255, 165, 2, 0.3); color: #ffa502; }
+.status-default { background: rgba(136, 136, 136, 0.3); color: #888; }
+
+/* PR Status */
+.pr-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pr-status.active { background: rgba(111, 217, 144, 0.3); color: #6fd990; }
+.pr-status.completed { background: rgba(0, 120, 212, 0.3); color: #0078d4; }
+.pr-status.abandoned { background: rgba(255, 71, 87, 0.3); color: #ff4757; }
+
+/* Filter Bar */
+.azure-dashboard .filter-bar {
+  margin-bottom: 20px;
+}
+
+.state-filter {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #fff;
+  min-width: 150px;
+}
+
+/* Overview Grid */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.overview-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.overview-section h3 {
+  color: #00bcf2;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.overview-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.overview-item:last-child {
+  border-bottom: none;
+}
+
+.overview-item .wi-type {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(0, 188, 242, 0.2);
+  color: #00bcf2;
+}
+
+.overview-item .wi-title {
+  flex: 1;
+  color: #ccc;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overview-item .wi-state {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.wi-state.new { background: rgba(0, 188, 242, 0.2); color: #00bcf2; }
+.wi-state.active { background: rgba(111, 217, 144, 0.2); color: #6fd990; }
+.wi-state.resolved { background: rgba(165, 94, 234, 0.2); color: #a55eea; }
+.wi-state.closed { background: rgba(136, 136, 136, 0.2); color: #888; }
+
+.overview-item .pipeline-status {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.overview-item .pipeline-name {
+  flex: 1;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.overview-item .pipeline-build {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.overview-item .pr-id {
+  color: #0078d4;
+  font-weight: 600;
+}
+
+.overview-item .pr-title {
+  flex: 1;
+  color: #ccc;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overview-item .pr-author {
+  color: #666;
+  font-size: 0.85rem;
+}

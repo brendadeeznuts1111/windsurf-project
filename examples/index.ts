@@ -114,37 +114,10 @@ const EXAMPLES = {
       'Tension rules setup',
       'Security configuration'
     ],
-    runCommand: 'echo "Configuration file - view with: cat examples/worker-config-example.ts"'
-  },
-
-   'bun-file-mime-demo.test.ts': {
-     title: 'Bun File MIME-Type Demo',
-     description: 'File API mime-type handling and custom type override',
-     features: [
-       'Bun.file() API usage',
-       'Custom mime-type setting',
-       'Automatic content-type detection',
-       'File extension mapping',
-       'Type validation'
-     ],
-     runCommand: 'bun test examples/bun-file-mime-demo.test.ts'
+     runCommand: 'echo "Configuration file - view with: cat examples/worker-config-example.ts"'
    },
 
-   'bun-file-mime-advanced-demo.test.ts': {
-     title: 'Bun File MIME-Type Advanced Demo',
-     description: 'Comprehensive MIME-type examples with various file types and edge cases',
-     features: [
-       'Multiple file extension types',
-       'Image and document MIME types',
-       'Custom type overrides',
-       'Charset specifications',
-       'Vendor-specific types',
-       'Edge case handling'
-     ],
-     runCommand: 'bun test examples/bun-file-mime-advanced-demo.test.ts'
-   },
-
-   'bun-file-sink-demo.test.ts': {
+    'bun-file-sink-demo.test.ts': {
      title: 'Bun FileSink Demo',
      description: 'File writing and streaming functionality with Bun.file().writer()',
      features: [
@@ -172,31 +145,18 @@ const EXAMPLES = {
      runCommand: 'bun test examples/bun-error-tracker-demo.test.ts'
    },
 
-   '../benchmarks/bun-file-mime.benchmark.test.ts': {
-     title: 'Bun File MIME-Type Benchmarks',
-     description: 'Performance benchmarks for MIME-type detection and file operations',
-     features: [
-       'MIME detection performance',
-       'Custom type override speed',
-       'Memory efficiency testing',
-       'Extension vs explicit type comparison',
-       'Complex MIME type handling'
-     ],
-     runCommand: 'bun test benchmarks/bun-file-mime.benchmark.test.ts'
-   },
-
-   '../benchmarks/bun-file-mime.benchmark.test.ts': {
-     title: 'Bun File MIME-Type Benchmarks',
-     description: 'Performance benchmarks for MIME-type detection and file operations',
-     features: [
-       'MIME detection performance',
-       'Custom type override speed',
-       'Memory efficiency testing',
-       'Extension vs explicit type comparison',
-       'Complex MIME type handling'
-     ],
-     runCommand: 'bun test benchmarks/bun-file-mime.benchmark.test.ts'
-   },
+    '../benchmarks/bun-file-mime.benchmark.test.ts': {
+      title: 'Bun File MIME-Type Benchmarks',
+      description: 'Performance benchmarks for MIME-type detection and file operations',
+      features: [
+        'MIME detection performance',
+        'Custom type override speed',
+        'Memory efficiency testing',
+        'Extension vs explicit type comparison',
+        'Complex MIME type handling'
+      ],
+      runCommand: 'bun test benchmarks/bun-file-mime.benchmark.test.ts'
+    },
 
    '../benchmarks/bun-file-sink.benchmark.test.ts': {
      title: 'Bun FileSink Benchmarks',
@@ -321,33 +281,6 @@ const EXAMPLES = {
     },
 
     // Bun-Native API Integration Master Suite (EX021-EX050)
-    'core/bun-serve-advanced.ts': {
-      title: 'EX021: Bun.serve Advanced Patterns',
-      description: 'Enterprise HTTP/2 server with TLS, WebSocket upgrades, rate limiting',
-      features: [
-        'HTTP/2 support',
-        'WebSocket upgrade handling',
-        'Rate limiting',
-        'Security headers',
-        'Health check endpoints',
-        'Graceful shutdown'
-      ],
-      runCommand: 'bun run examples/core/bun-serve-advanced.ts'
-    },
-
-    'streaming/bun-compression.ts': {
-      title: 'EX038: Bun Compression Streams',
-      description: 'Streaming gzip/zstd compression with automatic algorithm selection',
-      features: [
-        'Gzip compression',
-        'Zstd compression',
-        'Streaming compression',
-        'Auto-compression selection',
-        'Compression ratio analysis',
-        'Performance benchmarking'
-      ],
-      runCommand: 'echo "Compression utilities - import and use in code"'
-    },
 
     '../src/internals/bun-jsc.ts': {
       title: 'EX044: Bun JSC Memory Management',
@@ -401,19 +334,7 @@ const EXAMPLES = {
       runCommand: 'echo "Module resolution utilities - import and use in code"'
     },
 
-    '../src/database/bun-sqlite-advanced.ts': {
-      title: 'EX028: Bun SQLite Advanced',
-      description: 'High-performance persistence with WAL, prepared statements, transactions',
-      features: [
-        'Write-Ahead Logging (WAL)',
-        'Prepared statement caching',
-        'Bulk insert operations',
-        'Streaming query results',
-        'Custom SQLite functions',
-        'Database backup API'
-      ],
-      runCommand: 'echo "Advanced SQLite implementation - requires database setup"'
-    },
+
 
     '../src/security/crypto-suite.ts': {
       title: 'EX026: Bun Crypto Suite',
@@ -567,19 +488,97 @@ const EXAMPLES = {
      runCommand: 'bun test benchmarks/bun-snapshot-testing.benchmark.test.ts'
    },
 
-   '../integration.ts': {
-      title: 'Complete System Integration',
-      description: 'Full integration of all Bun advanced features working together',
+    '../integration.ts': {
+       title: 'Complete System Integration',
+       description: 'Full integration of all Bun advanced features working together',
+       features: [
+         'Text file loading',
+         'Environment synchronization',
+         'Unix socket proxy',
+         'Worker spawn system',
+         'Tension monitoring',
+         'Health checks',
+         'Configuration management'
+       ],
+       runCommand: 'bun run integration.ts --demo'
+     },
+
+    'team-analytics-dashboard.tsx': {
+      title: 'Team Analytics Dashboard',
+      description: 'React dashboard for team metrics, bottlenecks, and performance analytics',
       features: [
-        'Text file loading',
-        'Environment synchronization',
-        'Unix socket proxy',
-        'Worker spawn system',
-        'Tension monitoring',
-        'Health checks',
-        'Configuration management'
+        'Real-time team metrics visualization',
+        'Bottleneck detection and alerts',
+        'Performance analytics with charts',
+        'Team member performance tracking',
+        'REST API integration',
+        'SQLite backend persistence',
+        'GitHub issue/PR synchronization'
       ],
-      runCommand: 'bun run integration.ts --demo'
+      runCommand: 'cd apps/dashboard && bun run dev'
+    },
+
+    'enhanced-mime-metrics-demo.ts': {
+      title: 'Enhanced MIME Type & Byte Metrics',
+      description: 'Comprehensive MIME type detection, byte tracking, and file operation analytics',
+      features: [
+        'Advanced MIME type detection and categorization',
+        'Real-time byte processing metrics',
+        'File operation tracking (reads, writes, streams)',
+        'Statistical analysis and reporting',
+        'Category-based insights',
+        'Performance rate calculations',
+        'Data export/import capabilities'
+      ],
+      runCommand: 'bun run examples/enhanced-mime-metrics-demo.ts'
+    },
+
+    'bun-mime-api-constants-demo.ts': {
+      title: 'Bun MIME API Constants',
+      description: 'Official Bun MIME type constants and utilities for file operations',
+      features: [
+        'Comprehensive MIME type database (79+ types)',
+        'Automatic file extension detection',
+        'Category-based classification',
+        'Text vs binary type detection',
+        'Charset specifications',
+        'Quality factors for content negotiation',
+        'Performance-optimized caching',
+        'Bun-native API integration'
+      ],
+      runCommand: 'bun run examples/bun-mime-api-constants-demo.ts'
+    },
+
+    'rbac-system-demo.ts': {
+      title: 'RBAC System Demo',
+      description: 'Comprehensive Role-Based Access Control with hierarchical permissions and audit logging',
+      features: [
+        'Hierarchical role-based permissions (7 roles)',
+        'Resource-specific access control (14 types)',
+        'Policy-based authorization rules',
+        'Comprehensive audit logging',
+        'High-performance caching (446K/sec)',
+        'Middleware integration',
+        'Security analysis and reporting',
+        'Time-based access controls'
+      ],
+      runCommand: 'bun run examples/rbac-system-demo.ts'
+    },
+
+    'team-organization-api-demo.ts': {
+      title: 'Team Organization API Demo',
+      description: 'Complete team and organizational structure management with Telegram notifications',
+      features: [
+        'Hierarchical team structures with relationships',
+        'Role-based team member management',
+        'Service health monitoring and tracking',
+        'Telegram notifications for team events',
+        'Complete REST API with 12+ endpoints',
+        'SQLite persistence with relations',
+        'RBAC integration for access control',
+        'Team analytics and reporting'
+      ],
+      runCommand: 'bun run examples/team-organization-api-demo.ts'
     }
 };
 

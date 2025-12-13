@@ -14,10 +14,13 @@ const { Worker, getEnvironmentData, setEnvironmentData } = (globalThis as any).w
   (globalThis as any).require?.('worker_threads') || {};
 
 interface DemoResult {
-  success: boolean;
+  success?: boolean;
   data?: any;
   error?: string;
   executionTime?: number;
+  feature?: string;
+  status?: string;
+  result?: any;
 }
 
 const NodeCompatDemo: React.FC = () => {
@@ -303,12 +306,12 @@ fetch('https://api.example.com/data', {
             eval: true
           });
 
-          worker.on('message', (message) => {
+          worker.on('message', (message: any) => {
             worker.terminate();
             resolve(message);
           });
 
-          worker.on('error', (error) => {
+          worker.on('error', (error: Error) => {
             worker.terminate();
             reject(error);
           });
@@ -378,7 +381,7 @@ describe('Node.js Test Compatibility', () => {
 
           testResults.push({ name: 'basic assertions', status: 'passed' });
         } catch (error) {
-          testResults.push({ name: 'basic assertions', status: 'failed', error: error.message });
+          testResults.push({ name: 'basic assertions', status: 'failed', error: error instanceof Error ? error.message : String(error) });
         }
 
         // Async test simulation
@@ -387,7 +390,7 @@ describe('Node.js Test Compatibility', () => {
           if (result !== 'async works') throw new Error('Async test failed');
           testResults.push({ name: 'async test', status: 'passed' });
         } catch (error) {
-          testResults.push({ name: 'async test', status: 'failed', error: error.message });
+          testResults.push({ name: 'async test', status: 'failed', error: error instanceof Error ? error.message : String(error) });
         }
 
         // Error handling test
@@ -401,7 +404,7 @@ describe('Node.js Test Compatibility', () => {
           if (!errorThrown) throw new Error('Error was not thrown');
           testResults.push({ name: 'error handling', status: 'passed' });
         } catch (error) {
-          testResults.push({ name: 'error handling', status: 'failed', error: error.message });
+          testResults.push({ name: 'error handling', status: 'failed', error: error instanceof Error ? error.message : String(error) });
         }
 
         return {
@@ -495,7 +498,7 @@ console.log('Script cached data:', script.cachedData);`,
         } catch (error) {
           results.push({
             feature: 'Basic Script',
-            error: error.message,
+            error: error instanceof Error ? error.message : String(error),
             status: 'failed'
           });
         }
@@ -515,7 +518,7 @@ console.log('Script cached data:', script.cachedData);`,
         } catch (error) {
           results.push({
             feature: 'compileFunction',
-            error: error.message,
+            error: error instanceof Error ? error.message : String(error),
             status: 'failed'
           });
         }
@@ -543,7 +546,7 @@ console.log('Script cached data:', script.cachedData);`,
         } catch (error) {
           results.push({
             feature: 'SourceTextModule',
-            error: error.message,
+            error: error instanceof Error ? error.message : String(error),
             status: 'failed'
           });
         }
@@ -724,7 +727,7 @@ const response = await fetch('https://api.example.com', requestOptions);
         } catch (error) {
           return {
             systemCACertificates: 'Test failed',
-            error: error.message,
+            error: error instanceof Error ? error.message : String(error),
             possibleCauses: [
               'Network connectivity issues',
               'Certificate validation problems',
@@ -733,6 +736,22 @@ const response = await fetch('https://api.example.com', requestOptions);
           };
         }
       }
+    }
+  };
+
+  const executeDemo = async (demoId: string, demoFn: () => Promise<any>) => {
+    try {
+      setExecutingDemos(prev => ({ ...prev, [demoId]: true }));
+      const result = await demoFn();
+      results.set(demoId, { feature: demoId, result, status: 'success' });
+    } catch (error) {
+      results.set(demoId, {
+        feature: demoId,
+        error: error instanceof Error ? error.message : String(error),
+        status: 'failed'
+      });
+    } finally {
+      setExecutingDemos(prev => ({ ...prev, [demoId]: false }));
     }
   };
 

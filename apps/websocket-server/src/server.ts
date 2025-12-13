@@ -13,9 +13,11 @@ import { MetricsCollector } from "../../../src/utils/metrics-collector";
 import { TensionScoringEngine } from "../../../src/core/tension-scoring/tension-engine";
 
 // Types
+import type { ServerWebSocket } from 'bun';
+
 interface WebSocketClient {
   id: string;
-  ws: WebSocket;
+  ws: ServerWebSocket<undefined>;
   subscribedChannels: Set<string>;
   connectedAt: Date;
   lastActivity: Date;
@@ -38,7 +40,6 @@ interface ChannelMessage {
 
 // Initialize core services
 const uuid = new BunUUIDGenerator();
-const metrics = new MetricsCollector();
 const tension = new TensionScoringEngine({
   rules: {},
   thresholds: {
@@ -53,6 +54,8 @@ const tension = new TensionScoringEngine({
     alertCooldownMs: 60000,
   },
 });
+
+const metrics = new MetricsCollector(tension);
 
 // Client and channel management
 const clients = new Map<string, WebSocketClient>();
@@ -278,7 +281,7 @@ const server = serve({
     return new Response('Not found', { status: 404 });
   },
   websocket: {
-    open(ws) {
+    open(ws: ServerWebSocket<undefined>) {
       const clientId = uuid.generate();
       const client: WebSocketClient = {
         id: clientId,
@@ -301,7 +304,7 @@ const server = serve({
       console.log(`🔗 Client ${clientId} connected. Total clients: ${clients.size}`);
     },
 
-    message(ws, message) {
+    message(ws: ServerWebSocket<undefined>, message: string | Buffer) {
       try {
         const data = JSON.parse(message.toString()) as ChannelMessage;
         const client = Array.from(clients.values()).find(c => c.ws === ws);
@@ -357,7 +360,7 @@ const server = serve({
       }
     },
 
-    close(ws) {
+    close(ws: ServerWebSocket<undefined>) {
       const client = Array.from(clients.values()).find(c => c.ws === ws);
       if (client) {
         removeClient(client.id);

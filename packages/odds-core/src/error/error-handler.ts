@@ -1,4 +1,4 @@
-import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
+import { apiTracker } from '../monitoring/api-tracker';
 // Intelligent error handler with automatic documentation search
 import { randomUUIDv7 } from "bun";
 

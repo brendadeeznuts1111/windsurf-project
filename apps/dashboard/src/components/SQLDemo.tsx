@@ -68,7 +68,7 @@ const SQLDemo: React.FC = () => {
           await initializeTables(sql, config.type);
           break;
         } catch (error) {
-          console.log(`Failed to connect to ${config.type}:`, error.message);
+          console.log(`Failed to connect to ${config.type}:`, error instanceof Error ? error.message : String(error));
         }
       }
     } catch (error) {
@@ -159,11 +159,12 @@ const SQLDemo: React.FC = () => {
     } catch (error: any) {
       const executionTime = Date.now() - startTime;
 
+      const errorMessage = error instanceof Error ? error.message : String(error);
       setResults(prev => new Map(prev).set(queryId, {
         success: false,
-        error: error.message,
+        error: errorMessage,
         executionTime,
-        cancelled: error.message?.includes('cancelled')
+        cancelled: errorMessage.includes('cancelled')
       }));
     } finally {
       setExecutingQueries(prev => {
@@ -298,7 +299,7 @@ GROUP BY u.id, u.name\``,
             return { message: 'Transaction completed successfully' };
           });
         } catch (error) {
-          return { message: 'Transaction rolled back', error: error.message };
+          return { message: 'Transaction rolled back', error: error instanceof Error ? error.message : String(error) };
         }
       }
     }

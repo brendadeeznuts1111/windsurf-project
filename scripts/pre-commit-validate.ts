@@ -1,4 +1,4 @@
-import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
+import { apiTracker } from  '../packages/odds-core/src/monitoring/api-tracker';
 #!/usr/bin/env bun
 
 // scripts/pre-commit-validate.ts

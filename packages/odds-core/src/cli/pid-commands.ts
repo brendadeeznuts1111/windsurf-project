@@ -13,6 +13,12 @@ import { SecurePIDRegistry } from '../telemetry/pid-context';
 import { PIDAuditTrail } from '../telemetry/pid-audit-trail';
 import { LoggerManager } from '../error/error-handler';
 
+// Constants
+const ONE_HOUR_MS = 3600000;
+const RAPID_EVENT_THRESHOLD_MS = 10;
+const ERROR_RATE_THRESHOLD = 0.1;
+const MAX_EVENTS_PER_PID = 1000;
+
 // ──────────────────────────────────────────────────────────────
 // Coordinator Election
 // ──────────────────────────────────────────────────────────────
@@ -35,6 +41,8 @@ class PIDCoordinator {
   private logger = LoggerManager.getInstance();
   private audit = PIDAuditTrail.getInstance();
   private registry = SecurePIDRegistry.getInstance();
+  private lastElectionTime = 0;
+  private readonly ELECTION_COOLDOWN_MS = 5000; // 5 seconds
 
   static getInstance(): PIDCoordinator {
     if (!PIDCoordinator.instance) {
@@ -48,6 +56,16 @@ class PIDCoordinator {
    */
   async forceElection(options: { force?: boolean } = {}): Promise<CoordinatorState> {
     const pid = process.pid;
+    const now = Date.now();
+
+    // Rate limiting to prevent abuse
+    if (!options.force && now - this.lastElectionTime < this.ELECTION_COOLDOWN_MS) {
+      const remaining = Math.ceil((this.ELECTION_COOLDOWN_MS - (now - this.lastElectionTime)) / 1000);
+      console.log(`\n🗳️  Election Rate Limited`);
+      console.log(`   ⏱️  Please wait ${remaining} seconds before triggering another election`);
+      return this.state;
+    }
+
     const allProcesses = this.registry.getAllProcesses();
 
     console.log('\n🗳️  PID Coordinator Election');
@@ -59,6 +77,8 @@ class PIDCoordinator {
       return this.state;
     }
 
+    this.lastElectionTime = now;
+
     // Increment term
     this.state.term++;
     console.log(`   📊 Election Term: ${this.state.term}`);
@@ -68,7 +88,11 @@ class PIDCoordinator {
     console.log(`   👥 Registered Voters: ${voters.length}`);
 
     // Simple election: lowest PID wins (Bully algorithm simplified)
+    // Include current process if not already in voters
     const candidates = voters.length > 0 ? voters : [pid];
+    if (!candidates.includes(pid)) {
+      candidates.push(pid);
+    }
     const winner = Math.min(...candidates);
 
     // Record election
@@ -158,12 +182,14 @@ class RequestLineageTracer {
       byPid.get(entry.pid)!.push(entry);
     }
 
-    // Print lineage
+    // Print lineage (sort by timestamp ascending)
+    const sortedEntries = entries.sort((a, b) => a.timestamp - b.timestamp);
+
     console.log('   Request Flow:');
     console.log('   ' + '─'.repeat(46));
 
-    let prevTimestamp = entries[0].timestamp;
-    for (const entry of entries) {
+    let prevTimestamp = sortedEntries[0].timestamp;
+    for (const entry of sortedEntries) {
       const delta = entry.timestamp - prevTimestamp;
       const deltaStr = delta > 0 ? ` (+${delta}ms)` : '';
       const time = new Date(entry.timestamp).toISOString().slice(11, 23);
@@ -189,7 +215,7 @@ class RequestLineageTracer {
     console.log('   └─ [END]');
 
     // Summary
-    const totalDuration = entries[entries.length - 1].timestamp - entries[0].timestamp;
+    const totalDuration = sortedEntries[sortedEntries.length - 1].timestamp - sortedEntries[0].timestamp;
     const uniquePids = byPid.size;
 
     console.log('\n   Summary:');
@@ -208,7 +234,7 @@ class RequestLineageTracer {
     console.log('='.repeat(50));
 
     const allEntries = this.audit.getEntriesInRange(
-      Date.now() - 3600000, // Last hour
+      Date.now() - ONE_HOUR_MS, // Last hour
       Date.now()
     );
 
@@ -263,7 +289,7 @@ class ForensicAnalyzer {
     console.log('='.repeat(50));
 
     const processInfo = this.registry.getProcess(targetPid);
-    const auditEntries = this.audit.getEntriesForPid(targetPid, 1000);
+    const auditEntries = this.audit.getEntriesForPid(targetPid, MAX_EVENTS_PER_PID);
 
     // Build report
     const report: ForensicReport = {
@@ -307,14 +333,15 @@ class ForensicAnalyzer {
         console.log(`     • ${event}: ${count}`);
       }
 
-      // Timeline
-      const firstEvent = auditEntries[auditEntries.length - 1];
-      const lastEvent = auditEntries[0];
+      // Timeline (sort chronologically)
+      const sortedAuditEntries = auditEntries.sort((a, b) => a.timestamp - b.timestamp);
+      const firstEvent = sortedAuditEntries[0];
+      const lastEvent = sortedAuditEntries[sortedAuditEntries.length - 1];
       console.log(`\n   Timeline:`);
       console.log(`     First: ${new Date(firstEvent.timestamp).toISOString()}`);
       console.log(`     Last:  ${new Date(lastEvent.timestamp).toISOString()}`);
 
-      report.timeline = auditEntries.map(e => ({
+      report.timeline = sortedAuditEntries.map(e => ({
         timestamp: e.timestamp,
         event: e.event,
         data: e.data
@@ -361,10 +388,10 @@ class ForensicAnalyzer {
     const errorEvents = entries.filter(e =>
       e.event.includes('error') || e.event.includes('failed')
     );
-    if (errorEvents.length > entries.length * 0.1) {
+    if (errorEvents.length > entries.length * ERROR_RATE_THRESHOLD) {
       anomalies.push({
         type: 'HIGH_ERROR_RATE',
-        description: `${errorEvents.length}/${entries.length} events are errors (>${10}%)`,
+        description: `${errorEvents.length}/${entries.length} events are errors (>${ERROR_RATE_THRESHOLD * 100}%)`,
         recommendation: 'Investigate error patterns and root causes'
       });
     }
@@ -372,10 +399,10 @@ class ForensicAnalyzer {
     // Check for rapid events (possible loop)
     const timestamps = entries.map(e => e.timestamp).sort((a, b) => a - b);
     for (let i = 1; i < timestamps.length; i++) {
-      if (timestamps[i] - timestamps[i - 1] < 10) { // Less than 10ms apart
+      if (timestamps[i] - timestamps[i - 1] < RAPID_EVENT_THRESHOLD_MS) {
         anomalies.push({
           type: 'RAPID_EVENTS',
-          description: 'Multiple events within 10ms - possible tight loop',
+          description: `Multiple events within ${RAPID_EVENT_THRESHOLD_MS}ms - possible tight loop`,
           recommendation: 'Check for infinite loops or excessive logging'
         });
         break;
@@ -492,12 +519,23 @@ async function main() {
   const args = process.argv.slice(2);
   const command = args[0];
 
-  // Parse flags
+  // Input validation
+  if (!command || typeof command !== 'string') {
+    console.error('❌ Error: Command required');
+    process.exit(1);
+  }
+
+  // Parse flags with validation
   const flags: Record<string, string | boolean> = {};
   for (let i = 1; i < args.length; i++) {
     const arg = args[i];
     if (arg.startsWith('--')) {
       const [key, value] = arg.slice(2).split('=');
+      // Basic validation - prevent command injection
+      if (!/^[a-zA-Z0-9_-]+$/.test(key)) {
+        console.error(`❌ Error: Invalid flag name: ${key}`);
+        process.exit(1);
+      }
       flags[key] = value || true;
     }
   }
@@ -512,21 +550,48 @@ async function main() {
     case 'lineage': {
       const tracer = new RequestLineageTracer();
       if (flags.request) {
-        await tracer.traceLineage(flags.request as string);
+        const requestId = flags.request as string;
+        if (!requestId || requestId.length === 0) {
+          console.error('❌ Error: Request ID cannot be empty');
+          process.exit(1);
+        }
+        await tracer.traceLineage(requestId);
       } else if (flags.list) {
-        tracer.listRecentRequests(parseInt(flags.limit as string) || 10);
+        const limit = parseInt(flags.limit as string) || 10;
+        if (limit <= 0 || limit > 100) {
+          console.error('❌ Error: Limit must be between 1 and 100');
+          process.exit(1);
+        }
+        tracer.listRecentRequests(limit);
       } else {
         console.log('Usage:');
         console.log('  pid:lineage --request=<request_id>  Trace specific request');
-        console.log('  pid:lineage --list                  List recent requests');
+        console.log('  pid:lineage --list [--limit=<n>]    List recent requests');
       }
       break;
     }
 
     case 'forensics': {
       const analyzer = new ForensicAnalyzer();
-      const targetPid = parseInt(flags.pid as string) || process.pid;
+      const targetPidStr = flags.pid as string;
+      let targetPid: number;
+
+      if (targetPidStr) {
+        targetPid = parseInt(targetPidStr);
+        if (isNaN(targetPid) || targetPid <= 0) {
+          console.error('❌ Error: Invalid PID specified');
+          process.exit(1);
+        }
+      } else {
+        targetPid = process.pid;
+      }
+
       const output = flags.output as string | undefined;
+      if (output && !output.endsWith('.json')) {
+        console.error('❌ Error: Output file must have .json extension');
+        process.exit(1);
+      }
+
       await analyzer.generateReport(targetPid, output);
       break;
     }

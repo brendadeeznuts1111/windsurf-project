@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
-import { Badge } from './ui/Badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import { Badge } from '../components/ui/Badge';
 import { Activity, Users, FileText, TrendingUp } from 'lucide-react';
-import MetricsChart from './MetricsChart';
-import HealthStatus from './HealthStatus';
+import MetricsChart from '../components/MetricsChart';
+import HealthStatus from '../components/HealthStatus';
 
 interface SystemMetrics {
   status: string;

@@ -36,6 +36,7 @@ import AzureDevOpsDashboard from './components/AzureDevOpsDashboard';
 import SQLDemo from './components/SQLDemo';
 import AdvancedSQLDemo from './components/AdvancedSQLDemo';
 import NodeCompatDemo from './components/NodeCompatDemo';
+import TeamAnalyticsDashboard from './components/TeamAnalyticsDashboard';
 import './App.css';
 
 /**
@@ -182,6 +183,12 @@ function App() {
         >
           Azure DevOps
         </button>
+        <button
+          className={activeTab === 'team-analytics' ? 'active' : ''}
+          onClick={() => setActiveTab('team-analytics')}
+        >
+          Team Analytics
+        </button>
         <a
           href="/docs"
           target="_blank"
@@ -255,6 +262,7 @@ function App() {
         {activeTab === 'node-compat-demo' && <NodeCompatDemo />}
         {activeTab === 'orca-dashboard' && <OrcaDashboard />}
         {activeTab === 'azure-devops' && <AzureDevOpsDashboard />}
+        {activeTab === 'team-analytics' && <TeamAnalyticsDashboard />}
       </main>
     </div>
   );

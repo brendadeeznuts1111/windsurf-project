@@ -6,11 +6,11 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Examples | 51 |
-| Categories | 17 |
+| Total Examples | 56 |
+| Categories | 22 |
 | Difficulty Levels | 4 |
 | Platform Support | 3 |
-| Technology Tags | 46 |
+| Technology Tags | 51 |
 | Avg Performance | 3707 ops/sec |
 
 ## 🛣️ Learning Paths
@@ -464,6 +464,187 @@ Core example demonstrating Bun runtime capabilities
 - [Practical Bun Patch Workflow](practical-bun-patch-workflow.ts)
 - [Bun File Sink Demo.Test](bun-file-sink-demo.test.ts)
 - [Bun File Mime Demo.Test](bun-file-mime-demo.test.ts)
+
+---
+
+### Metrics (1 examples)
+
+#### 🔵 Enhanced MIME Type & Byte Metrics
+
+Comprehensive MIME type detection, byte tracking, and file operation analytics system with real-time performance monitoring
+
+**Difficulty**: intermediate | **Time**: 20 minutes | **Bun**: >=1.3.4
+
+**Tags**: `metrics`, `mime-type`, `byte-tracking`, `file-operations`, `performance`, `analytics`, `monitoring`, `typescript`
+
+**Platforms**: macOS, Linux, Windows
+
+**Learning Path**: Enterprise Applications
+
+**Prerequisites**: TypeScript Fundamentals, File Operations
+
+**File**: [`enhanced-mime-metrics-demo.ts`](enhanced-mime-metrics-demo.ts)
+
+**Related examples:**
+- [Team Analytics Dashboard](../apps/dashboard/src/components/TeamAnalyticsDashboard.tsx)
+- [Performance Metrics](../apps/dashboard/src/components/PerformanceMetrics.tsx)
+- [Bun File MIME Demo.Test](bun-file-mime-demo.test.ts)
+
+**Features:**
+- Advanced MIME type detection with 50+ supported types
+- Real-time byte processing metrics and rate calculations
+- File operation tracking (reads, writes, streams, deletes)
+- Statistical analysis with category breakdowns
+- Performance insights and bottleneck detection
+- Data export/import for persistence
+- Category-based analysis (text, image, video, code, etc.)
+
+---
+
+### MIME (1 examples)
+
+#### 🔵 Bun MIME API Constants
+
+Official Bun MIME type constants and utilities for comprehensive file type detection and content-type handling
+
+**Difficulty**: intermediate | **Time**: 15 minutes | **Bun**: >=1.3.4
+
+**Tags**: `mime-types`, `file-detection`, `content-type`, `constants`, `utilities`, `caching`, `performance`, `api`
+
+**Platforms**: macOS, Linux, Windows
+
+**Learning Path**: File Operations & APIs
+
+**Prerequisites**: TypeScript Fundamentals
+
+**File**: [`bun-mime-api-constants-demo.ts`](bun-mime-api-constants-demo.ts)
+
+**Related examples:**
+- [Enhanced MIME Type & Byte Metrics](enhanced-mime-metrics-demo.ts)
+- [Bun File MIME Demo.Test](bun-file-mime-demo.test.ts)
+- [Bun Text File Import Demo](bun-text-file-import-demo.ts)
+
+**Features:**
+- 79+ supported MIME types with file extension mappings
+- Category-based classification (text, code, image, video, audio, document, archive)
+- Text vs binary type detection utilities
+- Charset specifications for text-based MIME types
+- Quality factors for HTTP content negotiation
+- Performance-optimized caching system
+- Bun-native API integration and utilities
+
+---
+
+### Security (1 examples)
+
+#### 🔐 RBAC System Demo
+
+Comprehensive Role-Based Access Control system with hierarchical permissions, policy-based authorization, and audit logging
+
+**Difficulty**: intermediate | **Time**: 25 minutes | **Bun**: >=1.3.4
+
+**Tags**: `rbac`, `security`, `authorization`, `permissions`, `access-control`, `audit`, `middleware`, `authentication`, `policy`, `roles`
+
+**Platforms**: macOS, Linux, Windows
+
+**Learning Path**: Enterprise Applications
+
+**Prerequisites**: TypeScript Fundamentals, Security Concepts
+
+**File**: [`rbac-system-demo.ts`](rbac-system-demo.ts)
+
+**Related examples:**
+- [Team Analytics Dashboard](../apps/dashboard/src/components/TeamAnalyticsDashboard.tsx)
+- [CI/CD Pipeline](../scripts/ci-cd.ts)
+- [Enhanced MIME Type & Byte Metrics](enhanced-mime-metrics-demo.ts)
+
+**Features:**
+- Hierarchical role-based permissions (7 built-in roles)
+- Resource-specific access control (14 resource types)
+- Policy-based authorization with conditions
+- Comprehensive audit logging and reporting
+- High-performance caching (446K checks/sec)
+- Middleware integration for API protection
+- Security analysis and permission inventory
+- Time-based and attribute-based access rules
+
+---
+
+### Organization (1 examples)
+
+#### 🏢 Team Organization API Demo
+
+Complete team and organizational structure management with hierarchical relationships, Telegram notifications, and comprehensive API endpoints
+
+**Difficulty**: intermediate | **Time**: 30 minutes | **Bun**: >=1.3.4
+
+**Tags**: `organization`, `teams`, `hierarchy`, `telegram`, `api`, `rbac`, `management`, `structure`, `notifications`, `sqlite`
+
+**Platforms**: macOS, Linux, Windows
+
+**Learning Path**: Enterprise Applications
+
+**Prerequisites**: API Development, Database Design, RBAC Concepts
+
+**File**: [`team-organization-api-demo.ts`](team-organization-api-demo.ts)
+
+**API Endpoints**: [`../apps/dashboard/src/api/router.ts`](../apps/dashboard/src/api/router.ts) (Team routes)
+
+**Related examples:**
+- [RBAC System Demo](rbac-system-demo.ts)
+- [Team Analytics Dashboard](../apps/dashboard/src/components/TeamAnalyticsDashboard.tsx)
+- [Complete Integration Example](complete-integration-example.ts)
+
+**Features:**
+- Hierarchical team structures with parent/child relationships
+- Role-based team member management (LEAD, CONTRIBUTOR, MEMBER)
+- Service health monitoring and status tracking
+- Telegram notifications for team events and alerts
+- Complete REST API with 12+ endpoints for team operations
+- SQLite persistence with proper relational design
+- RBAC integration for access control
+- Team analytics and reporting capabilities
+
+---
+
+### Dashboard (1 examples)
+
+#### 🔵 Team Analytics Dashboard
+
+React dashboard for visualizing team metrics, bottlenecks, and performance analytics with real-time data from REST API endpoints
+
+**Difficulty**: intermediate | **Time**: 30 minutes | **Bun**: >=1.3.4
+
+**Tags**: `react`, `dashboard`, `analytics`, `api`, `metrics`, `bottlenecks`, `visualization`, `chart.js`, `real-time`
+
+**Platforms**: macOS, Linux, Windows
+
+**Learning Path**: Enterprise Applications
+
+**Prerequisites**: React Fundamentals, API Development
+
+**File**: [`../apps/dashboard/src/components/TeamAnalyticsDashboard.tsx`](../apps/dashboard/src/components/TeamAnalyticsDashboard.tsx)
+
+**API Endpoints**: [`../apps/dashboard/src/api/router.ts`](../apps/dashboard/src/api/router.ts)
+
+**Cross-references:**
+- [Team Issue Release Mapping Engine](../src/mapping-engine.ts)
+- [GitHub Integration](../src/github-integration.ts)
+- [Dashboard API Router](../apps/dashboard/src/api/router.ts)
+
+**Related examples:**
+- [Complete Integration Example](complete-integration-example.ts)
+- [Api Server Demo](api-server-demo.ts)
+- [Bun Serve Advanced](core/bun-serve-advanced.ts)
+
+**Features:**
+- Real-time team metrics visualization
+- Bottleneck detection and alerts
+- Performance analytics with charts
+- Team member performance tracking
+- REST API integration
+- SQLite backend persistence
+- GitHub issue/PR synchronization
 
 ---
 

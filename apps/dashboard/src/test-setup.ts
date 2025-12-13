@@ -1,7 +1,6 @@
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import "@testing-library/jest-dom";
 
-// Register happy-dom globals
+// Register happy-dom globals for DOM testing
 GlobalRegistrator.register();
 
 // Add any global test configuration here
@@ -11,17 +10,30 @@ global.ResizeObserver = class ResizeObserver {
   disconnect() {}
 };
 
-// Mock other APIs as needed
+// Mock other APIs as needed for Bun native testing
 Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: (query: string) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => {},
+  }),
 });
+
+// Bun native testing utilities
+export const mockFunction = (implementation?: (...args: any[]) => any) => {
+  const calls: any[][] = [];
+  const mock = (...args: any[]) => {
+    calls.push(args);
+    return implementation?.(...args);
+  };
+  mock.calls = calls;
+  mock.mockClear = () => { calls.length = 0; };
+  mock.mockReturnValue = (value: any) => { implementation = () => value; };
+  return mock;
+};

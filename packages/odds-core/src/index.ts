@@ -1,5 +1,8 @@
 // Core package entry point - re-exports all public APIs
 export * from './types';
+
+// Explicit export to ensure SharpDetectionResult is included
+export type { SharpDetectionResult } from './types/index';
 export * from './constants';
 export * from './utils';
 export * from './validation';

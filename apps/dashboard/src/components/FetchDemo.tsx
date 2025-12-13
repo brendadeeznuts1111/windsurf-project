@@ -9,7 +9,7 @@ interface FetchExample {
   id: string;
   title: string;
   description: string;
-  category: 'basic' | 'advanced' | 'bun-specific' | 'streaming' | 'websocket';
+  category: 'basic' | 'advanced' | 'bun-specific' | 'streaming' | 'websocket' | 'file-io';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   code: string;
   endpoint: string;
@@ -514,8 +514,9 @@ export const FetchDemo: React.FC = () => {
           response = await fetch(example.endpoint);
           if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
           response = new Response(JSON.stringify({
-            error: error.message,
+            error: errorMessage,
             message: 'This demonstrates error handling - the endpoint returns a 500 error'
           }));
         }
@@ -658,7 +659,7 @@ export const FetchDemo: React.FC = () => {
         duration: endTime - startTime,
         size: 0,
         timestamp: endTime,
-        error: error.message
+        error: error instanceof Error ? error.message : String(error)
       };
 
       setResults(prev => new Map(prev).set(example.id, result));

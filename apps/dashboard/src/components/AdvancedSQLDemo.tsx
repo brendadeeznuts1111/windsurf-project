@@ -47,7 +47,8 @@ const AdvancedSQLDemo: React.FC = () => {
         }
       }
     } catch (error) {
-      console.log('Redis not available:', error.message);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.log('Redis not available:', errorMessage);
     }
   };
 
@@ -268,7 +269,8 @@ await redis.publish("notifications", "Hello from Bun!");`,
             ttl: { key: 'bun-demo:temp', ttl_seconds: ttl }
           };
         } catch (error) {
-          throw new Error(`Redis operations failed: ${error.message}`);
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          throw new Error(`Redis operations failed: ${errorMessage}`);
         }
       }
     },
@@ -427,7 +429,7 @@ const results = await Promise.all([
 
         // Simulate multiple queries (prepared statements would be reused)
         const userIds = [1, 2, 3];
-        const results = [];
+        const results: any[] = [];
 
         for (const id of userIds) {
           const user = await sql`SELECT * FROM users WHERE id = ${id}`;

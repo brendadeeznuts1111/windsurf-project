@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { TIMING_CONSTANTS } from '../constants';
+import { TIMING_CONSTANTS, BUSINESS_CONFIG } from '../constants';
 
 interface ArbitrageOpportunity {
   id: string;
@@ -21,7 +21,7 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({
     minEdge: 0,
-    maxAge: TIME_CONSTANTS.INTERVALS.FIVE_MINUTES,
+    maxAge: TIMING_CONSTANTS.FIVE_MINUTES,
     exchanges: [] as string[]
   });
 
@@ -60,7 +60,7 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
           price2: 2801.20, // Keep as specific test data
           profit: 0.70,
           confidence: 0.92,
-          timestamp: Date.now() - TIME_CONSTANTS.INTERVALS.TEN_SECONDS
+          timestamp: Date.now() - TIMING_CONSTANTS.TEN_SECONDS
         }
       ];
 
@@ -128,8 +128,8 @@ export const ArbitrageTable: React.FC<ArbitrageTableProps> = () => {
             <label>Max Age (sec):</label>
             <input
               type="number"
-              value={filter.maxAge / TIME_CONSTANTS.MILLISECONDS_PER_SECOND}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter((prev) => ({ ...prev, maxAge: (parseFloat(e.target.value) || 0) * TIME_CONSTANTS.MILLISECONDS_PER_SECOND }))}
+              value={filter.maxAge / TIMING_CONSTANTS.SECOND}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter((prev) => ({ ...prev, maxAge: (parseFloat(e.target.value) || 0) * TIMING_CONSTANTS.SECOND }))}
             />
           </div>
           <button onClick={fetchOpportunities} className="refresh">

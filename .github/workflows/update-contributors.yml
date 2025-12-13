@@ -1,0 +1,69 @@
+name: Update Contributors
+
+on:
+  schedule:
+    # Run monthly on the 1st at 10 AM UTC
+    - cron: '0 10 1 * *'
+  workflow_dispatch:
+
+jobs:
+  update-contributors:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate contributors list
+        run: |
+          # Get all contributors from GitHub API
+          CONTRIBUTORS=$(gh api repos/${{ github.repository }}/contributors --paginate --jq '.[].login' | sort | uniq)
+
+          # Update CONTRIBUTORS.md
+          sed -i '/<!-- This section is automatically populated by the contributor update workflow -->/a \
+          ## Contributors\
+          \
+          '"$(echo "$CONTRIBUTORS" | sed 's/^/- **@\0** - Contributor/')"'' CONTRIBUTORS.md
+
+          # Update last updated timestamp
+          sed -i "s/*Last updated: .*/Last updated: $(date)/" CONTRIBUTORS.md
+
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: update contributors list"
+          title: "📝 Update Contributors List"
+          body: |
+            ## Description
+            Automatically update the contributors list with recent contributions.
+
+            ## Type of Change
+            - [ ] 📚 Documentation update
+
+            ## Testing
+            - [x] Automated update via GitHub Actions
+
+            ## Additional Notes
+            This PR was automatically created by the contributor update workflow.
+          branch: update-contributors
+          delete-branch: true
+          labels: |
+            documentation
+            automated

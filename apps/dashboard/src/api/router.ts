@@ -28,6 +28,11 @@
 // URLPattern is natively available in Bun v1.3.4+
 import { Database } from 'bun:sqlite';
 import { BunLogger } from '../utils/logger';
+import { TeamIssueReleaseMappingEngine } from '../../../../src/mapping-engine';
+import { RBACEngine, createRBACMiddleware, SystemRole, ResourceType } from '../../../../src/rbac/rbac-engine';
+import { TeamOrganizationEngine, createTeamAPIHandlers } from '../../../../src/team-organization-engine';
+import { BunTeamMapper } from '../../../../src/bun-team-mapper';
+import { TOMLEndpoints } from '../../../../src/api/toml-endpoints';
 // import { HB47MegaRegistry } from '@odds-protocol/odds-core'; // Commented out due to missing module
 
 // Mock HB47MegaRegistry for demo purposes
@@ -151,6 +156,12 @@ function docsIndexHandler(request: Request): Response {
      { path: '/docs/v134-release-notes', title: 'Bun v1.3.4 Release Notes & Features Guide', description: 'Complete overview of Bun v1.3.4 enhancements including fs.glob improvements, SourceMap API, smarter TypeScript types, and Node.js compatibility fixes' },
      { path: '/docs/v135-release-notes', title: 'Bun v1.3.5 Release Notes & Features Guide', description: 'Complete overview of Bun v1.3.5 enhancements including package management tools, workspace improvements, testing features, and developer experience improvements' },
      { path: '/docs/v111-bytecode-analysis', title: 'Bun v1.1.11 Bytecode Alignment Analysis', description: 'Technical deep-dive into Bun v1.1.11 bytecode alignment fixes and their cascading effects on build/compile reliability' },
+     { path: '/docs/private-registry', title: 'Bun Private Registry Guide - Scoped Packages & Authentication', description: 'Complete guide for working with private scoped registries, authentication, and package management in Bun' },
+     { path: '/docs/rbac', title: 'Bun RBAC (Role-Based Access Control) Guide', description: 'Complete guide to implementing role-based access control in Bun applications with database integration, middleware, and best practices' },
+     { path: '/docs/team-rbac-registry', title: 'Bun Team-Scoped RBAC + Private Registry Guide', description: 'Complete guide to team-scoped role-based access control, private registries, and operational workflows in Bun' },
+     { path: '/docs/v136-release-notes', title: 'Bun v1.3.6 Release Notes & Breaking Changes', description: 'Complete overview of Bun v1.3.6 updates including breaking changes, new features, and migration guide' },
+     { path: '/docs/release-template', title: 'Bun Release Template & Documentation Guide', description: 'Standardized template for documenting Bun releases with comprehensive section explanations' },
+     { path: '/docs/release-template-guide', title: 'Bun Release Template Guide - Section Explanations', description: 'Detailed guide explaining what each section of the Bun release template means and how to fill it out' },
   ];
 
   const html = `
@@ -431,9 +442,10 @@ async function docsHandler(request: Request, filename: string, title: string): P
     });
 
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return Response.json({
       success: false,
-      error: `Failed to load documentation: ${error.message}`,
+      error: `Failed to load documentation: ${errorMessage}`,
       timestamp: Date.now()
     } as APIResponse, { status: 500 });
   }
@@ -677,6 +689,214 @@ const ROUTES: Array<{
       pattern: new URLPattern({ pathname: '/docs/v111-bytecode-analysis' }),
       handler: async (request) => await docsHandler(request, 'bun-v111-bytecode-alignment-analysis.md', 'Bun v1.1.11 Bytecode Alignment Analysis')
     },
+    {
+      method: 'GET',
+      pattern: new URLPattern({ pathname: '/docs/private-registry' }),
+      handler: async (request) => await docsHandler(request, 'bun-private-registry-guide.md', 'Bun Private Registry Guide - Scoped Packages & Authentication')
+    },
+    {
+      method: 'GET',
+      pattern: new URLPattern({ pathname: '/docs/rbac' }),
+      handler: async (request) => await docsHandler(request, 'bun-rbac-guide.md', 'Bun RBAC (Role-Based Access Control) Guide')
+    },
+    {
+      method: 'GET',
+      pattern: new URLPattern({ pathname: '/docs/team-rbac-registry' }),
+      handler: async (request) => await docsHandler(request, 'bun-team-rbac-registry-guide.md', 'Bun Team-Scoped RBAC + Private Registry Guide')
+    },
+    {
+      method: 'GET',
+      pattern: new URLPattern({ pathname: '/docs/v136-release-notes' }),
+      handler: async (request) => await docsHandler(request, 'bun-v136-release-notes-guide.md', 'Bun v1.3.6 Release Notes & Breaking Changes')
+    },
+    {
+      method: 'GET',
+      pattern: new URLPattern({ pathname: '/docs/release-template' }),
+      handler: async (request) => await docsHandler(request, 'bun-release-template.md', 'Bun Release Template & Documentation Guide')
+    },
+    {
+      method: 'GET',
+      pattern: new URLPattern({ pathname: '/docs/release-template-guide' }),
+      handler: async (request) => await docsHandler(request, 'bun-release-template-guide.md', 'Bun Release Template Guide - Section Explanations')
+    },
+
+  // Team-Issue-Release Mapping System API
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/mapping/members' }),
+    handler: getTeamMembersHandler
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/mapping/members' }),
+    handler: createTeamMemberHandler
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/mapping/members/:id' }),
+    handler: getTeamMemberHandler
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/mapping/issues' }),
+    handler: getIssuesPRsHandler
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/mapping/issues' }),
+    handler: createIssuePRHandler
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/mapping/issues/:id' }),
+    handler: getIssuePRHandler
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/mapping/analytics/:teamId' }),
+    handler: getTeamAnalyticsHandler
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/mapping/xrefs/:type/:id' }),
+    handler: getCrossReferencesHandler
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/mapping/xrefs' }),
+    handler: createCrossReferenceHandler
+  },
+
+  // Team Organization API
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/teams' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).getTeams
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/teams' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).createTeam
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/teams/:id' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).getTeam
+  },
+  {
+    method: 'PATCH',
+    pattern: new URLPattern({ pathname: '/api/teams/:id' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).updateTeam
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/teams/:id/delete' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).deleteTeam
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/teams/hierarchy' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).getTeamHierarchy
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/teams/:id/members' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).getTeamMembers
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/teams/:id/members' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).addTeamMember
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/teams/:id/members/:userId/remove' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).removeTeamMember
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/teams/:id/services' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).getTeamServices
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/teams/:id/services' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).addTeamService
+  },
+  {
+    method: 'PATCH',
+    pattern: new URLPattern({ pathname: '/api/teams/:id/services/:serviceId/health' }),
+    handler: createTeamAPIHandlers(getTeamEngine()).updateServiceHealth
+  },
+
+  // Bun Team Mapper API routes
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/team-mapper/sync' }),
+    handler: createBunTeamMapperAPIHandlers(getTeamMapper()).syncTeamHierarchy
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/team-mapper/hierarchy' }),
+    handler: createBunTeamMapperAPIHandlers(getTeamMapper()).getTeamHierarchy
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/team-mapper/load' }),
+    handler: createBunTeamMapperAPIHandlers(getTeamMapper()).loadTeamHierarchy
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/team-mapper/route-pr' }),
+    handler: createBunTeamMapperAPIHandlers(getTeamMapper()).routePR
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/team-mapper/permissions/:userId' }),
+    handler: createBunTeamMapperAPIHandlers(getTeamMapper()).getRegistryPermissions
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/team-mapper/notify' }),
+    handler: createBunTeamMapperAPIHandlers(getTeamMapper()).sendTeamNotification
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/team-mapper/validate' }),
+    handler: createBunTeamMapperAPIHandlers(getTeamMapper()).validateTeamStructure
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/team-mapper/generate-codeowners' }),
+    handler: createBunTeamMapperAPIHandlers(getTeamMapper()).generateCODEOWNERS
+  },
+
+  // TOML Configuration Endpoints
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/config/team-hierarchy.toml' }),
+    handler: getTOMLEndpoints().getTeamHierarchyTOML
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/config/rbac-rules.toml' }),
+    handler: getTOMLEndpoints().getRBACRulesTOML
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/config/auth-settings.toml' }),
+    handler: getTOMLEndpoints().getAuthSettingsTOML
+  },
+  {
+    method: 'GET',
+    pattern: new URLPattern({ pathname: '/api/config/system-status.toml' }),
+    handler: getTOMLEndpoints().getSystemStatusTOML
+  },
+  {
+    method: 'POST',
+    pattern: new URLPattern({ pathname: '/api/config/reload' }),
+    handler: getTOMLEndpoints().reloadConfigurations
+  },
 
   // Catch-all for dashboard assets
   {
@@ -767,7 +987,7 @@ async function executeCodeHandler(request: Request): Promise<Response> {
       } catch {}
 
     } catch (execError) {
-      errorOutput = execError.message;
+      errorOutput = execError instanceof Error ? execError.message : String(execError);
       exitCode = 1;
     }
 
@@ -1305,9 +1525,291 @@ function staticHandler(request: Request): Response {
   });
 }
 
+// Team-Issue-Release Mapping System Handlers
+let mappingEngine: TeamIssueReleaseMappingEngine | null = null;
+let rbacEngine: RBACEngine | null = null;
+let teamEngine: TeamOrganizationEngine | null = null;
+let teamMapper: BunTeamMapper | null = null;
+let tomlEndpoints: TOMLEndpoints | null = null;
+
+function getMappingEngine(): TeamIssueReleaseMappingEngine {
+  if (!mappingEngine) {
+    mappingEngine = new TeamIssueReleaseMappingEngine();
+  }
+  return mappingEngine;
+}
+
+function getRBACEngine(): RBACEngine {
+  if (!rbacEngine) {
+    rbacEngine = new RBACEngine();
+  }
+  return rbacEngine;
+}
+
+function getTeamEngine(): TeamOrganizationEngine {
+  if (!teamEngine) {
+    // Use a separate database for team organization
+    const Database = require('bun:sqlite');
+    const db = new Database('team-organization.db');
+    teamEngine = new TeamOrganizationEngine(db, getRBACEngine());
+  }
+  return teamEngine;
+}
+
+function getTeamMapper(): BunTeamMapper {
+  if (!teamMapper) {
+    teamMapper = new BunTeamMapper(getTeamEngine(), getRBACEngine());
+  }
+  return teamMapper;
+}
+
+function getAuthMiddleware() {
+  const { AuthMiddleware } = require('../../../../src/auth/auth-middleware');
+  return new AuthMiddleware(getRBACEngine(), null, getTeamMapper());
+}
+
+function getTOMLEndpoints(): TOMLEndpoints {
+  if (!tomlEndpoints) {
+    tomlEndpoints = new TOMLEndpoints(getTeamEngine(), getRBACEngine(), getAuthMiddleware());
+  }
+  return tomlEndpoints;
+}
+
+// Team Members API
+async function getTeamMembersHandler(request: Request): Promise<Response> {
+  try {
+    const url = new URL(request.url);
+    const team = url.searchParams.get('team');
+
+    const engine = getMappingEngine();
+    const members = await engine.getTeamMembers(team || undefined);
+
+    console.log(`📋 Retrieved ${members.length} team members for team: ${team || 'all'}`);
+
+    return Response.json({
+      success: true,
+      data: members,
+      count: members.length,
+      timestamp: Date.now()
+    } as APIResponse);
+  } catch (error) {
+    console.log(`❌ Error getting team members:`, error);
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
+async function getTeamMemberHandler(request: Request, match: any): Promise<Response> {
+  try {
+    const id = match.pathname.groups.id;
+    const engine = getMappingEngine();
+    const member = await engine.getTeamMember(id);
+
+    if (!member) {
+      return Response.json({
+        success: false,
+        error: 'Team member not found',
+        timestamp: Date.now()
+      } as APIResponse, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      data: member,
+      timestamp: Date.now()
+    } as APIResponse);
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
+async function createTeamMemberHandler(request: Request): Promise<Response> {
+  try {
+    const body = await request.json();
+    const engine = getMappingEngine();
+    const id = await engine.createTeamMember(body);
+
+    return Response.json({
+      success: true,
+      data: { id },
+      message: 'Team member created successfully',
+      timestamp: Date.now()
+    } as APIResponse, { status: 201 });
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
+// Issues/PRs API
+async function getIssuesPRsHandler(request: Request): Promise<Response> {
+  try {
+    // For now, return empty array - would need to implement search/filtering
+    return Response.json({
+      success: true,
+      data: [],
+      count: 0,
+      timestamp: Date.now()
+    } as APIResponse);
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
+async function getIssuePRHandler(request: Request, match: any): Promise<Response> {
+  try {
+    const id = match.pathname.groups.id;
+    const engine = getMappingEngine();
+    const issue = await engine.getIssuePR(id);
+
+    if (!issue) {
+      return Response.json({
+        success: false,
+        error: 'Issue/PR not found',
+        timestamp: Date.now()
+      } as APIResponse, { status: 404 });
+    }
+
+    return Response.json({
+      success: true,
+      data: issue,
+      timestamp: Date.now()
+    } as APIResponse);
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
+async function createIssuePRHandler(request: Request): Promise<Response> {
+  try {
+    const body = await request.json();
+    const engine = getMappingEngine();
+    const id = await engine.createIssuePR(body);
+
+    return Response.json({
+      success: true,
+      data: { id },
+      message: 'Issue/PR created successfully',
+      timestamp: Date.now()
+    } as APIResponse, { status: 201 });
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
+// Analytics API
+async function getTeamAnalyticsHandler(request: Request, match: any): Promise<Response> {
+  try {
+    const teamId = match.pathname.groups.teamId || 'core-api';
+    const url = new URL(request.url);
+    const period = url.searchParams.get('period') || 'weekly';
+
+    console.log(`📊 Generating analytics for team: ${teamId}, period: ${period}`);
+
+    const engine = getMappingEngine();
+    const analytics = await engine.generateTeamAnalytics(teamId, period);
+
+    console.log(`✅ Generated analytics with ${analytics.memberMetrics ? Object.keys(analytics.memberMetrics).length : 0} member metrics`);
+
+    return Response.json({
+      success: true,
+      data: analytics,
+      timestamp: Date.now()
+    } as APIResponse);
+  } catch (error) {
+    console.log(`❌ Analytics error:`, error);
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
+// Cross-references API
+async function getCrossReferencesHandler(request: Request, match: any): Promise<Response> {
+  try {
+    const entityType = match.pathname.groups.type;
+    const entityId = match.pathname.groups.id;
+
+    const engine = getMappingEngine();
+    const xrefs = await engine.getCrossReferences(entityType, entityId);
+
+    return Response.json({
+      success: true,
+      data: xrefs,
+      count: xrefs.length,
+      timestamp: Date.now()
+    } as APIResponse);
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
+async function createCrossReferenceHandler(request: Request): Promise<Response> {
+  try {
+    const body = await request.json();
+    const engine = getMappingEngine();
+    const id = await engine.createCrossReference(body);
+
+    return Response.json({
+      success: true,
+      data: { id },
+      message: 'Cross-reference created successfully',
+      timestamp: Date.now()
+    } as APIResponse, { status: 201 });
+  } catch (error) {
+    return Response.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: Date.now()
+    } as APIResponse, { status: 500 });
+  }
+}
+
 // Internal routing function
 async function routeRequest(request: Request): Promise<Response> {
   const url = new URL(request.url);
+
+  // Debug logging for mapping routes
+  if (url.pathname.startsWith('/api/mapping/')) {
+    console.log(`🔍 Mapping route requested: ${request.method} ${url.pathname}`);
+  }
+
+  // Apply RBAC middleware for protected routes
+  if (url.pathname.startsWith('/api/')) {
+    const rbacMiddleware = createRBACMiddleware(getRBACEngine());
+    const rbacResult = await rbacMiddleware(request);
+    if (rbacResult !== null) {
+      return rbacResult; // RBAC check failed
+    }
+  }
 
   // Find matching route
   for (const route of ROUTES) {
@@ -1315,6 +1817,9 @@ async function routeRequest(request: Request): Promise<Response> {
 
     const match = route.pattern.exec(url);
     if (match) {
+      if (url.pathname.startsWith('/api/mapping/')) {
+        console.log(`✅ Found matching route for: ${url.pathname}`);
+      }
       return await route.handler(request, match);
     }
   }
@@ -1368,13 +1873,14 @@ export async function handleAPIRequest(request: Request): Promise<Response> {
 
   } catch (error) {
     const duration = Date.now() - startTime;
+    const errorMessage = error instanceof Error ? error.message : String(error);
 
     // Log error using %j format specifier
     BunLogger.error('API request failed', {
       method: request.method,
       url: url.pathname,
       duration: `${duration}ms`,
-      error: error.message,
+      error: errorMessage,
       timestamp: new Date().toISOString()
     });
 
@@ -1390,6 +1896,180 @@ export async function handleAPIRequest(request: Request): Promise<Response> {
       }
     });
   }
+}
+
+// ============================================================================
+// BUN TEAM MAPPER API HANDLERS
+// ============================================================================
+
+function createBunTeamMapperAPIHandlers(teamMapper: BunTeamMapper) {
+  return {
+    // Sync team hierarchy
+    async syncTeamHierarchy(request: Request): Promise<Response> {
+      try {
+        await teamMapper.syncTeamHierarchy();
+
+        return Response.json({
+          success: true,
+          message: 'Team hierarchy synchronized successfully',
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
+      }
+    },
+
+    // Load team hierarchy data
+    async loadTeamHierarchy(request: Request): Promise<Response> {
+      try {
+        const data = await teamMapper.loadTeamHierarchy();
+
+        return Response.json({
+          success: true,
+          data,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
+      }
+    },
+
+    // Get team hierarchy
+    async getTeamHierarchy(request: Request): Promise<Response> {
+      try {
+        const hierarchy = teamMapper.getHierarchyData();
+
+        return Response.json({
+          success: true,
+          data: hierarchy,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
+      }
+    },
+
+    // Route PR based on team ownership
+    async routePR(request: Request): Promise<Response> {
+      try {
+        const prData = await request.json() as {
+          number: number;
+          title: string;
+          author: string;
+          files: string[];
+          baseBranch: string;
+        };
+
+        const routing = await teamMapper.routePullRequest(prData);
+
+        return Response.json({
+          success: true,
+          data: routing,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 400 });
+      }
+    },
+
+    // Get registry permissions for user
+    async getRegistryPermissions(request: Request, match: any): Promise<Response> {
+      try {
+        const permissions = await teamMapper.getRegistryPermissions(match.pathname.groups.userId);
+
+        return Response.json({
+          success: true,
+          data: permissions,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
+      }
+    },
+
+    // Send team notification
+    async sendTeamNotification(request: Request): Promise<Response> {
+      try {
+        const { teamKey, message, priority } = await request.json() as {
+          teamKey: string;
+          message: string;
+          priority?: 'low' | 'medium' | 'high' | 'critical';
+        };
+
+        await teamMapper.sendTeamNotification(teamKey, message, priority);
+
+        return Response.json({
+          success: true,
+          message: 'Notification sent successfully',
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 400 });
+      }
+    },
+
+    // Validate team structure
+    async validateTeamStructure(request: Request): Promise<Response> {
+      try {
+        const validation = await teamMapper.validateTeamStructure();
+
+        return Response.json({
+          success: true,
+          data: validation,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
+      }
+    },
+
+    // Generate CODEOWNERS
+    async generateCODEOWNERS(request: Request): Promise<Response> {
+      try {
+        await teamMapper.generateCODEOWNERS();
+
+        return Response.json({
+          success: true,
+          message: 'CODEOWNERS file generated successfully',
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        return Response.json({
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
+      }
+    }
+  };
 }
 
 // Export for use in main server

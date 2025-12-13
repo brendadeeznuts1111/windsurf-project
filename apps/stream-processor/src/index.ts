@@ -1,11 +1,11 @@
-import { NETWORK_CONFIG, TIME_CONSTANTS, BUSINESS_CONFIG } from '../../../core/src/constants';
+import { DEFAULTS, EXCHANGE_CONFIG } from '../../../packages/odds-core/src/constants';
 import { OddsWebSocketServer } from 'odds-websocket';
 import { SharpDetector } from 'odds-ml';
 import { ArbitrageDetector } from 'odds-arbitrage';
 import { TickSequencer } from 'odds-temporal';
 import { DataValidator } from 'odds-validation';
 import { MarketDataProcessor } from './processors/market-data';
-import { SharpDetectionHandler } from './handlers/sharp-detection';
+import { DefaultSharpDetectionHandler } from './handlers/sharp-detection';
 import { ArbitrageHandler } from './handlers/arbitrage';
 import { WebSocketHandler } from './handlers/websocket';
 
@@ -16,13 +16,13 @@ class StreamProcessor {
   private tickSequencer: TickSequencer;
   private validator: DataValidator;
   private marketDataProcessor: MarketDataProcessor;
-  private sharpDetectionHandler: SharpDetectionHandler;
+  private sharpDetectionHandler: DefaultSharpDetectionHandler;
   private arbitrageHandler: ArbitrageHandler;
   private webSocketHandler: WebSocketHandler;
 
   constructor() {
     // Initialize components
-    this.wsServer = new OddsWebSocketServer(NETWORK_CONFIG.DEFAULT_PORTS.STREAM_PROCESSOR);
+    this.wsServer = new OddsWebSocketServer(DEFAULTS.WS_PORT);
     this.sharpDetector = new SharpDetector(0.85, 100);
     this.arbitrageDetector = new ArbitrageDetector(0.001);
     this.tickSequencer = new TickSequencer();
@@ -30,7 +30,7 @@ class StreamProcessor {
 
     // Initialize processors and handlers
     this.marketDataProcessor = new MarketDataProcessor();
-    this.sharpDetectionHandler = new SharpDetectionHandler(this.sharpDetector);
+    this.sharpDetectionHandler = new DefaultSharpDetectionHandler(this.sharpDetector);
     this.arbitrageHandler = new ArbitrageHandler(this.arbitrageDetector);
     this.webSocketHandler = new WebSocketHandler(this.wsServer);
   }
@@ -199,11 +199,11 @@ class StreamProcessor {
     // Start periodic tasks
     setInterval(() => {
       this.performPeriodicTasks();
-    }, TIME_CONSTANTS.INTERVALS.ONE_SECOND);
+    }, 1000); // 1 second
 
     setInterval(() => {
       this.cleanupOldData();
-    }, TIME_CONSTANTS.INTERVALS.ONE_MINUTE);
+    }, 60000); // 1 minute
   }
 
   private performPeriodicTasks(): void {

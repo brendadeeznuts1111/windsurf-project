@@ -25,7 +25,7 @@ nativeProcessor.startTCPDataFeed(8080);
 nativeProcessor.startUDPDataFeed(8081);
 
 // Use Bun's native WebSocket with generics and enhanced features
-const server = await apiTracker.track('Bun.serve', () => Bun.serve<OddsTick>({
+const server = await apiTracker.track('Bun.serve', () => Bun.serve<BunWebSocketData>({
   port: Bun.env.WS_PORT || 3000,
   development: Bun.env.NODE_ENV !== 'production',
   
@@ -374,13 +374,12 @@ const server = await apiTracker.track('Bun.serve', () => Bun.serve<OddsTick>({
       
       console.log(`🔗 Connection opened: ${connectionId} (session: ${sessionId})`);
       
-      // Broadcast connection event
-      server.publish('system-events', JSON.stringify({
-        type: 'client-connected',
-        data: { id: connectionId, sessionId, totalConnections: server.clients.size },
-        timestamp: Date.now(),
-        sequence: 0
-      } as WebSocketMessage));
+        // Broadcast connection event
+        server.publish('system-events', JSON.stringify({
+          type: 'client-connected',
+          data: { id: connectionId, sessionId },
+          timestamp: Date.now()
+        } as WebSocketMessage));
     },
     
     close(ws, code, message) {
@@ -414,16 +413,19 @@ const server = await apiTracker.track('Bun.serve', () => Bun.serve<OddsTick>({
       }
     },
     
-    // Enhanced compression configuration
+    // Enhanced compression configuration (per Bun docs)
     perMessageDeflate: {
-      compress: true,
-      compressThreshold: 512,
+      compress: "shared", // Use shared compressor for better performance
+      decompress: "shared",
+      compressThreshold: 1024, // Compress messages > 1KB
     },
-    
-    // Bun-specific optimizations
-    backpressureLimit: 1024 * 1024,
-    idleTimeout: 60,
-    maxPayloadLength: 10 * 1024 * 1024,
+
+    // Bun-specific optimizations with proper backpressure handling
+    backpressureLimit: 1024 * 1024, // 1MB backpressure limit
+    idleTimeout: 120, // 2 minutes (Bun default)
+    maxPayloadLength: 16 * 1024 * 1024, // 16MB (Bun default)
+    sendPings: true, // Enable automatic ping/pong
+    publishToSelf: false, // Don't send published messages back to sender
   },
 }));
 

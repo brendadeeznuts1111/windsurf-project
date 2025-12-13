@@ -542,4 +542,8 @@ bun build --concurrency 8
 - Use specific package versions
 - Avoid running untrusted code with `bun --print`
 
+## Related Documentation
+
+For working with private scoped registries and authentication, see the [Bun Private Registry Guide](../bun-private-registry-guide.md).
+
 This guide covers Bun's comprehensive CLI toolkit, from basic package management to advanced development workflows and production deployment strategies.

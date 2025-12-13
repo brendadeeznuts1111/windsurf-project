@@ -1,4 +1,9 @@
-import { BUSINESS_CONFIG, TIME_CONSTANTS, ERROR_CODES } from '../../../core/src/constants';
+import { ERROR_CODES, DEFAULTS } from '../../../../packages/odds-core/src/constants';
+
+export interface ExecutionContext {
+  waitUntil(promise: Promise<any>): void;
+  passThroughOnException(): void;
+}
 
 export class ArbitrageRouter {
   static async handle(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -96,7 +101,7 @@ export class ArbitrageRouter {
         edge: 0.025,
         kellyFraction: 0.08,
         confidence: 0.92,
-        timestamp: Date.now() - BUSINESS_CONFIG.ARBITRAGE.DEFAULT_UPDATE_INTERVAL,
+        timestamp: Date.now() - DEFAULTS.ARB_EXPIRY_MS,
         expiry: Date.now() + 25000
       }
     ].filter(opp => {
@@ -161,7 +166,7 @@ export class ArbitrageRouter {
         edge: 0.066,
         profit: 0.10,
         executed: true,
-        executionTime: Date.now() - TIME_CONSTANTS.INTERVALS.ONE_HOUR,
+        executionTime: Date.now() - (60 * 60 * 1000), // 1 hour in milliseconds
         status: 'completed'
       },
       {

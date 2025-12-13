@@ -42,7 +42,6 @@ interface APIResponse<T = any> {
 // Initialize core services
 const db = new Database("api-server.db");
 const uuid = new BunUUIDGenerator();
-const metrics = new MetricsCollector();
 const tension = new TensionScoringEngine({
   rules: {},
   thresholds: {
@@ -57,6 +56,8 @@ const tension = new TensionScoringEngine({
     alertCooldownMs: 60000,
   },
 });
+
+const metrics = new MetricsCollector(tension);
 
 // Initialize database schema
 function initDatabase() {

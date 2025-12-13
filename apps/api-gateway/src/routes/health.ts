@@ -1,3 +1,5 @@
+import type { ExecutionContext } from '../../../../types/cloudflare';
+
 export class HealthRouter {
   static async handle(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);

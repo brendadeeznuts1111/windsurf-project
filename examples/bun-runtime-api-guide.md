@@ -417,21 +417,21 @@ bun run --env-file=.env your-script.ts
 ### Security Best Practices
 
 ```typescript
-// Validate required secrets at startup
-function validateSecrets() {
+// Validate required environment variables at startup
+function validateEnvironment() {
   const required = ["API_KEY", "DATABASE_URL", "JWT_SECRET"];
 
-  for (const secret of required) {
-    if (!Bun.secrets.get(secret)) {
-      throw new Error(`Required secret ${secret} is not set`);
+  for (const envVar of required) {
+    if (!Bun.env[envVar]) {
+      throw new Error(`Required environment variable ${envVar} is not set`);
     }
   }
 }
 
 // Call at application start
-validateSecrets();
+validateEnvironment();
 
-console.log("✅ All required secrets are available");
+console.log("✅ All required environment variables are available");
 ```
 
 ### Runtime vs Build-time Secrets
@@ -516,5 +516,9 @@ console.log("Exit code:", proc.exitCode);
 - Use top-level await in scripts (no wrapper function needed)
 - Leverage Bun's fast transpilation for development
 - Use `bun --hot` for development with hot reload
+
+## Version Compatibility
+
+This guide covers Bun runtime APIs as of v1.3.5. For breaking changes in v1.3.6 (WebSocket patterns, type definitions, etc.), see the [Bun v1.3.6 Release Notes](../bun-v136-release-notes-guide.md).
 
 This guide covers the core Bun runtime APIs. For more advanced usage, check the specific guides for bundling, testing, and deployment.

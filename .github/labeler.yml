@@ -1,0 +1,167 @@
+# Issue and PR labeler configuration
+# https://github.com/actions/labeler
+
+# Bug-related labels
+bug:
+  - 'bug'
+  - 'error'
+  - 'crash'
+  - 'fix'
+  - 'broken'
+
+# Feature-related labels
+enhancement:
+  - 'feature'
+  - 'enhancement'
+  - 'improve'
+  - 'add'
+
+# Documentation labels
+documentation:
+  - 'docs'
+  - 'documentation'
+  - 'readme'
+  - 'guide'
+  - 'tutorial'
+
+# Performance labels
+performance:
+  - 'performance'
+  - 'speed'
+  - 'optimization'
+  - 'slow'
+  - 'fast'
+
+# Security labels
+security:
+  - 'security'
+  - 'vulnerability'
+  - 'auth'
+  - 'encryption'
+  - 'privacy'
+
+# Testing labels
+testing:
+  - 'test'
+  - 'testing'
+  - 'spec'
+  - 'unit'
+  - 'integration'
+
+# Build/CI labels
+build:
+  - 'build'
+  - 'ci'
+  - 'pipeline'
+  - 'workflow'
+  - 'deploy'
+
+# Breaking changes
+breaking-change:
+  - 'breaking'
+  - 'breaking-change'
+  - 'major'
+  - 'migration'
+
+# Priority labels
+priority-high:
+  - 'urgent'
+  - 'critical'
+  - 'high-priority'
+
+priority-low:
+  - 'nice-to-have'
+  - 'low-priority'
+  - 'wishlist'
+
+# Component labels
+runtime:
+  - 'runtime'
+  - 'api'
+  - 'bun-api'
+
+build-system:
+  - 'bundler'
+  - 'build-system'
+  - 'compile'
+
+package-manager:
+  - 'package'
+  - 'dependency'
+  - 'npm'
+  - 'install'
+
+cli:
+  - 'cli'
+  - 'command'
+  - 'terminal'
+
+websocket:
+  - 'websocket'
+  - 'ws'
+  - 'socket'
+
+http:
+  - 'http'
+  - 'server'
+  - 'request'
+  - 'response'
+
+database:
+  - 'database'
+  - 'sqlite'
+  - 'sql'
+
+# Status labels
+triage:
+  - 'triage'
+  - 'investigate'
+  - 'needs-investigation'
+
+help-wanted:
+  - 'help-wanted'
+  - 'good-first-issue'
+  - 'beginner-friendly'
+
+# Platform labels
+windows:
+  - 'windows'
+  - 'win32'
+
+macos:
+  - 'macos'
+  - 'darwin'
+  - 'osx'
+
+linux:
+  - 'linux'
+  - 'ubuntu'
+  - 'debian'
+
+# File path based labels
+examples:
+  - changed-files:
+    - any-glob-to-any-file: 'examples/**'
+
+packages:
+  - changed-files:
+    - any-glob-to-any-file: 'packages/**'
+
+src:
+  - changed-files:
+    - any-glob-to-any-file: 'src/**'
+
+docs:
+  - changed-files:
+    - any-glob-to-any-file: 'docs/**'
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file: 'test/**'
+    - any-glob-to-any-file: 'tests/**'
+    - any-glob-to-any-file: '**/*.test.ts'
+    - any-glob-to-any-file: '**/*.spec.ts'
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file: '.github/**'

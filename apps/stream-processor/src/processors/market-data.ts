@@ -1,5 +1,8 @@
 import type { OddsTick, MarketData } from 'odds-core';
 
+// Import the correct types explicitly to avoid path mapping conflicts
+import type { MarketData as CorrectMarketData, OddsTick as CorrectOddsTick } from '../../../../packages/odds-core/src/types/index';
+
 export interface ProcessedMarketData {
   symbol: string;
   ticks: OddsTick[];
@@ -19,7 +22,7 @@ export class MarketDataProcessor {
   private readonly bufferSize = 1000;
   private readonly aggregationWindow = 60000; // 1 minute
 
-  public async process(rawData: MarketData): Promise<ProcessedMarketData> {
+  public async process(rawData: CorrectMarketData): Promise<ProcessedMarketData> {
     const symbol = rawData.symbol;
     const timestamp = Date.now();
     
@@ -44,7 +47,7 @@ export class MarketDataProcessor {
     };
   }
 
-  private marketDataToTicks(marketData: MarketData): OddsTick[] {
+  private marketDataToTicks(marketData: CorrectMarketData): CorrectOddsTick[] {
     const ticks: OddsTick[] = [];
     const timestamp = Date.now();
     

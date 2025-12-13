@@ -68,20 +68,14 @@ class TestRunner {
 
   async runTestSuite(suite: TestSuite): Promise<TestResult[]> {
     try {
-      const command = ['bun', 'test', suite.pattern, '--run', '--reporter=json'];
-      const process = spawn(command, {
+      const { exited, stdout } = Bun.spawn({
+        cmd: ['bun', 'test', suite.pattern, '--run', '--reporter=json'],
         cwd: process.cwd(),
         stdio: ['inherit', 'pipe', 'inherit']
       });
 
-      let output = '';
-      process.stdout?.on('data', (data) => {
-        output += data.toString();
-      });
-
-      const exitCode = await new Promise<number>((resolve) => {
-        process.on('close', resolve);
-      });
+      const exitCode = await exited;
+      const output = await Bun.readableStreamToText(stdout);
 
       if (exitCode !== 0) {
         console.log(`❌ ${suite.name} tests failed`);
@@ -105,7 +99,7 @@ class TestRunner {
           test: 'parsing',
           status: 'fail',
           duration: 0,
-          error: error.message
+          error: error instanceof Error ? error.message : String(error)
         }];
       }
 
@@ -116,7 +110,7 @@ class TestRunner {
         test: 'execution',
         status: 'fail',
         duration: 0,
-        error: error.message
+        error: error instanceof Error ? error.message : String(error)
       }];
     }
   }
@@ -266,15 +260,12 @@ class TestRunner {
   async runPerformanceBenchmarks(): Promise<void> {
     console.log('🏃 Running performance benchmarks...\n');
 
-    const benchmarkCommand = ['bun', 'test', '--run', '--reporter=verbose', 'performance-benchmarks'];
-    const process = spawn(benchmarkCommand, {
+    const { exited } = Bun.spawn(['bun', 'test', '--run', '--reporter=verbose', 'performance-benchmarks'], {
       cwd: process.cwd(),
-      stdio: 'inherit'
+      stdio: ['inherit', 'inherit', 'inherit']
     });
 
-    const exitCode = await new Promise<number>((resolve) => {
-      process.on('close', resolve);
-    });
+    const exitCode = await exited;
 
     if (exitCode === 0) {
       console.log('✅ Performance benchmarks completed successfully');
@@ -287,14 +278,12 @@ class TestRunner {
     console.log('📊 Generating coverage report...\n');
 
     const coverageCommand = ['bun', 'test', '--run', '--coverage'];
-    const process = spawn(coverageCommand, {
+    const { exited } = Bun.spawn(coverageCommand, {
       cwd: process.cwd(),
-      stdio: 'inherit'
+      stdio: ['inherit', 'inherit', 'inherit']
     });
 
-    const exitCode = await new Promise<number>((resolve) => {
-      process.on('close', resolve);
-    });
+    const exitCode = await exited;
 
     if (exitCode === 0) {
       console.log('✅ Coverage report generated');
@@ -309,14 +298,12 @@ class TestRunner {
     // This would integrate with tools like axe-core, lighthouse, etc.
     // For now, just run the visual regression tests which include accessibility checks
     const auditCommand = ['bun', 'test', '--run', 'visual-regression'];
-    const process = spawn(auditCommand, {
+    const { exited } = Bun.spawn(auditCommand, {
       cwd: process.cwd(),
-      stdio: 'inherit'
+      stdio: ['inherit', 'inherit', 'inherit']
     });
 
-    const exitCode = await new Promise<number>((resolve) => {
-      process.on('close', resolve);
-    });
+    const exitCode = await exited;
 
     if (exitCode === 0) {
       console.log('✅ Accessibility audit completed');

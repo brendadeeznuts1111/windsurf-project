@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 ULTRA-ARB GLOBAL - Interactive Live Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        .demo-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        .demo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+        .status-online {
+            background: linear-gradient(135deg, #10b981, #059669);
+            animation: pulse-green 2s infinite;
+        }
+        .status-offline {
+            background: #6b7280;
+        }
+        .status-away {
+            background: #f59e0b;
+            animation: pulse-yellow 2s infinite;
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        }
+        @keyframes pulse-yellow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid #e2e8f0;
+        }
+        .metric-card:hover {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        }
+        .notification-enter {
+            animation: slideInRight 0.5s ease-out;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        .terminal-text {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.25;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 shadow-xl border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white/10 backdrop-blur-sm text-white p-3 rounded-xl border border-white/20 glow-effect">
+                        <i data-lucide="shield" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-white flex items-center space-x-2">
+                            <span>🎮 ULTRA-ARB GLOBAL</span>
+                            <span class="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">LIVE DEMO</span>
+                        </h1>
+                        <p class="text-blue-100 text-sm mt-1">Enterprise Authentication & Team Management System</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="hidden md:flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-lg border border-white/20">
+                        <div id="systemStatus" class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                        <span class="text-blue-100 text-sm">System Online</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-lg border border-white/20">
+                        <span class="text-sm font-medium">v1.3.0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Demo Interface -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- System Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="metric-card p-6 rounded-xl fade-in">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Active Users</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1" id="activeUsers">1,247</p>
+                        <p class="text-xs text-green-600 mt-2 flex items-center">
+                            <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i>
+                            ↑ 23% from average
+                        </p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-xl shadow-lg">
+                        <i data-lucide="users" class="w-7 h-7 text-white"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card p-6 rounded-xl fade-in" style="animation-delay: 0.1s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Auth Success Rate</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1" id="authRate">99.97%</p>
+                        <p class="text-xs text-green-600 mt-2 flex items-center">
+                            <i data-lucide="check-circle" class="w-3 h-3 mr-1"></i>
+                            Last 24h
+                        </p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-xl shadow-lg">
+                        <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card p-6 rounded-xl fade-in" style="animation-delay: 0.2s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Response Time</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1" id="responseTime">3.2ms</p>
+                        <p class="text-xs text-blue-600 mt-2 flex items-center">
+                            <i data-lucide="zap" class="w-3 h-3 mr-1"></i>
+                            Average latency
+                        </p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-xl shadow-lg">
+                        <i data-lucide="activity" class="w-7 h-7 text-white"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card p-6 rounded-xl fade-in" style="animation-delay: 0.3s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Team Members</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1" id="teamMembers">17</p>
+                        <p class="text-xs text-purple-600 mt-2 flex items-center">
+                            <i data-lucide="building-2" class="w-3 h-3 mr-1"></i>
+                            4 departments, 5 tiers
+                        </p>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 p-4 rounded-xl shadow-lg">
+                        <i data-lucide="users" class="w-7 h-7 text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo Sections -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Authentication Demo -->
+            <div class="lg:col-span-1">
+                <div class="demo-card bg-white rounded-xl p-6 fade-in">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-blue-100 p-2 rounded-lg">
+                            <i data-lucide="log-in" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">🔐 Authentication</h3>
+                            <p class="text-sm text-gray-600">JWT + HttpOnly Cookies</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div id="authStatus" class="p-4 rounded-lg bg-gray-50 border">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                                <span class="text-sm text-gray-600">Not authenticated</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <select id="demoUser" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select a user...</option>
+                                <option value="sarah-johnson">Sarah Johnson (Executive)</option>
+                                <option value="michael-chen">Michael Chen (Engineering Lead)</option>
+                                <option value="david-kim">David Kim (Developer)</option>
+                                <option value="jane-smith">Jane Smith (Senior Dev)</option>
+                            </select>
+
+                            <button id="loginBtn" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
+                                <i data-lucide="log-in" class="w-4 h-4"></i>
+                                <span>Login</span>
+                            </button>
+
+                            <button id="logoutBtn" class="w-full bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center space-x-2" disabled>
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+
+                        <div id="authDetails" class="hidden p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <h4 class="text-sm font-medium text-blue-900 mb-2">Session Details</h4>
+                            <div class="space-y-1 text-xs text-blue-700">
+                                <div>User ID: <span id="userId">-</span></div>
+                                <div>Role: <span id="userRole">-</span></div>
+                                <div>Team: <span id="userTeam">-</span></div>
+                                <div>Expires: <span id="sessionExpiry">-</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RBAC Demo -->
+                <div class="demo-card bg-white rounded-xl p-6 mt-6 fade-in" style="animation-delay: 0.4s">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-green-100 p-2 rounded-lg">
+                            <i data-lucide="shield" class="w-5 h-5 text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">🛡️ RBAC Permissions</h3>
+                            <p class="text-sm text-gray-600">Role-based access control</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button id="checkPermissionsBtn" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm" disabled>
+                            Check Current Permissions
+                        </button>
+
+                        <div id="permissionsList" class="hidden space-y-2">
+                            <div class="text-xs text-gray-600">Current permissions:</div>
+                            <div class="space-y-1" id="permissionsItems">
+                                <!-- Permissions will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Hierarchy Demo -->
+            <div class="lg:col-span-1">
+                <div class="demo-card bg-white rounded-xl p-6 fade-in" style="animation-delay: 0.5s">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-purple-100 p-2 rounded-lg">
+                            <i data-lucide="git-branch" class="w-5 h-5 text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">👥 Team Hierarchy</h3>
+                            <p class="text-sm text-gray-600">17 members, 4 departments</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <button id="loadHierarchyBtn" class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center space-x-2">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            <span>Load Team Hierarchy</span>
+                        </button>
+
+                        <div id="hierarchyContent" class="hidden space-y-3">
+                            <div class="text-xs text-gray-600 mb-2">Team structure:</div>
+                            <div class="space-y-2 max-h-64 overflow-y-auto" id="hierarchyTree">
+                                <!-- Hierarchy will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Monitoring -->
+                <div class="demo-card bg-white rounded-xl p-6 mt-6 fade-in" style="animation-delay: 0.6s">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-orange-100 p-2 rounded-lg">
+                            <i data-lucide="activity" class="w-5 h-5 text-orange-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">📊 System Monitor</h3>
+                            <p class="text-sm text-gray-600">Real-time health metrics</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">CPU Usage</span>
+                            <span class="font-medium" id="cpuUsage">25%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-orange-500 h-2 rounded-full" id="cpuBar" style="width: 25%"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Memory</span>
+                            <span class="font-medium" id="memoryUsage">150MB</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full" id="memoryBar" style="width: 30%"></div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600">Active Sessions</span>
+                            <span class="font-medium" id="activeSessions">1,247</span>
+                        </div>
+
+                        <button id="refreshMetricsBtn" class="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors text-sm">
+                            Refresh Metrics
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Activity Feed -->
+            <div class="lg:col-span-1">
+                <div class="demo-card bg-white rounded-xl p-6 fade-in" style="animation-delay: 0.7s">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-red-100 p-2 rounded-lg">
+                            <i data-lucide="bell" class="w-5 h-5 text-red-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">📡 Live Activity</h3>
+                            <p class="text-sm text-gray-600">Real-time system events</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="max-h-96 overflow-y-auto space-y-3" id="activityFeed">
+                            <!-- Activity items will be added here -->
+                        </div>
+
+                        <div class="flex space-x-2">
+                            <button id="simulateActivityBtn" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors text-sm">
+                                Simulate Activity
+                            </button>
+                            <button id="clearActivityBtn" class="flex-1 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                                Clear Feed
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOML Configuration Demo -->
+                <div class="demo-card bg-white rounded-xl p-6 mt-6 fade-in" style="animation-delay: 0.8s">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-indigo-100 p-2 rounded-lg">
+                            <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">📄 TOML Config</h3>
+                            <p class="text-sm text-gray-600">Sub-millisecond loading</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <select id="configType" class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                            <option value="auth">Authentication Config</option>
+                            <option value="team">Team Hierarchy</option>
+                            <option value="rbac">RBAC Rules</option>
+                            <option value="system">System Status</option>
+                        </select>
+
+                        <button id="loadConfigBtn" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-sm">
+                            Load TOML Config
+                        </button>
+
+                        <div id="configViewer" class="hidden">
+                            <div class="bg-gray-900 text-green-400 p-3 rounded-lg terminal-text text-xs max-h-48 overflow-y-auto">
+                                <div id="configContent">
+                                    # Click "Load TOML Config" to see configuration...
+                                </div>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">
+                                Load time: <span id="loadTime">-</span>ms
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center">
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">🎮 ULTRA-ARB GLOBAL Demo Complete!</h3>
+                <p class="text-gray-600 mb-4">
+                    This interactive demo showcases our enterprise-grade authentication system with:
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="shield" class="w-4 h-4 text-blue-600"></i>
+                        <span>JWT + HttpOnly</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="users" class="w-4 h-4 text-green-600"></i>
+                        <span>RBAC System</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="git-branch" class="w-4 h-4 text-purple-600"></i>
+                        <span>Team Hierarchy</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="file-text" class="w-4 h-4 text-indigo-600"></i>
+                        <span>TOML Config</span>
+                    </div>
+                </div>
+                <div class="mt-4 text-xs text-gray-500">
+                    Built with Bun 1.3 • Zero Dependencies • Enterprise Security • Sub-10ms Performance
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Demo state management
+        let currentUser = null;
+        let activityFeed = [];
+        let metricsInterval = null;
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Demo data
+        const demoUsers = {
+            'sarah-johnson': {
+                id: 'sarah-johnson',
+                name: 'Sarah Johnson',
+                role: 'Super Admin',
+                team: 'Executive',
+                permissions: ['read', 'write', 'admin', 'super_admin']
+            },
+            'michael-chen': {
+                id: 'michael-chen',
+                name: 'Michael Chen',
+                role: 'Team Admin',
+                team: 'Engineering',
+                permissions: ['read', 'write', 'admin']
+            },
+            'david-kim': {
+                id: 'david-kim',
+                name: 'David Kim',
+                role: 'Developer',
+                team: 'Engineering',
+                permissions: ['read', 'write']
+            },
+            'jane-smith': {
+                id: 'jane-smith',
+                name: 'Jane Smith',
+                role: 'Developer',
+                team: 'Engineering',
+                permissions: ['read', 'write']
+            }
+        };
+
+        const teamHierarchy = {
+            executive: ['Sarah Johnson'],
+            engineering: ['Michael Chen', 'David Kim', 'Jane Smith', 'Emily Rodriguez'],
+            platform: ['Robert Taylor', 'Amanda Foster', 'Daniel Brown'],
+            'quality-assurance': ['Jennifer Martinez', 'Christopher Lee'],
+            product: ['Patricia Thompson', 'Maria Hernandez', 'Thomas Garcia']
+        };
+
+        // Authentication handlers
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const userId = document.getElementById('demoUser').value;
+            if (!userId) {
+                addActivity('⚠️ Please select a user to login', 'warning');
+                return;
+            }
+
+            const user = demoUsers[userId];
+            currentUser = user;
+
+            // Update UI
+            document.getElementById('authStatus').innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full status-online"></div>
+                    <span class="text-sm text-green-600 font-medium">Authenticated as ${user.name}</span>
+                </div>
+            `;
+
+            document.getElementById('loginBtn').disabled = true;
+            document.getElementById('logoutBtn').disabled = false;
+            document.getElementById('checkPermissionsBtn').disabled = false;
+            document.getElementById('authDetails').classList.remove('hidden');
+
+            // Update session details
+            document.getElementById('userId').textContent = user.id;
+            document.getElementById('userRole').textContent = user.role;
+            document.getElementById('userTeam').textContent = user.team;
+            document.getElementById('sessionExpiry').textContent = new Date(Date.now() + 15 * 60 * 1000).toLocaleTimeString();
+
+            addActivity(`🔐 ${user.name} logged in successfully`, 'success');
+            addActivity(`🛡️ RBAC permissions loaded for ${user.role}`, 'info');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            if (!currentUser) return;
+
+            const userName = currentUser.name;
+
+            // Reset state
+            currentUser = null;
+
+            // Update UI
+            document.getElementById('authStatus').innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                    <span class="text-sm text-gray-600">Not authenticated</span>
+                </div>
+            `;
+
+            document.getElementById('loginBtn').disabled = false;
+            document.getElementById('logoutBtn').disabled = true;
+            document.getElementById('checkPermissionsBtn').disabled = true;
+            document.getElementById('authDetails').classList.add('hidden');
+            document.getElementById('permissionsList').classList.add('hidden');
+
+            addActivity(`👋 ${userName} logged out`, 'info');
+        });
+
+        // RBAC permissions handler
+        document.getElementById('checkPermissionsBtn').addEventListener('click', () => {
+            if (!currentUser) return;
+
+            const permissionsList = document.getElementById('permissionsItems');
+            permissionsList.innerHTML = '';
+
+            currentUser.permissions.forEach(permission => {
+                const permissionItem = document.createElement('div');
+                permissionItem.className = 'flex items-center space-x-2 text-xs';
+                permissionItem.innerHTML = `
+                    <i data-lucide="check" class="w-3 h-3 text-green-600"></i>
+                    <span class="text-gray-700">${permission}</span>
+                `;
+                permissionsList.appendChild(permissionItem);
+            });
+
+            document.getElementById('permissionsList').classList.remove('hidden');
+            addActivity(`🔍 Permissions checked for ${currentUser.name}`, 'info');
+
+            // Re-initialize icons for new elements
+            lucide.createIcons();
+        });
+
+        // Team hierarchy handler
+        document.getElementById('loadHierarchyBtn').addEventListener('click', () => {
+            const hierarchyTree = document.getElementById('hierarchyTree');
+            hierarchyTree.innerHTML = '';
+
+            Object.entries(teamHierarchy).forEach(([department, members]) => {
+                const deptItem = document.createElement('div');
+                deptItem.className = 'border-l-2 border-blue-200 pl-3 py-2';
+                deptItem.innerHTML = `
+                    <div class="font-medium text-blue-900 capitalize">${department.replace('-', ' ')}</div>
+                    <div class="text-xs text-gray-600 mt-1">
+                        ${members.map(member => `<span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs mr-1 mb-1">${member}</span>`).join('')}
+                    </div>
+                `;
+                hierarchyTree.appendChild(deptItem);
+            });
+
+            document.getElementById('hierarchyContent').classList.remove('hidden');
+            addActivity(`📋 Team hierarchy loaded (${Object.keys(teamHierarchy).length} departments)`, 'success');
+        });
+
+        // System monitoring
+        document.getElementById('refreshMetricsBtn').addEventListener('click', () => {
+            // Simulate metric updates
+            const cpuPercent = Math.floor(Math.random() * 40) + 20;
+            const memoryMB = Math.floor(Math.random() * 100) + 100;
+            const activeConnections = Math.floor(Math.random() * 500) + 1000;
+
+            document.getElementById('cpuUsage').textContent = `${cpuPercent}%`;
+            document.getElementById('cpuBar').style.width = `${cpuPercent}%`;
+
+            document.getElementById('memoryUsage').textContent = `${memoryMB}MB`;
+            document.getElementById('memoryBar').style.width = `${Math.min(memoryMB / 5, 100)}%`;
+
+            document.getElementById('activeSessions').textContent = activeConnections.toLocaleString();
+            document.getElementById('activeUsers').textContent = activeConnections.toLocaleString();
+
+            addActivity(`📊 System metrics refreshed - CPU: ${cpuPercent}%, Memory: ${memoryMB}MB`, 'info');
+        });
+
+        // TOML configuration handler
+        document.getElementById('loadConfigBtn').addEventListener('click', async () => {
+            const configType = document.getElementById('configType').value;
+            const startTime = performance.now();
+
+            let tomlContent = '';
+
+            switch (configType) {
+                case 'auth':
+                    tomlContent = `# Authentication Configuration
+[jwt]
+secret_key = "your-jwt-secret-here"
+access_token_expiry = 900
+refresh_token_expiry = 604800
+algorithm = "HS256"
+
+[session]
+name = "auth_session"
+refresh_name = "auth_refresh"
+secure = true
+http_only = true
+same_site = "strict"
+max_age = 900
+
+[rbac]
+default_role = "viewer"
+admin_users = ["sarah-johnson", "michael-chen"]`;
+                    break;
+
+                case 'team':
+                    tomlContent = `# Team Hierarchy Configuration
+[metadata]
+version = "1.0.0"
+last_updated = "${new Date().toISOString()}"
+total_members = 17
+departments = 4
+tiers = 5
+
+[executive]
+tier = "tier1"
+members = ["Sarah Johnson"]
+
+[engineering.leadership]
+tier = "tier2"
+members = ["Michael Chen"]
+
+[engineering.developers]
+tier = "tier3"
+members = ["David Kim", "Jane Smith", "Emily Rodriguez"]`;
+                    break;
+
+                case 'rbac':
+                    tomlContent = `# RBAC Rules Configuration
+[rbac]
+total_roles = 5
+total_permissions = 49
+active_sessions = 1247
+
+[[roles]]
+name = "super_admin"
+level = 100
+permissions = ["read", "write", "admin", "super_admin"]
+
+[[roles]]
+name = "team_admin"
+level = 80
+permissions = ["read", "write", "admin"]
+
+[[roles]]
+name = "developer"
+level = 60
+permissions = ["read", "write"]`;
+                    break;
+
+                case 'system':
+                    tomlContent = `# System Status
+[system]
+timestamp = "${new Date().toISOString()}"
+uptime_seconds = ${Math.floor(process.uptime())}
+memory_usage_mb = 150
+cpu_usage_percent = 25.5
+
+[[services]]
+name = "auth-service"
+status = "healthy"
+response_time_ms = 0.5
+
+[[services]]
+name = "team-service"
+status = "healthy"
+response_time_ms = 0.3
+
+[[services]]
+name = "rbac-engine"
+status = "healthy"
+response_time_ms = 0.8`;
+                    break;
+            }
+
+            const loadTime = (performance.now() - startTime).toFixed(2);
+
+            document.getElementById('configContent').textContent = tomlContent;
+            document.getElementById('loadTime').textContent = loadTime;
+            document.getElementById('configViewer').classList.remove('hidden');
+
+            addActivity(`📄 TOML ${configType} config loaded in ${loadTime}ms`, 'success');
+        });
+
+        // Activity simulation
+        document.getElementById('simulateActivityBtn').addEventListener('click', () => {
+            const activities = [
+                { message: '🔐 User authentication successful', type: 'success' },
+                { message: '🛡️ RBAC permission check passed', type: 'info' },
+                { message: '📋 Team hierarchy accessed', type: 'info' },
+                { message: '📊 System metrics updated', type: 'info' },
+                { message: '📄 TOML configuration loaded', type: 'success' },
+                { message: '⚠️ High memory usage detected', type: 'warning' },
+                { message: '🚨 Failed login attempt blocked', type: 'error' },
+                { message: '👥 Team member permissions updated', type: 'info' }
+            ];
+
+            const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+            addActivity(randomActivity.message, randomActivity.type);
+        });
+
+        document.getElementById('clearActivityBtn').addEventListener('click', () => {
+            document.getElementById('activityFeed').innerHTML = '';
+            activityFeed = [];
+            addActivity('🧹 Activity feed cleared', 'info');
+        });
+
+        // Activity feed management
+        function addActivity(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const activity = { message, type, timestamp };
+
+            activityFeed.unshift(activity);
+            if (activityFeed.length > 50) {
+                activityFeed = activityFeed.slice(0, 50);
+            }
+
+            updateActivityFeed();
+        }
+
+        function updateActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            feed.innerHTML = '';
+
+            activityFeed.slice(0, 20).forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = `p-3 rounded-lg border notification-enter ${
+                    activity.type === 'success' ? 'bg-green-50 border-green-200' :
+                    activity.type === 'error' ? 'bg-red-50 border-red-200' :
+                    activity.type === 'warning' ? 'bg-yellow-50 border-yellow-200' :
+                    'bg-blue-50 border-blue-200'
+                }`;
+
+                activityItem.innerHTML = `
+                    <div class="flex items-start space-x-2">
+                        <div class="flex-shrink-0 mt-0.5">
+                            <i data-lucide="${
+                                activity.type === 'success' ? 'check-circle' :
+                                activity.type === 'error' ? 'x-circle' :
+                                activity.type === 'warning' ? 'alert-triangle' :
+                                'info'
+                            }" class="w-4 h-4 ${
+                                activity.type === 'success' ? 'text-green-600' :
+                                activity.type === 'error' ? 'text-red-600' :
+                                activity.type === 'warning' ? 'text-yellow-600' :
+                                'text-blue-600'
+                            }"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm text-gray-900">${activity.message}</p>
+                            <p class="text-xs text-gray-500 mt-1">${activity.timestamp}</p>
+                        </div>
+                    </div>
+                `;
+
+                feed.appendChild(activityItem);
+            });
+
+            // Re-initialize icons
+            lucide.createIcons();
+        }
+
+        // Initialize with some demo activity
+        setTimeout(() => {
+            addActivity('🎮 ULTRA-ARB GLOBAL Demo initialized', 'success');
+            addActivity('🔐 Authentication system ready', 'info');
+            addActivity('🛡️ RBAC engine loaded', 'info');
+            addActivity('👥 Team hierarchy configured', 'info');
+            addActivity('📊 System monitoring active', 'info');
+        }, 1000);
+
+        // Simulate real-time metrics updates
+        setInterval(() => {
+            const activeUsers = parseInt(document.getElementById('activeUsers').textContent.replace(',', '')) +
+                               Math.floor(Math.random() * 20) - 10;
+            document.getElementById('activeUsers').textContent = Math.max(1000, activeUsers).toLocaleString();
+
+            const responseTime = (Math.random() * 2 + 2).toFixed(1);
+            document.getElementById('responseTime').textContent = `${responseTime}ms`;
+        }, 5000);
+
+        // Initialize icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -23,9 +23,9 @@ import { generateId, rapidHash } from '../utils/index-streamlined';
 import { PIDContext } from './pid-context';
 import type {
   TelemetryEvent,
-  TelemetryContext,
-  IntegrityError
+  TelemetryContext
 } from './telemetry-types';
+import { IntegrityError } from './telemetry-types';
 
 export interface AuditEntry {
   id: string;

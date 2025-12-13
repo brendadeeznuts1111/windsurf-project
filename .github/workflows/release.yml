@@ -1,0 +1,126 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Build release artifacts
+        run: |
+          bun install
+          bun run build
+
+      - name: Create release archives
+        run: |
+          # Create source archive
+          git archive --format=tar.gz --prefix=windsurf-${{ github.ref_name }}/ -o windsurf-${{ github.ref_name }}.tar.gz HEAD
+
+          # Create checksums
+          sha256sum windsurf-${{ github.ref_name }}.tar.gz > windsurf-${{ github.ref_name }}.tar.gz.sha256
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the previous tag
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+
+          if [ -n "$PREVIOUS_TAG" ]; then
+            # Generate changelog between tags
+            CHANGES=$(git log --pretty=format:"- %s (%h)" $PREVIOUS_TAG..HEAD)
+          else
+            # First release
+            CHANGES=$(git log --pretty=format:"- %s (%h)" --max-count=20)
+          fi
+
+          # Escape newlines for GitHub output
+          CHANGES="${CHANGES//'%'/'%25'}"
+          CHANGES="${CHANGES//$'\n'/'%0A'}"
+          CHANGES="${CHANGES//$'\r'/'%0D'}"
+
+          echo "changes<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## Changes in this release
+
+            ${{ steps.changelog.outputs.changes }}
+
+            ## Installation
+
+            ### Using Bun
+            ```bash
+            bun add https://github.com/odds-protocol/windsurf/releases/download/${{ github.ref }}/windsurf-${{ github.ref }}.tar.gz
+            ```
+
+            ### Manual Installation
+            Download the release archive and extract it to your project.
+
+            ## Checksums
+
+            ```
+            $(cat windsurf-${{ github.ref }}.tar.gz.sha256)
+            ```
+
+            ## What's Changed
+
+            This release includes bug fixes, performance improvements, and new features. See the [changelog](https://github.com/odds-protocol/windsurf/blob/main/CHANGELOG.md) for full details.
+
+            ## Contributors
+
+            Thank you to all contributors who helped with this release! 🎉
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+
+      - name: Upload release assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./windsurf-${{ github.ref_name }}.tar.gz
+          asset_name: windsurf-${{ github.ref_name }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload checksums
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./windsurf-${{ github.ref_name }}.tar.gz.sha256
+          asset_name: windsurf-${{ github.ref_name }}.tar.gz.sha256
+          asset_content_type: text/plain
+
+      - name: Notify release
+        run: |
+          # Send notification to Slack or other channels
+          echo "Release ${{ github.ref }} created successfully!"
+          # In a real implementation, this would send notifications

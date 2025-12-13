@@ -41,7 +41,7 @@ interface TestReport {
   results: TestResult[];
 }
 
-class EnhancedTestRunner {
+export class EnhancedTestRunner {
   private results: TestResult[] = [];
   private startTime = 0;
 

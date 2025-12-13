@@ -3,7 +3,7 @@
 // scripts/benchmark.ts - Bun performance testing
 import { $ } from 'bun';
 import { performance } from 'perf_hooks';
-import { apiTracker } from '../packages/odds-core/src/monitoring/api-tracker.js';
+import { apiTracker } from  '../packages/odds-core/src/monitoring/api-tracker';
 
 // Type declarations for Bun globals
 declare const Bun: {

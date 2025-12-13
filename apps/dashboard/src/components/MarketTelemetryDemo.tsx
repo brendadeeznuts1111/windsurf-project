@@ -17,6 +17,10 @@ import { MarketTelemetry } from '../core/telemetry/MarketTelemetry';
 import './market-telemetry-demo.css';
 import { MARKET_CONSTANTS, TIMING_CONSTANTS, TEST_DATA } from '../constants';
 
+interface TelemetryContext {
+  requestId: string;
+}
+
 /**
  * Telemetry operation data structure for display
  * @interface TelemetryOperation
@@ -115,7 +119,7 @@ export const MarketTelemetryDemo: React.FC = () => {
       volume: Math.floor(Math.random() * 100) + 1,
       bid: basePrice * 0.999,
       ask: basePrice * 1.001,
-      side: Math.random() > 0.5 ? 'buy' : 'sell',
+      side: (Math.random() > 0.5 ? 'buy' : 'sell') as 'buy' | 'sell',
       tick_size: marketId.includes('ES') ? 0.25 : marketId.includes('NQ') ? 0.25 : 0.01,
     };
   };
@@ -143,7 +147,7 @@ export const MarketTelemetryDemo: React.FC = () => {
       const context: TelemetryContext = { requestId: `demo_${Date.now()}` };
 
       try {
-        const enrichedTick = await telemetry.recordTick(tick, context);
+        const enrichedTick = await MarketTelemetry.getInstance().recordTick(tick, context);
 
         // Track operation for display
         const operation: TelemetryOperation = {
@@ -193,7 +197,7 @@ export const MarketTelemetryDemo: React.FC = () => {
     const context: TelemetryContext = { requestId: `batch_${Date.now()}` };
 
     try {
-      const enrichedTicks = await telemetry.recordBatch(ticks, context);
+      const enrichedTicks = await MarketTelemetry.getInstance().recordBatch(ticks, context);
 
       // Track operation for display
       const operation: TelemetryOperation = {
@@ -202,7 +206,7 @@ export const MarketTelemetryDemo: React.FC = () => {
         marketId: ticks[0]?.market_id || 'unknown',
         pid: process.pid,
         timestamp: Date.now(),
-        latency: enrichedTicks.reduce((sum, tick) => sum + tick.telemetry.ingest_latency_ns, 0) / enrichedTicks.length,
+        latency: enrichedTicks.reduce((sum: number, tick: any) => sum + tick.telemetry.ingest_latency_ns, 0) / enrichedTicks.length,
         data: {
           count: enrichedTicks.length,
           throughput: enrichedTicks.length / 0.1 // Rough estimate
@@ -238,7 +242,7 @@ export const MarketTelemetryDemo: React.FC = () => {
 
     const context: TelemetryContext = { requestId: `sub_${marketId}` };
 
-    const subscription = telemetry.subscribe(marketId, {
+    const subscription = MarketTelemetry.getInstance().subscribe(marketId, {
       pid: process.pid,
       callback: (data: any) => {
         console.log(`📡 ${marketId} tick:`, {

@@ -71,6 +71,21 @@ export const RETRY_CONSTANTS = {
   MAX_DELAY_MS: 10000,
 } as const;
 
+// Business Logic Constants
+export const BUSINESS_CONFIG = {
+  ARBITRAGE: {
+    DEFAULT_UPDATE_INTERVAL: 30000, // 30 seconds
+    MIN_PROFIT_THRESHOLD: 0.001, // 0.1%
+    MAX_OPPORTUNITIES: 50,
+    CONFIDENCE_THRESHOLD: 0.8,
+  },
+  MARKET_DATA: {
+    DEFAULT_UPDATE_INTERVAL: 1000, // 1 second
+    PRICE_PRECISION: 2,
+    VOLUME_PRECISION: 0,
+  },
+} as const;
+
 // Test Data Constants
 export const TEST_DATA = {
   SAMPLE_PRICES: {

@@ -3,7 +3,7 @@
  * Client utilities for communicating with the URLPattern-based API server
  */
 
-import { APIResponse, ArbitrageOpportunity } from './api/router';
+import { APIResponse, ArbitrageOpportunity } from './router';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:6969';
 

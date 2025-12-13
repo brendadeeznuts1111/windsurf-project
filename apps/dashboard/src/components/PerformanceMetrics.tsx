@@ -26,6 +26,14 @@ interface MetricsData {
   clients_connected: number;
   uptime_seconds: number;
   memory_mb: number;
+  bytes_processed: number;
+  bytes_per_second: number;
+  mime_types: Record<string, number>;
+  file_operations: {
+    reads: number;
+    writes: number;
+    streams: number;
+  };
 }
 
 interface PerformanceMetricsProps {
@@ -39,6 +47,9 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ classNam
   const [ticksPerSecond, setTicksPerSecond] = useState(0);
   const [avgLatency, setAvgLatency] = useState(0);
   const [serverPid, setServerPid] = useState<number | null>(null);
+  const [bytesPerSecond, setBytesPerSecond] = useState(0);
+  const [mimeTypeStats, setMimeTypeStats] = useState<Record<string, number>>({});
+  const [fileOpStats, setFileOpStats] = useState({ reads: 0, writes: 0, streams: 0 });
   const ws = useRef<WebSocket | null>(null);
   const tickCountRef = useRef(0);
   const latencySum = useRef(0);
@@ -100,7 +111,23 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ classNam
             }
 
             if (msg.channel === 'metrics') {
-              setMetrics(msg.data as MetricsData);
+              const metricsData = msg.data as MetricsData;
+              setMetrics(metricsData);
+
+              // Update byte-level metrics
+              if (metricsData.bytes_per_second !== undefined) {
+                setBytesPerSecond(metricsData.bytes_per_second);
+              }
+
+              // Update MIME type statistics
+              if (metricsData.mime_types) {
+                setMimeTypeStats(metricsData.mime_types);
+              }
+
+              // Update file operation statistics
+              if (metricsData.file_operations) {
+                setFileOpStats(metricsData.file_operations);
+              }
             }
           }
         } catch (err) {
@@ -190,7 +217,50 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ classNam
           <div className="metric-label">WS Port</div>
           <div className="metric-value">{NETWORK_CONSTANTS.WEBSOCKET_PORT}</div>
         </div>
+
+        <div className="metric-card">
+          <div className="metric-label">Bytes/Second</div>
+          <div className="metric-value">{bytesPerSecond.toLocaleString()}</div>
+        </div>
+
+        <div className="metric-card">
+          <div className="metric-label">Total Bytes</div>
+          <div className="metric-value">{metrics?.bytes_processed?.toLocaleString() || 0}</div>
+        </div>
+
+        <div className="metric-card">
+          <div className="metric-label">File Reads</div>
+          <div className="metric-value">{fileOpStats.reads}</div>
+        </div>
+
+        <div className="metric-card">
+          <div className="metric-label">File Writes</div>
+          <div className="metric-value">{fileOpStats.writes}</div>
+        </div>
+
+        <div className="metric-card">
+          <div className="metric-label">File Streams</div>
+          <div className="metric-value">{fileOpStats.streams}</div>
+        </div>
       </div>
+
+      {/* MIME Type Statistics */}
+      {Object.keys(mimeTypeStats).length > 0 && (
+        <div className="mime-stats">
+          <h4>MIME Type Distribution</h4>
+          <div className="mime-grid">
+            {Object.entries(mimeTypeStats)
+              .sort(([,a], [,b]) => b - a)
+              .slice(0, 8)
+              .map(([mimeType, count]) => (
+                <div key={mimeType} className="mime-item">
+                  <span className="mime-type">{mimeType}</span>
+                  <span className="mime-count">{count}</span>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
 
       <div className="tick-stream">
         <h4>Live Tick Stream</h4>
@@ -316,6 +386,43 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ classNam
           color: #666;
           text-align: center;
           padding: 20px;
+        }
+
+        .mime-stats {
+          margin-bottom: 16px;
+        }
+
+        .mime-stats h4 {
+          margin: 0 0 8px 0;
+          font-size: 14px;
+          color: #fff;
+        }
+
+        .mime-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 8px;
+        }
+
+        .mime-item {
+          background: #16213e;
+          border-radius: 4px;
+          padding: 8px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .mime-type {
+          font-size: 11px;
+          color: #60a5fa;
+          font-family: monospace;
+        }
+
+        .mime-count {
+          font-size: 12px;
+          color: #34d399;
+          font-weight: bold;
         }
 
         @media (max-width: 768px) {

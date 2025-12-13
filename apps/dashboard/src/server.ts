@@ -22,6 +22,120 @@ interface WSClient {
 const wsClients = new Map<ServerWebSocket<WSClient>, WSClient>();
 let messageSequence = 0;
 
+// Enhanced metrics tracking with comprehensive MIME support
+import { EnhancedMimeMetrics, globalMimeMetrics } from '../../../src/utils/enhanced-mime-metrics';
+
+interface ServerMetrics {
+  bytesProcessed: number;
+  mimeTypes: Map<string, number>;
+  fileOperations: {
+    reads: number;
+    writes: number;
+    streams: number;
+  };
+  startTime: number;
+}
+
+const serverMetrics: ServerMetrics = {
+  bytesProcessed: 0,
+  mimeTypes: new Map(),
+  fileOperations: {
+    reads: 0,
+    writes: 0,
+    streams: 0
+  },
+  startTime: Date.now()
+};
+
+// Enhanced file operation tracking
+const originalBunFile = Bun.file;
+
+// Override Bun.file for path-based calls to track metrics
+const trackedBunFile = function(path: string | URL, options?: { type?: string }) {
+  const file = originalBunFile(path, options);
+
+  // Track MIME type
+  if (options?.type) {
+    const count = serverMetrics.mimeTypes.get(options.type) || 0;
+    serverMetrics.mimeTypes.set(options.type, count + 1);
+  } else if (typeof path === 'string') {
+    // Infer MIME type from extension
+    const ext = path.split('.').pop()?.toLowerCase();
+    if (ext) {
+      const mimeType = getMimeTypeFromExtension(ext);
+      const count = serverMetrics.mimeTypes.get(mimeType) || 0;
+      serverMetrics.mimeTypes.set(mimeType, count + 1);
+    }
+  }
+
+  // Track file operation
+  serverMetrics.fileOperations.reads++;
+
+  // Wrap methods to track bytes
+  const originalText = file.text.bind(file);
+  const originalBytes = file.bytes.bind(file);
+  const originalArrayBuffer = file.arrayBuffer.bind(file);
+  const originalStream = file.stream.bind(file);
+
+  file.text = async function() {
+    const result = await originalText();
+    serverMetrics.bytesProcessed += new Blob([result]).size;
+    return result;
+  };
+
+  file.bytes = async function() {
+    const result = await originalBytes();
+    serverMetrics.bytesProcessed += result.length;
+    return result;
+  };
+
+  file.arrayBuffer = async function() {
+    const result = await originalArrayBuffer();
+    serverMetrics.bytesProcessed += result.byteLength;
+    return result;
+  };
+
+  file.stream = function() {
+    serverMetrics.fileOperations.streams++;
+    return originalStream();
+  };
+
+  return file;
+};
+
+// Apply the wrapper for string/URL paths
+(Bun as any).file = function(path: string | URL | ArrayBufferLike | Uint8Array | number, options?: any) {
+  if (typeof path === 'string' || path instanceof URL) {
+    return trackedBunFile(path, options);
+  }
+  return originalBunFile(path as any, options);
+};
+
+// MIME type inference helper
+function getMimeTypeFromExtension(ext: string): string {
+  const mimeTypes: Record<string, string> = {
+    'txt': 'text/plain',
+    'json': 'application/json',
+    'js': 'application/javascript',
+    'ts': 'application/typescript',
+    'html': 'text/html',
+    'css': 'text/css',
+    'md': 'text/markdown',
+    'xml': 'application/xml',
+    'png': 'image/png',
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'gif': 'image/gif',
+    'svg': 'image/svg+xml',
+    'pdf': 'application/pdf',
+    'zip': 'application/zip',
+    'mp4': 'video/mp4',
+    'mp3': 'audio/mpeg',
+    'wav': 'audio/wav'
+  };
+  return mimeTypes[ext] || 'application/octet-stream';
+}
+
 console.log(`🚀 Starting Unified Bun Dashboard Server...`);
 console.log(`📡 HTTP Server: http://${HOST}:${PORT}`);
 console.log(`🔌 WebSocket: ws://${HOST}:${PORT}/ws`);
@@ -180,10 +294,6 @@ const server = Bun.serve<WSClient>({
       console.log(`🔌 WebSocket disconnected: ${client.id} (code: ${code}, ${wsClients.size} remaining)`);
     },
 
-    error(ws, error) {
-      console.error(`❌ WebSocket error for ${ws.data.id}:`, error);
-    },
-
     // Performance settings
     perMessageDeflate: false, // Disable for lower latency
     maxPayloadLength: 16 * 1024 * 1024, // 16MB max message
@@ -299,11 +409,25 @@ setInterval(() => {
 
     // Broadcast metrics every 10 ticks
     if (tickCount % 10 === 0) {
+      const byteMetrics = globalMimeMetrics.getByteMetrics();
+      const mimeStats = globalMimeMetrics.getMimeStats();
+      const operationMetrics = globalMimeMetrics.getOperationMetrics();
+
+      // Convert MIME stats to simple count map for dashboard
+      const mimeTypeCounts: Record<string, number> = {};
+      mimeStats.forEach(stat => {
+        mimeTypeCounts[stat.type] = stat.count;
+      });
+
       broadcastTelemetry('metrics', {
         ticks_processed: tickCount,
         clients_connected: wsClients.size,
         uptime_seconds: process.uptime(),
-        memory_mb: process.memoryUsage().heapUsed / 1024 / 1024
+        memory_mb: process.memoryUsage().heapUsed / 1024 / 1024,
+        bytes_processed: byteMetrics.totalProcessed,
+        bytes_per_second: byteMetrics.perSecond,
+        mime_types: mimeTypeCounts,
+        file_operations: operationMetrics
       });
     }
   }

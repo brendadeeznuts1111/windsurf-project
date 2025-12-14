@@ -11,7 +11,7 @@ body:
         ## 🔒 Security Report
 
         **IMPORTANT:** This form is for reporting security vulnerabilities only.
-        For general security questions, please use [GitHub Discussions](https://github.com/odds-protocol/windsurf/discussions).
+        For general security questions, please use [GitHub Discussions](https://github.com/brendadeeznuts1111/windsurf-project/discussions).
 
         We take security seriously and will respond promptly to legitimate reports.
 

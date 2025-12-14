@@ -14,10 +14,10 @@ Thank you for your interest in contributing to the Odds Protocol! This guide wil
 ### Setup
 
 1. **Fork and Clone**
-   ```bash
-   git clone https://github.com/your-username/odds-protocol.git
-   cd odds-protocol
-   ```
+    ```bash
+    git clone https://github.com/your-username/windsurf-project.git
+    cd windsurf-project
+    ```
 
 2. **Install Dependencies**
    ```bash
@@ -393,8 +393,8 @@ Brief description of changes
 ### Resources
 
 - **Documentation**: [./docs/](./docs/)
-- **Issues**: [GitHub Issues](https://github.com/odds-protocol/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/odds-protocol/discussions)
+- **Issues**: [GitHub Issues](https://github.com/brendadeeznuts1111/windsurf-project/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/brendadeeznuts1111/windsurf-project/discussions)
 - **Discord**: [Community Discord](https://discord.gg/odds-protocol)
 
 ### Contact

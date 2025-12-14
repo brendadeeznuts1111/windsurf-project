@@ -14,7 +14,7 @@ body:
 
         **Note:** For general questions, you might also want to check:
         - [Bun Documentation](https://docs.bun.sh)
-        - [GitHub Discussions](https://github.com/odds-protocol/windsurf/discussions)
+        - [GitHub Discussions](https://github.com/brendadeeznuts1111/windsurf-project/discussions)
         - [Discord Community](https://discord.gg/odds-protocol)
 
   - type: textarea

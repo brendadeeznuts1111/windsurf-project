@@ -11,7 +11,7 @@ If you discover a security vulnerability in Bun, please report it to us as follo
 ### Contact Information
 
 - **Email**: security@odds-protocol.com
-- **GitHub**: Create a [security advisory](https://github.com/odds-protocol/windsurf/security/advisories/new) (recommended)
+- **GitHub**: Create a [security advisory](https://github.com/brendadeeznuts1111/windsurf-project/security/advisories/new) (recommended)
 - **Response Time**: We will acknowledge receipt within 48 hours
 
 ### What to Include
@@ -128,8 +128,8 @@ We recognize security researchers who help make Bun safer:
 ## 📞 Contact
 
 - **Security Issues**: security@odds-protocol.com
-- **General Security Questions**: Use [GitHub Discussions](https://github.com/odds-protocol/windsurf/discussions)
-- **PGP Key**: Available at [security/odds-protocol.asc](https://github.com/odds-protocol/windsurf/blob/main/security/odds-protocol.asc)
+- **General Security Questions**: Use [GitHub Discussions](https://github.com/brendadeeznuts1111/windsurf-project/discussions)
+- **PGP Key**: Available at [security/brendadeeznuts1111.asc](https://github.com/brendadeeznuts1111/windsurf-project/blob/main/security/brendadeeznuts1111.asc)
 
 ## 📜 Security Policy Changes
 

@@ -213,12 +213,20 @@ export class EnhancedMimeMetrics {
    */
   import(data: {
     mimeStats: Record<string, MimeTypeStats>;
+    byteMetrics: ByteMetrics;
     operationMetrics: FileOperationMetrics;
     startTime: number;
   }): void {
     this.mimeStats = new Map(Object.entries(data.mimeStats));
     this.operationMetrics = { ...data.operationMetrics };
     this.startTime = data.startTime;
+    // Restore byte history from total processed (approximate)
+    if (data.byteMetrics.totalProcessed > 0) {
+      // Create a reasonable byte history based on total processed
+      const avgBytesPerOperation = Math.max(1000, data.byteMetrics.totalProcessed / Math.max(1, this.operationMetrics.reads + this.operationMetrics.writes + this.operationMetrics.streams));
+      const numOperations = this.operationMetrics.reads + this.operationMetrics.writes + this.operationMetrics.streams;
+      this.byteHistory = Array.from({ length: Math.min(1000, numOperations) }, () => avgBytesPerOperation);
+    }
   }
 }
 

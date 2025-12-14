@@ -579,6 +579,207 @@ const EXAMPLES = {
         'Team analytics and reporting'
       ],
       runCommand: 'bun run examples/team-organization-api-demo.ts'
+    },
+
+    // ============================================================================
+    // NEW CROSS-REFERENCED EXAMPLES (2025 Enhancement)
+    // ============================================================================
+
+    'bun-rest-crud-api.ts': {
+      title: 'Complete REST CRUD API',
+      description: 'Full-stack REST API with authentication, middleware, and SQLite database',
+      features: [
+        'Complete CRUD operations (Users & Posts)',
+        'JWT authentication system',
+        'Middleware stack (CORS, rate limiting, validation)',
+        'SQLite database with relationships',
+        'Error handling and logging',
+        '8 REST endpoints with proper HTTP methods',
+        'Input validation and sanitization'
+      ],
+      runCommand: 'bun run examples/applications/apis/bun-rest-crud-api.ts',
+      category: 'applications/apis',
+      difficulty: 'intermediate',
+      crossReferences: 8
+    },
+
+    'bun-websocket-chat-api.ts': {
+      title: 'WebSocket Chat API',
+      description: 'Real-time chat application with rooms, authentication, and message history',
+      features: [
+        'Multi-room chat system',
+        'WebSocket authentication',
+        'Message history and persistence',
+        'Private messaging',
+        'User presence tracking',
+        'Room management and moderation',
+        'Real-time notifications'
+      ],
+      runCommand: 'bun run examples/applications/realtime/bun-websocket-chat-api.ts',
+      category: 'applications/realtime',
+      difficulty: 'intermediate',
+      crossReferences: 6
+    },
+
+    'bun-http-session.ts': {
+      title: 'HTTP Session Management',
+      description: 'Secure HTTP session handling with automatic cleanup and configurable options',
+      features: [
+        'Secure session storage',
+        'Automatic session cleanup',
+        'Configurable session cookies',
+        'Session validation and renewal',
+        'Memory-efficient storage',
+        'Session statistics and monitoring',
+        'Security headers integration'
+      ],
+      runCommand: 'bun run examples/core/networking/bun-http-session.ts',
+      category: 'core/networking',
+      difficulty: 'intermediate',
+      crossReferences: 5
+    },
+
+    'bun-rate-limiting.ts': {
+      title: 'Rate Limiting Middleware',
+      description: 'Advanced rate limiting with multiple algorithms and configurable strategies',
+      features: [
+        'Multiple rate limiting algorithms',
+        'IP and user-based limiting',
+        'Custom key generators',
+        'Configurable error handlers',
+        'Pre-built presets (API, login, upload)',
+        'Rate limit headers',
+        'Statistics and monitoring'
+      ],
+      runCommand: 'bun run examples/core/networking/bun-rate-limiting.ts',
+      category: 'core/networking',
+      difficulty: 'intermediate',
+      crossReferences: 7
+    },
+
+    'bun-cors-middleware.ts': {
+      title: 'CORS Middleware',
+      description: 'Comprehensive CORS handling with preflight support and security features',
+      features: [
+        'Preflight request handling',
+        'Dynamic origin validation',
+        'Credentials support',
+        'Security headers integration',
+        'Multiple configuration presets',
+        'Custom origin functions',
+        'CORS testing utilities'
+      ],
+      runCommand: 'bun run examples/core/networking/bun-cors-middleware.ts',
+      category: 'core/networking',
+      difficulty: 'beginner',
+      crossReferences: 6
+    },
+
+    'bun-api-validation.ts': {
+      title: 'API Input Validation',
+      description: 'Comprehensive input validation with sanitization and schema-based rules',
+      features: [
+        'Schema-based validation',
+        'Type conversion and sanitization',
+        'Custom validation rules',
+        'Error aggregation and reporting',
+        'Pre-built schemas (user, blog, search)',
+        'Security-focused validation',
+        'Comprehensive error messages'
+      ],
+      runCommand: 'bun run examples/core/networking/bun-api-validation.ts',
+      category: 'core/networking',
+      difficulty: 'intermediate',
+      crossReferences: 5
+    },
+
+    'bun-file-upload-api.ts': {
+      title: 'File Upload API',
+      description: 'Complete file upload system with multipart handling and security validation',
+      features: [
+        'Multipart form-data parsing',
+        'File type and size validation',
+        'Streaming uploads',
+        'Progress tracking',
+        'Secure filename generation',
+        'MIME type validation',
+        'Content analysis and security scanning'
+      ],
+      runCommand: 'bun run examples/core/file-system/bun-file-upload-api.ts',
+      category: 'core/file-system',
+      difficulty: 'intermediate',
+      crossReferences: 6
+    },
+
+    'bun-file-streaming.ts': {
+      title: 'File Streaming Utilities',
+      description: 'High-performance file streaming with memory efficiency and resumable transfers',
+      features: [
+        'Memory-efficient streaming',
+        'Progress tracking and callbacks',
+        'Resumable file transfers',
+        'Parallel streaming',
+        'Stream transformation pipelines',
+        'Compression support',
+        'Optimal chunk size calculation'
+      ],
+      runCommand: 'bun run examples/core/file-system/bun-file-streaming.ts',
+      category: 'core/file-system',
+      difficulty: 'intermediate',
+      crossReferences: 5
+    },
+
+    'bun-tls-server.ts': {
+      title: 'TLS/HTTPS Server',
+      description: 'Secure HTTPS server with automatic certificates and comprehensive security',
+      features: [
+        'Automatic certificate generation',
+        'Self-signed certificate creation',
+        'Security headers (HSTS, CSP, X-Frame-Options)',
+        'Certificate validation and expiry checking',
+        'TLS version configuration',
+        'Cipher suite management',
+        'HTTPS simulation and testing'
+      ],
+      runCommand: 'bun run examples/core/networking/bun-tls-server.ts',
+      category: 'core/networking',
+      difficulty: 'advanced',
+      crossReferences: 5
+    },
+
+    // Cross-reference system examples
+    'cross-references/registry.ts': {
+      title: 'Cross-Reference Registry',
+      description: 'Central registry for example relationships and discovery system',
+      features: [
+        'Example metadata management',
+        'Cross-reference validation',
+        'CLI discovery tools',
+        'Learning path generation',
+        'Benchmark linkages',
+        'System statistics and reporting'
+      ],
+      runCommand: 'bun run examples/cross-references/registry.ts stats',
+      category: 'cross-references',
+      difficulty: 'intermediate',
+      crossReferences: 53
+    },
+
+    'cross-references/system.ts': {
+      title: 'Cross-Reference System Core',
+      description: 'Core logic for managing example relationships and metadata',
+      features: [
+        'Metadata parsing and validation',
+        'Relationship management',
+        'Query and search functionality',
+        'System integrity checking',
+        'Performance optimization',
+        'Extensible architecture'
+      ],
+      runCommand: 'echo "Core system - import in other files"',
+      category: 'cross-references',
+      difficulty: 'advanced',
+      crossReferences: 12
     }
 };
 
@@ -609,7 +810,11 @@ async function quickStartDemo() {
     // 3. Environment Synchronization
     console.log('\n🔄 Testing Environment Synchronization...');
     const envSync = new BunEnvSynchronizer();
-    envSync.sync({ QUICK_DEMO: 'success' }, process.env);
+    // Filter out undefined values from process.env
+    const cleanEnv = Object.fromEntries(
+      Object.entries(process.env).filter(([_, value]) => value !== undefined)
+    ) as Record<string, string>;
+    envSync.sync({ QUICK_DEMO: 'success' }, cleanEnv);
     console.log(`   ✅ Env sync: QUICK_DEMO=${process.env.QUICK_DEMO}`);
 
     // 3. Unix Socket Proxy (quick test)
@@ -754,7 +959,7 @@ async function checkSystemStatus() {
 function displayExamplesIndex() {
   console.log('🚀 Bun-Native API Integration Master Suite');
   console.log('==========================================');
-  console.log(`Total Examples: ${Object.keys(EXAMPLES).length} (50 Bun API implementations)`);
+  console.log(`Total Examples: ${Object.keys(EXAMPLES).length} (21 core + 12 cross-referenced examples)`);
   console.log('Core Runtime (EX001-EX010): 10 examples');
   console.log('Advanced APIs (EX021-EX050): 30 examples');
   console.log('');

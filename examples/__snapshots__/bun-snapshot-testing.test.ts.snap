@@ -95,9 +95,10 @@ exports[`Bun Snapshot Testing Examples error object snapshot 1`] = `[Error: Some
 
 exports[`Bun Snapshot Testing Examples date and time snapshots 1`] = `
 {
-  "future": "2025-12-13T10:00:51.555Z",
-  "now": "2025-12-12T10:00:51.555Z",
-  "timestamp": 1765533651555,
+  "futureFormat": "2025-12-15",
+  "isValidDate": true,
+  "nowFormat": "2025-12-14",
+  "timeDifference": 86400000,
   "timezone": "UTC",
 }
 `;

@@ -1,0 +1,405 @@
+/**
+ * @fileoverview Trading Engine Status Component Styles
+ * @description CSS styles for the trading engine monitoring dashboard
+ * @author Odds Protocol Team
+ * @version 1.0.0
+ * @since 2024
+ */
+
+.trading-engine-status {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.trading-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e1e5e9;
+}
+
+.header-left h2 {
+  margin: 0 0 10px 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1a202c;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-indicators {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.status-badge,
+.mode-badge,
+.automation-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.active {
+  background: #48bb78;
+  color: white;
+}
+
+.status-badge.inactive {
+  background: #a0aec0;
+  color: white;
+}
+
+.mode-badge {
+  background: #4299e1;
+  color: white;
+}
+
+.automation-badge {
+  background: #ed8936;
+  color: white;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.auto-refresh-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #4a5568;
+  cursor: pointer;
+}
+
+.auto-refresh-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.refresh-button {
+  padding: 8px 16px;
+  background: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.refresh-button:hover {
+  background: #3182ce;
+}
+
+.trading-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.metric-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.metric-section h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.metric-card {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.metric-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 4px;
+}
+
+.metric-value.positive {
+  color: #48bb78;
+}
+
+.metric-value.negative {
+  color: #f56565;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  color: #718096;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  margin-top: 20px;
+}
+
+.control-panel h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.control-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.control-button.pause {
+  background: #ed8936;
+  color: white;
+}
+
+.control-button.pause:hover {
+  background: #dd6b20;
+}
+
+.control-button.resume {
+  background: #48bb78;
+  color: white;
+}
+
+.control-button.resume:hover {
+  background: #38a169;
+}
+
+.control-button.emergency-stop {
+  background: #f56565;
+  color: white;
+}
+
+.control-button.emergency-stop:hover {
+  background: #e53e3e;
+}
+
+.control-button.reset-limits {
+  background: #4299e1;
+  color: white;
+}
+
+.control-button.reset-limits:hover {
+  background: #3182ce;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
+  color: #718096;
+}
+
+.error-message {
+  background: #fed7d7;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.error-message h3 {
+  margin: 0 0 10px 0;
+  color: #c53030;
+  font-size: 1.2rem;
+}
+
+.error-message p {
+  margin: 0 0 15px 0;
+  color: #742a2a;
+}
+
+.retry-button {
+  padding: 8px 16px;
+  background: #e53e3e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background: #c53030;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
+  color: #a0aec0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .trading-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .header-right {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+
+  .trading-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .control-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .header-left h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .trading-engine-status {
+    padding: 15px;
+  }
+
+  .metric-section {
+    padding: 16px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .metric-card {
+    padding: 12px;
+  }
+
+  .metric-value {
+    font-size: 1.4rem;
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .trading-engine-status {
+    background: #1a202c;
+    color: #e2e8f0;
+  }
+
+  .metric-section {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .metric-card {
+    background: #1a202c;
+    border-color: #4a5568;
+  }
+
+  .metric-value {
+    color: #e2e8f0;
+  }
+
+  .metric-label {
+    color: #a0aec0;
+  }
+
+  .control-panel {
+    background: #2d3748;
+    border-color: #4a5568;
+  }
+
+  .trading-header {
+    border-bottom-color: #4a5568;
+  }
+
+  .header-left h2 {
+    color: #e2e8f0;
+  }
+
+  .metric-section h3,
+  .control-panel h3 {
+    color: #e2e8f0;
+  }
+}

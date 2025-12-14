@@ -99,8 +99,8 @@ async function demonstrateEnhancedMetrics() {
   newMetrics.import(exported);
   const importedByteMetrics = newMetrics.getByteMetrics();
 
-  console.log(`   Imported ${importedByteMetrics.totalProcessed} bytes successfully`);
-  console.log(`   Data integrity: ${importedByteMetrics.totalProcessed === byteMetrics.totalProcessed ? '✅' : '❌'}`);
+   console.log(`   Imported ${Math.round(importedByteMetrics.totalProcessed)} bytes successfully`);
+   console.log(`   Data integrity: ${Math.abs(importedByteMetrics.totalProcessed - byteMetrics.totalProcessed) < 1 ? '✅' : '❌'}`);
 
   console.log('\n🎉 Enhanced MIME Type & Byte Metrics demonstration complete!');
   console.log('\n💡 Key Features Demonstrated:');

@@ -1,5 +1,5 @@
 import { test, describe, expect } from "bun:test";
-import { ENDPOINTS, getPath, getConfigByPath, buildQuery } from "./endpoints";
+import { ENDPOINTS, getPath, getConfigByPath, buildQuery, MonitorEndpoint, AdminEndpoint, WSEndpoint, StaticEndpoint } from "./endpoints";
 
 // Helper to extract all endpoint configs into a flat array for easy iteration
 function getAllEndpoints() {

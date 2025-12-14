@@ -75,19 +75,62 @@ cd ultra-arb-global
 # Install dependencies (Bun handles this automatically)
 bun install
 
-# Set environment variables
-export JWT_SECRET_KEY="your-256-bit-secret-key-here"
-export TELEGRAM_BOT_TOKEN="your-telegram-bot-token"
+# Configure environment variables
+cp .env.example .env
+# Edit .env with your values (see Environment Configuration below)
 
 # Start the system
 bun run dev
 ```
+
+### Environment Configuration
+
+**Required for Security:**
+- `JWT_SECRET_KEY` - Generate with: `openssl rand -hex 32` (32+ characters required)
+- `TELEGRAM_BOT_TOKEN` - Get from [@BotFather](https://t.me/botfather) on Telegram
+- `TELEGRAM_CHAT_ID` - Your Telegram chat ID for notifications
+
+**Production Settings:**
+- `FORCE_HTTPS=true` - Required for HttpOnly cookie security
+- `NODE_ENV=production` - Enables production optimizations
+- `ENABLE_DEBUG_LOGGING=false` - Reduces log verbosity
+
+**Performance Tuning:**
+- `MAX_CONNECTIONS=1247` - Enterprise-scale concurrent users
+- `RATE_LIMIT_MAX_REQUESTS=100` - Per-minute rate limiting
+- `CACHE_TTL=300` - Response caching duration
+
+See `.env.example` for complete configuration options.
 
 ### Interactive Demo
 ```bash
 # Open the live interactive demo
 open interactive-demo.html
 ```
+
+### Docker Deployment (Production)
+```bash
+# Build and start the production stack
+docker-compose -f docker-compose.ultra-arb.yml up -d
+
+# Or build and run specific services
+docker-compose -f docker-compose.ultra-arb.yml up ultra-arb-global
+
+# View logs
+docker-compose -f docker-compose.ultra-arb.yml logs -f ultra-arb-global
+
+# Scale the application
+docker-compose -f docker-compose.ultra-arb.yml up -d --scale ultra-arb-global=3
+```
+
+### Production Checklist
+- [ ] Configure `.env` with production values
+- [ ] Generate secure JWT secret: `openssl rand -hex 32`
+- [ ] Set up HTTPS certificates (Let's Encrypt recommended)
+- [ ] Configure monitoring stack (Prometheus/Grafana)
+- [ ] Set up log aggregation (Loki/Promtail)
+- [ ] Configure backup strategy for SQLite database
+- [ ] Set up health monitoring and alerting
 
 ## 📁 **Project Structure**
 

@@ -37,6 +37,7 @@ import SQLDemo from './components/SQLDemo';
 import AdvancedSQLDemo from './components/AdvancedSQLDemo';
 import NodeCompatDemo from './components/NodeCompatDemo';
 import TeamAnalyticsDashboard from './components/TeamAnalyticsDashboard';
+import { TradingEngineStatus } from './components/TradingEngineStatus';
 import './App.css';
 
 /**
@@ -189,6 +190,12 @@ function App() {
         >
           Team Analytics
         </button>
+        <button
+          className={activeTab === 'trading-engine' ? 'active' : ''}
+          onClick={() => setActiveTab('trading-engine')}
+        >
+          Trading Engine
+        </button>
         <a
           href="/docs"
           target="_blank"
@@ -263,6 +270,7 @@ function App() {
         {activeTab === 'orca-dashboard' && <OrcaDashboard />}
         {activeTab === 'azure-devops' && <AzureDevOpsDashboard />}
         {activeTab === 'team-analytics' && <TeamAnalyticsDashboard />}
+        {activeTab === 'trading-engine' && <TradingEngineStatus />}
       </main>
     </div>
   );

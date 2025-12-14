@@ -1,0 +1,199 @@
+# ULTRA-ARB GLOBAL - Docker Compose Production Setup
+# Enterprise-grade deployment with monitoring and security
+
+version: '3.8'
+
+services:
+  # ===========================================
+  # Main Application Service
+  # ===========================================
+  ultra-arb-global:
+    build:
+      context: .
+      dockerfile: Dockerfile.ultra-arb
+    container_name: ultra-arb-global
+    restart: unless-stopped
+
+    # Environment configuration
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - FORCE_HTTPS=true
+      - DATABASE_PATH=/app/data/ultra-arb.db
+
+    # Networking
+    ports:
+      - "6969:6969"
+    networks:
+      - ultra-arb-network
+
+    # Volumes for data persistence
+    volumes:
+      - ultra-arb-data:/app/data
+      - ./logs:/app/logs
+
+    # Health checks
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6969/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Security
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Logging
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===========================================
+  # Reverse Proxy (Optional - for HTTPS termination)
+  # ===========================================
+  nginx:
+    image: nginx:alpine
+    container_name: ultra-arb-nginx
+    restart: unless-stopped
+    depends_on:
+      - ultra-arb-global
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx-cache:/var/cache/nginx
+
+    networks:
+      - ultra-arb-network
+
+    # SSL certificate renewal (if using Let's Encrypt)
+    command: >
+      sh -c "nginx -g 'daemon off;' &
+             while true; do
+               sleep 86400
+               nginx -s reload
+             done"
+
+  # ===========================================
+  # Monitoring Stack (Optional)
+  # ===========================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ultra-arb-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+
+    ports:
+      - "9090:9090"
+
+    networks:
+      - ultra-arb-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ultra-arb-grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=ultra-arb-admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+
+    ports:
+      - "3000:3000"
+
+    networks:
+      - ultra-arb-network
+
+    depends_on:
+      - prometheus
+
+  # ===========================================
+  # Log Aggregation (Optional)
+  # ===========================================
+  loki:
+    image: grafana/loki:latest
+    container_name: ultra-arb-loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+
+    volumes:
+      - ./monitoring/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+
+    ports:
+      - "3100:3100"
+
+    networks:
+      - ultra-arb-network
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: ultra-arb-promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/config.yml
+
+    volumes:
+      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/log:/var/log:ro
+
+    networks:
+      - ultra-arb-network
+
+# ===========================================
+# Networks
+# ===========================================
+networks:
+  ultra-arb-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ===========================================
+# Volumes
+# ===========================================
+volumes:
+  ultra-arb-data:
+    driver: local
+  nginx-cache:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  loki-data:
+    driver: local

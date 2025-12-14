@@ -280,8 +280,11 @@ function getDashboardHTML(state: DashboardState): string {
     <div class="dashboard">
         <header class="dashboard-header">
             <h1>🚀 Bun Systems Dashboard</h1>
-            <div class="status-indicator status-${health.overall}">
-                ${health.overall.toUpperCase()}
+            <div class="header-controls">
+                <div class="connection-status disconnected">🔴 Disconnected</div>
+                <div class="status-indicator status-${health.overall}">
+                    ${health.overall.toUpperCase()}
+                </div>
             </div>
         </header>
 
@@ -403,6 +406,12 @@ function getDashboardCSS(): string {
         border-bottom: 1px solid #333;
     }
 
+    .header-controls {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
     .dashboard-header h1 {
         color: #00ff88;
     }
@@ -419,6 +428,26 @@ function getDashboardCSS(): string {
     .status-error { background: #ff4444; color: #000; }
     .status-unknown { background: #666; color: #fff; }
     .status-idle { background: #444; color: #fff; }
+
+    .connection-status {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    .connection-status.connected {
+        background: #00ff88;
+        color: #000;
+        box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+    }
+
+    .connection-status.disconnected {
+        background: #ff4444;
+        color: #fff;
+        box-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+    }
 
     .metrics-overview {
         display: grid;
@@ -545,6 +574,25 @@ function getDashboardCSS(): string {
     .log-level-info { color: #00ff88; }
     .log-level-warn { color: #ffaa00; }
     .log-level-error { color: #ff4444; }
+
+    .json-data {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 4px;
+        padding: 8px;
+        margin: 4px 0;
+        display: block;
+        white-space: pre-wrap;
+        font-size: 12px;
+        color: #00ff88;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .data-value {
+        color: #ffaa00;
+        font-weight: bold;
+    }
   `;
 }
 
@@ -556,9 +604,28 @@ function getDashboardJS(): string {
   return `
     let activityLog = [];
 
-    function addToActivityLog(level, message) {
+    function addToActivityLog(level, message, data = null) {
         const timestamp = new Date().toLocaleTimeString();
-        activityLog.unshift({ timestamp, level, message });
+
+        // Enhanced logging with data formatting
+        let formattedMessage = message;
+        if (data !== null) {
+            if (typeof data === 'object') {
+                formattedMessage += ' %j';
+            } else {
+                formattedMessage += ' ' + String(data);
+            }
+        }
+
+        // Also log to console with Bun's enhanced formatting
+        const logLevel = level === 'error' ? 'error' : level === 'warning' ? 'warn' : 'info';
+        if (data !== null) {
+            console[logLevel]('[' + timestamp + '] ' + message, data);
+        } else {
+            console[logLevel]('[' + timestamp + '] ' + message);
+        }
+
+        activityLog.unshift({ timestamp, level, message: formattedMessage, data });
 
         // Keep only last 50 entries
         if (activityLog.length > 50) {
@@ -570,20 +637,41 @@ function getDashboardJS(): string {
 
     function updateActivityLog() {
         const logElement = document.getElementById('activity-log');
-        logElement.innerHTML = activityLog.map(entry =>
-            \`<div class="log-entry">
+        logElement.innerHTML = activityLog.map(entry => {
+            let message = entry.message;
+            if (entry.data !== null && typeof entry.data === 'object') {
+                message += ' <code class="json-data">' + JSON.stringify(entry.data, null, 2) + '</code>';
+            } else if (entry.data !== null) {
+                message += ' <span class="data-value">' + String(entry.data) + '</span>';
+            }
+            return \`<div class="log-entry">
                 <span class="log-timestamp">[\${entry.timestamp}]</span>
                 <span class="log-level-\${entry.level}">[\${entry.level.toUpperCase()}]</span>
-                \${entry.message}
-            </div>\`
-        ).join('');
+                \${message}
+            </div>\`;
+        }).join('');
     }
 
     async function refreshData() {
         addToActivityLog('info', 'Refreshing dashboard data...');
 
         try {
-            const response = await fetch('/api/metrics');
+            const baseUrl = window.location.origin;
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+            const response = await fetch(baseUrl + '/api/metrics', {
+                signal: controller.signal,
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+            }
+
             const data = await response.json();
 
             // Update metrics overview
@@ -592,9 +680,29 @@ function getDashboardJS(): string {
             // Update system cards
             updateSystemCards(data.systems);
 
-            addToActivityLog('info', 'Dashboard data refreshed');
+            // Reset error counter on success
+            consecutiveErrors = 0;
+            updateConnectionStatus(true);
+
+            addToActivityLog('info', 'Dashboard data refreshed successfully', {
+                requests: data.requests,
+                systems: Object.keys(data.systems || {}).length,
+                timestamp: new Date().toISOString()
+            });
         } catch (error) {
-            addToActivityLog('error', \`Failed to refresh data: \${error.message}\`);
+            consecutiveErrors++;
+            updateConnectionStatus(false);
+
+            if (error.name === 'AbortError') {
+                addToActivityLog('error', 'Request timed out - server may be unresponsive');
+            } else {
+                addToActivityLog('error', 'Failed to refresh data: ' + error.message);
+            }
+
+            // If we've had too many consecutive errors, slow down the refresh rate
+            if (consecutiveErrors >= maxConsecutiveErrors) {
+                addToActivityLog('warning', 'Multiple connection failures - reducing refresh frequency');
+            }
         }
     }
 
@@ -608,9 +716,18 @@ function getDashboardJS(): string {
         if (uptimeElement) uptimeElement.textContent = formatDuration(data.uptime);
     }
 
+    function findSystemCard(systemName) {
+        const cards = document.querySelectorAll('.system-card');
+        const expectedText = formatSystemName(systemName);
+        return Array.from(cards).find(card => {
+            const h4 = card.querySelector('h4');
+            return h4 && h4.textContent.trim() === expectedText;
+        });
+    }
+
     function updateSystemCards(systems) {
         Object.entries(systems).forEach(([name, system]) => {
-            const card = document.querySelector(\`.system-card:has(h4:contains("\${formatSystemName(name)}"))\`);
+            const card = findSystemCard(name);
             if (card) {
                 // Update status
                 const statusBadge = card.querySelector('.status-badge');
@@ -643,7 +760,7 @@ function getDashboardJS(): string {
             // This would need a backend endpoint to actually clear cache
             addToActivityLog('info', 'Cache cleared (simulated)');
         } catch (error) {
-            addToActivityLog('error', \`Failed to clear cache: \${error.message}\`);
+            addToActivityLog('error', 'Failed to clear cache: ' + error.message);
         }
     }
 
@@ -651,14 +768,22 @@ function getDashboardJS(): string {
         addToActivityLog('info', 'Running health check...');
 
         try {
-            const response = await fetch('/api/health');
+            const baseUrl = window.location.origin;
+            const response = await fetch(baseUrl + '/api/health');
             const health = await response.json();
 
             addToActivityLog('info',
-                \`Health check: \${health.healthy}/\${health.total} healthy, \${health.warning} warnings, \${health.error} errors\`
+                'Health check completed',
+                {
+                    healthy: health.healthy + '/' + health.total,
+                    warnings: health.warning,
+                    errors: health.error,
+                    status: health.status,
+                    timestamp: health.timestamp
+                }
             );
         } catch (error) {
-            addToActivityLog('error', \`Health check failed: \${error.message}\`);
+            addToActivityLog('error', 'Health check failed', { error: error.message });
         }
     }
 
@@ -693,9 +818,22 @@ function getDashboardJS(): string {
         return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
     }
 
+    // Connection status tracking
+    let consecutiveErrors = 0;
+    const maxConsecutiveErrors = 3;
+
+    function updateConnectionStatus(connected) {
+        const statusElement = document.querySelector('.connection-status');
+        if (statusElement) {
+            statusElement.className = 'connection-status ' + (connected ? 'connected' : 'disconnected');
+            statusElement.textContent = connected ? '🟢 Connected' : '🔴 Disconnected';
+        }
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
         addToActivityLog('info', 'Dashboard initialized');
+        updateConnectionStatus(false);
         refreshData();
 
         // Auto-refresh every 30 seconds

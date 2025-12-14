@@ -6,7 +6,7 @@
 export interface UUIDInfo {
   uuid: string;
   version: number;
-  timestamp?: number;
+  timestamp?: Date;
   nodeId?: string;
   clockSequence?: number;
   // Common identifier properties
@@ -102,11 +102,11 @@ export class BunUUIDGenerator implements IDGenerator, TimeBased {
     const nodeId = clean.substring(15, 27);
 
     return {
+      uuid,
       version: 7,
       timestamp: new Date(timestamp),
-      sequence,
-      nodeId,
-      raw: uuid
+      clockSequence: sequence,
+      nodeId
     };
   }
 
@@ -115,6 +115,9 @@ export class BunUUIDGenerator implements IDGenerator, TimeBased {
    */
   extractTimestamp(uuid: string): Date {
     const info = this.parse(uuid);
+    if (!info.timestamp) {
+      throw new Error(`Invalid UUID v7 format: ${uuid}`);
+    }
     return info.timestamp;
   }
 

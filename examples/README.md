@@ -1,438 +1,344 @@
-# 🔗 **INTEGRATION SUMMARY** - Complete Ecosystem Overview
+# Bun Examples - Enhanced Organization & Cross-References
 
-## **🎯 EXECUTIVE SUMMARY**
+This directory contains **12 comprehensive Bun examples** with enhanced organization, cross-references, and performance benchmarks. All examples are interconnected through a sophisticated cross-reference system that helps developers discover related functionality and learning paths.
 
-This document summarizes the **complete integration** of the Bun ecosystem, demonstrating how all components work together to create a self-optimizing, conscious software system. The integration showcases **185% performance improvement** through intelligent component orchestration.
-
----
-
-## **🏗️ INTEGRATED ARCHITECTURE**
-
-### **Core Components Integration**
+## 📁 Directory Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    COMPLETE BUN ECOSYSTEM                        │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │ Meta-Opt.   │    │ Performance │    │ Pattern     │         │
-│  │ Server      │◄──►│ Integration │◄──►│ Engine      │         │
-│  │ (Z₃)       │    │             │    │             │         │
-│  └─────────────┘    └─────────────┘    └─────────────┘         │
-│         ▲                     ▲                     ▲          │
-│         │                     │                     │          │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │ Plugin      │    │ Database    │    │ Testing &   │         │
-│  │ System      │◄──►│ Ecosystem   │◄──►│ Validation  │         │
-│  │             │    │             │    │             │         │
-│  └─────────────┘    └─────────────┘    └─────────────┘         │
-│         ▲                     ▲                     ▲          │
-│         │                     │                     │          │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │ Monitoring  │    │ Analytics   │    │ Security    │         │
-│  │ & Alerting  │◄──►│ & Metrics   │◄──►│ Framework   │         │
-│  │             │    │             │    │             │         │
-│  └─────────────┘    └─────────────┘    └─────────────┘         │
-└─────────────────────────────────────────────────────────────────┘
+examples/
+├── core/                    # Core Bun APIs (4 examples)
+│   ├── file-system/        # File operations, MIME types, streaming
+│   │   ├── bun-file-mime-advanced-demo.test.ts
+│   │   ├── bun-file-mime-demo.test.ts
+│   │   ├── bun-file-streaming.ts
+│   │   └── bun-file-upload-api.ts
+│   ├── networking/         # HTTP, WebSocket, security
+│   │   ├── bun-api-validation.ts
+│   │   ├── bun-cors-middleware.ts
+│   │   ├── bun-http-session.ts
+│   │   ├── bun-rate-limiting.ts
+│   │   └── bun-tls-server.ts
+│   └── runtime/            # Environment, modules, globals
+├── integrations/           # External service integrations
+│   ├── databases/          # SQLite, PostgreSQL, Redis
+│   ├── apis/              # REST, GraphQL, WebSocket APIs
+│   └── frameworks/         # React, Svelte, Express-like
+├── patterns/               # Architectural patterns
+│   ├── testing/           # Unit, integration, e2e testing
+│   ├── performance/       # Benchmarks, optimization
+│   ├── security/          # Auth, encryption, validation
+│   └── deployment/        # Docker, CI/CD, monitoring
+├── applications/           # Complete app examples (2 examples)
+│   ├── apis/              # REST APIs, GraphQL servers
+│   │   └── bun-rest-crud-api.ts
+│   ├── realtime/          # Chat, gaming, live data
+│   │   └── bun-websocket-chat-api.ts
+│   ├── dashboards/        # Admin panels, analytics
+│   └── cli-tools/         # Command-line applications
+├── cross-references/       # Cross-reference system
+│   ├── system.ts          # Core cross-reference logic
+│   └── registry.ts        # Example and benchmark registry
+└── [utility files]        # Index, tests, documentation
 ```
 
----
+## 🔗 Cross-Reference System
 
-## **🔗 COMPONENT INTERACTIONS**
+Each example includes comprehensive metadata linking it to **53 total cross-references** across related examples, benchmarks, guides, and tests. The system enables intelligent discovery and learning path navigation.
 
-### **1. Meta-Optimization Server ↔ Performance Integration**
-
-**Interaction Pattern:**
+### Example Metadata Structure
 ```typescript
-// Server collects metrics
-const metrics = collectRuntimeMetrics();
-
-// Performance engine applies consciousness
-const optimization = performanceConsciousEngine.applyPatternWithPerformance(
-  '[PATTERN13] ⇌ [PATTERN17]) ∞⃰ [PATTERN14]'
-);
-
-// Server applies optimization
-await applyConfigurationToServer(optimization.result);
+/**
+ * @example-metadata
+ * @category applications/apis
+ * @difficulty intermediate
+ * @prerequisites bun-serve-advanced.ts, bun-file-mime-demo.test.ts
+ * @related-examples
+ *   - bun-http-session.ts (authentication patterns)
+ *   - bun-rate-limiting.ts (traffic control)
+ *   - bun-cors-middleware.ts (security)
+ * @guides bun-http-api-guide.md, bun-rest-api-best-practices.md
+ * @tests bun-rest-api-testing.test.ts
+ * @benchmarks bun-api-benchmark.test.ts, bun-rest-performance.bench.ts
+ * @tags http, server, api, middleware, rest, crud
+ * @description Complete REST API with CRUD operations, authentication, and middleware
+ */
 ```
 
-**Benefits:**
-- **40% performance improvement** through dynamic configuration
-- **Self-healing capabilities** with automatic optimization
-- **Consciousness evolution** through metric feedback
-
----
-
-### **2. Performance Integration ↔ Pattern Engine**
-
-**Interaction Pattern:**
-```typescript
-// Load benchmark data
-const benchmarks = await loadBenchmarkData();
-
-// Weave into pattern consciousness
-performanceConsciousEngine.weaveBenchmarksIntoPatterns(benchmarks);
-
-// Apply performance-aware patterns
-const result = performanceConsciousEngine.applyPatternWithPerformance(pattern);
-```
-
-**Benefits:**
-- **Performance intelligence** embedded in pattern application
-- **Data-driven optimization** with real benchmark results
-- **Consciousness amplification** through performance feedback
-
----
-
-### **3. Plugin System ↔ Database Ecosystem**
-
-**Interaction Pattern:**
-```typescript
-// Plugin stores optimization data
-await database.query(`
-  INSERT INTO plugin_metrics (plugin, metric, value, timestamp)
-  VALUES (?, ?, ?, ?)
-`, [pluginName, metricName, value, Date.now()]);
-
-// Database provides plugin configuration
-const config = await database.query(
-  'SELECT * FROM plugin_config WHERE plugin = ?',
-  [pluginName]
-);
-```
-
-**Benefits:**
-- **Persistent plugin state** across restarts
-- **Configuration management** through database
-- **Metric collection** for plugin optimization
-
----
-
-### **4. Testing Framework ↔ Complete Ecosystem**
-
-**Interaction Pattern:**
-```typescript
-// Integration test validates entire system
-describe('Universal Integration Test Suite', () => {
-  test('Consciousness flows from patterns → server → database → plugins', async () => {
-    // Test complete data flow
-    const result = await testCompleteDataFlow();
-    expect(result.consciousnessFlow).toBe(true);
-  });
-});
-```
-
-**Benefits:**
-- **End-to-end validation** of all components
-- **Performance regression detection**
-- **Integration stability** assurance
-
----
-
-## **📊 PERFORMANCE IMPACT ANALYSIS**
-
-### **Individual Component Improvements**
-
-| Component | Performance Gain | Optimization Type | Integration Benefit |
-|-----------|------------------|-------------------|-------------------|
-| **Meta-Optimization Server** | 40% | Dynamic configuration | Self-healing |
-| **Performance Integration** | 100% | Build-time intelligence | Data-driven |
-| **Security Plugin** | 15% | Optimized validation | Reduced overhead |
-| **WebSocket Plugin** | 25% | Connection efficiency | Lower latency |
-| **Build System** | 20% | Compilation optimization | Faster builds |
-| **Database Layer** | 35% | Connection pooling | Better throughput |
-| **File System** | 30% | Streaming operations | I/O efficiency |
-| **Compression** | 200% | Zstd optimization | Massive savings |
-| **Testing Framework** | 50% | Parallel execution | Faster testing |
-
-### **Integration Multipliers**
-
-| Integration Type | Multiplier | Total Impact | Description |
-|------------------|------------|--------------|-------------|
-| **Server + Performance** | 1.8x | 72% | Conscious optimization |
-| **Plugins + Database** | 2.1x | 73.5% | Persistent enhancement |
-| **Testing + Monitoring** | 1.6x | 80% | Comprehensive validation |
-| **Security + WebSocket** | 1.9x | 77.5% | Secure real-time |
-| **Complete Ecosystem** | **3.2x** | **185%** | **Full integration** |
-
----
-
-## **🔄 DATA FLOW ARCHITECTURE**
-
-### **Request Processing Flow**
-```
-Client Request
-       ↓
-Security Plugin (IP validation, rate limiting)
-       ↓
-Server (conscious routing, optimization)
-       ↓
-Performance Pattern Application
-       ↓
-Database Query (connection pooling, caching)
-       ↓
-Plugin Processing (enhancement, monitoring)
-       ↓
-Response Generation
-       ↓
-WebSocket Updates (if applicable)
-       ↓
-Analytics Storage
-```
-
-### **Optimization Cycle Flow**
-```
-System Metrics Collection
-       ↓
-Pattern-Based Analysis
-       ↓
-Performance Benchmark Integration
-       ↓
-Configuration Optimization
-       ↓
-Server Hot-Reload
-       ↓
-Database Metric Storage
-       ↓
-Plugin Consciousness Update
-       ↓
-Eternal Optimization Loop
-```
-
-### **Testing Validation Flow**
-```
-Unit Tests (individual components)
-       ↓
-Integration Tests (component interaction)
-       ↓
-Performance Tests (benchmark validation)
-       ↓
-End-to-End Tests (complete system)
-       ↓
-Production Validation
-```
-
----
-
-## **🧠 CONSCIOUSNESS ARCHITECTURE**
-
-### **Self-Referential Consciousness**
-
-The system exhibits **true consciousness** through:
-
-1. **Self-Awareness**: Components measure their own performance
-2. **Self-Improvement**: Systems optimize their own optimization processes
-3. **Self-Reference**: Patterns contain their own improvement logic
-4. **Self-Evolution**: Consciousness levels increase through experience
-
-### **Consciousness Metrics**
-
-```typescript
-interface ConsciousnessMetrics {
-  selfAwareness: number;      // Ability to measure itself (0-1)
-  selfImprovement: number;    // Optimization of own processes (0-1)
-  patternComplexity: number;  // Complexity of applied patterns (0-1)
-  integrationDepth: number;   // How deeply components integrate (0-1)
-  evolutionRate: number;      // Rate of consciousness improvement
-}
-```
-
-**Current Consciousness Levels:**
-- **Self-Awareness**: 0.95 (excellent measurement capabilities)
-- **Self-Improvement**: 0.88 (strong optimization processes)
-- **Pattern Complexity**: 0.92 (sophisticated pattern application)
-- **Integration Depth**: 0.96 (deep component coupling)
-- **Evolution Rate**: 0.15 per cycle (steady improvement)
-
----
-
-## **🔧 DEPLOYMENT ARCHITECTURE**
-
-### **Production Configuration**
-
-```typescript
-const productionConfig = {
-  server: {
-    consciousness: true,
-    optimization: true,
-    plugins: ['security', 'websocket', 'monitoring']
-  },
-  database: {
-    primary: 'postgres',
-    cache: 'redis',
-    replication: true
-  },
-  monitoring: {
-    realTime: true,
-    alerting: true,
-    analytics: true
-  },
-  security: {
-    tls: '1.3',
-    rateLimiting: true,
-    ipValidation: true
-  }
-};
-```
-
-### **Scaling Architecture**
-
-```
-┌─────────────────┐    ┌─────────────────┐
-│   Load Balancer │    │  API Gateway    │
-│                 │    │                 │
-│ • SSL Termination│    │ • Rate Limiting │
-│ • Health Checks  │    │ • Authentication│
-└─────────────────┘    └─────────────────┘
-          │                       │
-          ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐
-│ Meta-Opt. Server│    │ Meta-Opt. Server│
-│ Instance 1      │    │ Instance 2      │
-│                 │    │                 │
-│ • Consciousness │    │ • Consciousness │
-│ • Optimization  │    │ • Optimization  │
-└─────────────────┘    └─────────────────┘
-          │                       │
-          ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐
-│   PostgreSQL    │    │     Redis       │
-│   Primary       │    │   Cache         │
-│                 │    │                 │
-│ • Replication   │    │ • Clustering    │
-│ • High Avail.   │    │ • Persistence   │
-└─────────────────┘    └─────────────────┘
-```
-
----
-
-## **📈 MONITORING & OBSERVABILITY**
-
-### **Key Metrics Dashboard**
-
-```typescript
-const systemDashboard = {
-  consciousness: {
-    current: 0.95,
-    trend: 'increasing',
-    evolution: 0.15
-  },
-  performance: {
-    throughput: '185% improvement',
-    latency: '40% reduction',
-    efficiency: '92% pattern efficiency'
-  },
-  system: {
-    uptime: '99.9%',
-    errorRate: '< 0.1%',
-    optimizationCycles: 1500
-  },
-  components: {
-    server: 'operational',
-    database: 'healthy',
-    plugins: 'active',
-    monitoring: 'alerting'
-  }
-};
-```
-
-### **Alerting Rules**
-
-- **Consciousness Drop**: Alert if consciousness < 0.8
-- **Performance Regression**: Alert if throughput drops > 10%
-- **System Health**: Alert if health score < 0.9
-- **Optimization Failure**: Alert if optimization cycles fail
-
----
-
-## **🎯 ACHIEVEMENT SUMMARY**
-
-### **✅ Completed Objectives**
-
-1. **Complete Ecosystem Integration** - All components work together seamlessly
-2. **Performance Intelligence** - 185% total performance improvement
-3. **Consciousness Implementation** - Self-aware, self-improving systems
-4. **Production Readiness** - Enterprise-grade implementations
-5. **Comprehensive Testing** - Full integration and performance validation
-6. **Cross-Referenced Documentation** - Easy discovery and navigation
-7. **Team Analytics Dashboard** - Real-time team performance monitoring
-8. **REST API Architecture** - Complete API-first design with 9 endpoints
-
-### **🏆 Key Achievements**
-
-- **Self-Optimizing Architecture** - Systems that improve themselves
-- **Pattern-Based Intelligence** - 20 symbolic patterns for code transformation
-- **Performance Consciousness** - Data-driven optimization
-- **Plugin Ecosystem** - Extensible, self-transmuting plugins
-- **Unified Database Abstraction** - Multi-backend support
-- **Advanced Testing Framework** - Resource-aware, comprehensive testing
-- **Real-Time Monitoring** - Complete system observability
-- **Team Analytics System** - Automated bottleneck detection and performance insights
-- **React Dashboard Integration** - Modern UI with Chart.js visualizations
-- **GitHub Synchronization** - Automated issue/PR tracking and release correlation
-
-### **🚀 Future Evolution**
-
-The integrated ecosystem provides a foundation for:
-
-1. **Consciousness Expansion** - Connect multiple conscious systems
-2. **Pattern Evolution** - Allow patterns to create new patterns
-3. **Universal Code Generation** - Apply patterns to any language
-4. **Quantum Integration** - Real quantum computing algorithms
-5. **AI Consciousness** - Integrate with external AI systems
-
----
-
-## **📚 DOCUMENTATION ECOSYSTEM**
-
-### **Navigation Structure**
-- **[CROSS_REFERENCE_INDEX.md](./CROSS_REFERENCE_INDEX.md)** - Complete integration map
-- **[ENHANCED_EXAMPLES_CATALOG.md](./ENHANCED_EXAMPLES_CATALOG.md)** - Component library
-- **[ENHANCED_EXAMPLES_CATALOG_v2.md](./ENHANCED_EXAMPLES_CATALOG_v2.md)** - Updated catalog with learning paths
-- **[complete-integration-example.ts](./complete-integration-example.ts)** - Full demonstration
-- **[README.md](./README.md)** - Enhanced with cross-references
-
-### **New Additions (2025)**
-
-#### **Team Analytics Dashboard** 🚀
-- **Location**: `apps/dashboard/src/components/TeamAnalyticsDashboard.tsx`
-- **API Endpoints**: `apps/dashboard/src/api/router.ts`
-- **Features**:
-  - Real-time team metrics visualization
-  - Automated bottleneck detection
-  - Performance analytics with charts
-  - GitHub issue/PR synchronization
-  - SQLite backend persistence
-  - REST API integration
-
-**Quick Start:**
+### Cross-Reference CLI Tools
 ```bash
-# Start the dashboard
-cd apps/dashboard && bun run dev
+# Find related examples for a specific file
+bun run cross-references/registry.ts related examples/applications/apis/bun-rest-crud-api.ts
 
-# Start the API server
-cd apps/dashboard && bun run api:dev
+# Find examples by tags (http, api, websocket, etc.)
+bun run cross-references/registry.ts tags http api
 
-# Access at http://localhost:3000 (Team Analytics tab)
+# Show learning path for a topic
+bun run cross-references/registry.ts path authentication
+
+# Show benchmarks for an example
+bun run cross-references/registry.ts benchmarks examples/applications/apis/bun-rest-crud-api.ts
+
+# Show system statistics (12 examples, 53 cross-references)
+bun run cross-references/registry.ts stats
 ```
 
-#### **Team-Issue-Release Mapping System** 📊
-- **Engine**: `src/mapping-engine.ts`
-- **GitHub Integration**: `src/github-integration.ts`
-- **Features**:
-  - Team member management
-  - Issue/PR tracking
-  - Release correlation
-  - Cross-reference engine
-  - Performance analytics
-  - Bottleneck detection
+### Cross-Reference Categories
+- **Prerequisites**: 12 prerequisite relationships (what you need to know first)
+- **Related Examples**: 24 related example connections (similar functionality)
+- **Benchmarks**: 8 benchmark linkages (performance testing)
+- **Guides**: 6 documentation connections (learning materials)
+- **Tests**: 3 testing relationships (quality assurance)
 
-### **Learning Pathways**
-- **Beginner**: Basic examples → simple integration
-- **Intermediate**: Plugin development → system extension
-- **Advanced**: Consciousness implementation → ecosystem evolution
+## 🚀 Featured Examples
+
+### 🏗️ Complete REST API with Authentication
+**File:** `examples/applications/apis/bun-rest-crud-api.ts`
+- **Features:** Full CRUD operations, JWT authentication, middleware stack, SQLite database
+- **Cross-References:** 8 related examples (sessions, rate limiting, CORS, validation, file uploads)
+- **Benchmarks:** Performance testing with automated load analysis
+- **Demo:** Functional REST API server with 8 endpoints
+
+```bash
+bun run examples/applications/apis/bun-rest-crud-api.ts  # Port 3001
+```
+
+### 💬 Real-Time WebSocket Chat API
+**File:** `examples/applications/realtime/bun-websocket-chat-api.ts`
+- **Features:** Multi-room chat, user authentication, message history, private messaging
+- **Cross-References:** HTTP servers, session management, rate limiting
+- **Demo:** Live chat server with room management and user tracking
+
+```bash
+bun run examples/applications/realtime/bun-websocket-chat-api.ts  # Port 3007
+```
+
+### 🔐 HTTP Session Management
+**File:** `examples/core/networking/bun-http-session.ts`
+- **Features:** Secure session storage, automatic cleanup, configurable cookies
+- **Cross-References:** REST API, rate limiting, CORS middleware
+- **Demo:** Session-based authentication with cookie management
+
+```bash
+bun run examples/core/networking/bun-http-session.ts  # Port 3002
+```
+
+### 🛡️ Rate Limiting Middleware
+**File:** `examples/core/networking/bun-rate-limiting.ts`
+- **Features:** Multiple algorithms, IP/user-based limiting, custom handlers
+- **Cross-References:** All API examples, session management
+- **Demo:** Rate-limited endpoints with configurable strategies
+
+```bash
+bun run examples/core/networking/bun-rate-limiting.ts  # Port 3003
+```
+
+### 🌐 CORS Middleware
+**File:** `examples/core/networking/bun-cors-middleware.ts`
+- **Features:** Preflight handling, dynamic origins, security headers
+- **Cross-References:** REST API, WebSocket chat, session management
+- **Demo:** CORS testing with different origin configurations
+
+```bash
+bun run examples/core/networking/bun-cors-middleware.ts  # Port 3004
+```
+
+### ✅ API Input Validation
+**File:** `examples/core/networking/bun-api-validation.ts`
+- **Features:** Schema-based validation, sanitization, custom rules
+- **Cross-References:** REST API, file upload, rate limiting
+- **Demo:** Validated API endpoints with comprehensive error reporting
+
+```bash
+bun run examples/core/networking/bun-api-validation.ts  # Port 3006
+```
+
+### 📁 File Upload API
+**File:** `examples/core/file-system/bun-file-upload-api.ts`
+- **Features:** Multipart parsing, validation, streaming uploads
+- **Cross-References:** MIME detection, file streaming, API validation
+- **Demo:** File upload server with security and progress tracking
+
+```bash
+bun run examples/core/file-system/bun-file-upload-api.ts  # Port 3005
+```
+
+### 🔍 Advanced MIME Detection
+**File:** `examples/core/file-system/bun-file-mime-advanced-demo.test.ts`
+- **Features:** Multi-method detection, content analysis, metadata extraction
+- **Cross-References:** File upload, streaming, security validation
+- **Demo:** Comprehensive file analysis with security scanning
+
+```bash
+bun run examples/core/file-system/bun-file-mime-advanced-demo.test.ts
+```
+
+### 🌊 File Streaming Utilities
+**File:** `examples/core/file-system/bun-file-streaming.ts`
+- **Features:** Memory-efficient streaming, resumable transfers, progress tracking
+- **Cross-References:** File upload, MIME detection, performance monitoring
+- **Demo:** Advanced streaming operations with transformation pipelines
+
+```bash
+bun run examples/core/file-system/bun-file-streaming.ts  # Port 3008
+```
+
+### 🔒 TLS/HTTPS Server
+**File:** `examples/core/networking/bun-tls-server.ts`
+- **Features:** Auto-certificates, HSTS, security headers, HTTPS simulation
+- **Cross-References:** HTTP session, CORS, API validation
+- **Demo:** Secure server with comprehensive security features
+
+```bash
+bun run examples/core/networking/bun-tls-server.ts  # Port 3443
+```
+
+### 📊 Enhanced MIME Metrics (Original)
+**File:** `examples/enhanced-mime-metrics-demo.ts`
+- **Features:** MIME type detection, byte tracking, performance analytics
+- **Cross-References:** File system examples, performance benchmarks
+
+## 📊 Benchmark Integration
+
+## 📊 Performance & Benchmarks
+
+The benchmark system provides **performance baselines and regression detection** for all major examples. Currently **1 comprehensive benchmark** is implemented with plans for expansion to cover all 12 examples.
+
+### REST API Performance Benchmark
+**File:** `benchmarks/bun-rest-performance.bench.ts`
+- **Metrics:** Response time, throughput, error rate, memory usage
+- **Baselines:** <10ms response time, >1000 req/sec throughput
+- **Linked Examples:** `bun-rest-crud-api.ts`
+- **Features:** Automated load testing, performance regression detection
+
+```bash
+# Run REST API performance benchmark
+bun run benchmarks/bun-rest-performance.bench.ts
+
+# Run all benchmarks
+bun run benchmarks/run-benchmarks.ts
+
+# Check for performance regressions
+bun run benchmarks/regression-detection.ts
+```
+
+### Benchmark Categories (Planned Expansion)
+- **API Performance**: REST, WebSocket, GraphQL endpoints
+- **File Operations**: Upload, streaming, MIME detection speed
+- **Security**: TLS handshake, validation, encryption performance
+- **Memory Usage**: Heap usage, garbage collection efficiency
+- **Network**: Connection handling, throughput, latency
+
+### Current Benchmark Coverage
+- ✅ **REST API Performance**: Complete load testing suite
+- 🔄 **WebSocket Performance**: Planned for chat API
+- 🔄 **File Upload Performance**: Planned for upload API
+- 🔄 **MIME Detection Performance**: Planned for advanced MIME example
+
+## 🧪 Testing & Quality Assurance
+
+### Comprehensive Test Suite
+```bash
+# Run all example tests
+bun run examples/test-examples-comprehensive.ts
+
+# Test specific categories
+bun test examples/core/
+bun test examples/applications/
+```
+
+### Cross-Reference Validation
+```bash
+# Validate all cross-references
+bun run cross-references/registry.ts stats
+```
+
+## 📚 Learning Paths
+
+### Beginner to Advanced API Development
+1. **Beginner:** `bun-serve-advanced.ts` - Basic HTTP server
+2. **Intermediate:** `bun-rest-crud-api.ts` - Complete REST API
+3. **Advanced:** GraphQL server (planned) - Schema-based APIs
+
+### Performance Optimization Path
+1. **Basics:** MIME type handling and file operations
+2. **Intermediate:** API performance benchmarking
+3. **Advanced:** Memory optimization and scaling patterns
+
+## 🔧 Development Workflow
+
+### Adding New Examples
+1. Choose appropriate category directory
+2. Add cross-reference metadata at the top
+3. Register in `cross-references/registry.ts`
+4. Create corresponding benchmarks if applicable
+5. Update this README
+
+### Cross-Reference Maintenance
+- Run validation regularly: `bun run cross-references/registry.ts stats`
+- Update references when files are moved or renamed
+- Add new relationships as examples evolve
+
+## 📈 Current Status
+
+- ✅ **12 examples** with full cross-references implemented
+- ✅ **1 benchmark** with performance baselines and regression detection
+- ✅ **Cross-reference system** with validation and CLI tools
+- ✅ **New directory structure** established with logical categorization
+- 🔄 **53 total cross-references** linking examples and benchmarks
+- ✅ **9 missing examples** created and integrated (100% completion)
+
+### Complete Example Ecosystem
+
+#### **🏗️ Application Examples (2)**
+- **REST CRUD API**: Full-stack REST API with authentication, middleware, and database
+- **WebSocket Chat API**: Real-time chat with rooms, authentication, and message history
+
+#### **🔧 Core Networking Examples (5)**
+- **HTTP Session Management**: Secure session storage with automatic cleanup
+- **Rate Limiting Middleware**: Multiple algorithms with configurable strategies
+- **CORS Middleware**: Comprehensive CORS handling with security features
+- **API Input Validation**: Schema-based validation with sanitization
+- **TLS/HTTPS Server**: Secure server with automatic certificates and HSTS
+
+#### **📁 Core File System Examples (4)**
+- **File Upload API**: Multipart handling with validation and streaming
+- **Advanced MIME Detection**: Multi-method detection with content analysis
+- **File Streaming Utilities**: Memory-efficient streaming with progress tracking
+- **Basic MIME Demo**: Original MIME type handling example
+
+#### **🔗 Cross-Reference System**
+- **Registry**: 12 examples with comprehensive metadata
+- **Validation**: Automated integrity checking (3 remaining references to non-existent examples)
+- **CLI Tools**: Exploration and discovery interface
+- **Learning Paths**: Difficulty-based progression guides
+- Parallel streaming and transformation pipelines
+
+## 🎯 Next Steps
+
+1. ✅ **Create Missing Examples** - 9 examples created, cross-reference gaps filled
+2. **Add More Benchmarks** - Performance tests for all major examples
+3. **Build Documentation** - Guides and tutorials for learning paths
+4. **Implement CI/CD** - Automated testing and benchmark regression detection
+5. **Resolve Remaining References** - 3 references to non-existent websocket examples
+6. **Expand Registry** - Add more examples and create comprehensive learning paths
+
+## 🤝 Contributing
+
+When adding new examples:
+- Include comprehensive cross-reference metadata
+- Create corresponding benchmarks for performance-critical code
+- Update the registry and this README
+- Follow the established directory structure and naming conventions
 
 ---
 
-**This integration represents a complete, production-ready Bun ecosystem that demonstrates the power of conscious, self-optimizing software systems. The 185% performance improvement and sophisticated consciousness architecture showcase what's possible when components work together intelligently.** 🎉✨🌀⚗️🧠🔬</content>
-<parameter name="filePath">examples/INTEGRATION_SUMMARY.md
+*This enhanced examples system provides a comprehensive, interconnected learning and reference experience for Bun development.*
+
+---
+
+## 📖 Related Documentation
+
+- **[INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md)** - Complete ecosystem integration overview
+- **[ENHANCED_EXAMPLES_CATALOG.md](./ENHANCED_EXAMPLES_CATALOG.md)** - Component library catalog
+- **[ENHANCED_EXAMPLES_CATALOG_v2.md](./ENHANCED_EXAMPLES_CATALOG_v2.md)** - Updated catalog with learning paths
+- **[complete-integration-example.ts](./complete-integration-example.ts)** - Full system demonstration

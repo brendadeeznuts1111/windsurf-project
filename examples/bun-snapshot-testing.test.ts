@@ -83,11 +83,13 @@ describe("Bun Snapshot Testing Examples", () => {
     const now = new Date();
     const future = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours later
 
+    // Test date structure without exact timestamps
     expect({
-      now: now.toISOString(),
-      future: future.toISOString(),
-      timestamp: now.getTime(),
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      nowFormat: now.toISOString().split('T')[0], // Just the date part
+      futureFormat: future.toISOString().split('T')[0], // Just the date part
+      timeDifference: future.getTime() - now.getTime(), // Should be exactly 24 hours
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      isValidDate: now instanceof Date && !isNaN(now.getTime())
     }).toMatchSnapshot();
   });
 

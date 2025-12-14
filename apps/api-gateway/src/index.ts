@@ -3,6 +3,11 @@ import { ArbitrageRouter } from './routes/arbitrage';
 import { MarketDataRouter } from './routes/market-data';
 import { WebSocketRouter } from './routes/websocket';
 import { HealthRouter } from './routes/health';
+import { RiskAnalyticsRouter } from './routes/risk-analytics';
+import { TradingEngineRouter } from './routes/trading-engine';
+import { SportsRouter } from './routes/sports';
+import { SystemMonitoringRouter } from './routes/system-monitoring';
+import { MarketFeedRouter } from './routes/market-feed';
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -24,16 +29,27 @@ export default {
     try {
       let response: Response;
 
-      // Route handling
-      if (path.startsWith('/api/health')) {
-        response = await HealthRouter.handle(request, env, ctx);
-      } else if (path.startsWith('/api/arbitrage')) {
-        response = await ArbitrageRouter.handle(request, env, ctx);
-      } else if (path.startsWith('/api/market-data')) {
-        response = await MarketDataRouter.handle(request, env, ctx);
-      } else if (path.startsWith('/api/websocket')) {
-        response = await WebSocketRouter.handle(request, env, ctx);
-      } else {
+       // Route handling
+       if (path.startsWith('/api/health')) {
+         response = await HealthRouter.handle(request, env, ctx);
+       } else if (path.startsWith('/api/arbitrage')) {
+         response = await ArbitrageRouter.handle(request, env, ctx);
+       } else if (path.startsWith('/api/market-data')) {
+         response = await MarketDataRouter.handle(request, env, ctx);
+       } else if (path.startsWith('/api/websocket')) {
+         response = await WebSocketRouter.handle(request, env, ctx);
+       } else if (path.startsWith('/api/v1/risk')) {
+         response = await RiskAnalyticsRouter.handle(request, env, ctx);
+       } else if (path.startsWith('/api/v1/trading')) {
+         response = await TradingEngineRouter.handle(request, env, ctx);
+       } else if (path.startsWith('/api/v1/basketball') || path.startsWith('/api/v1/football') ||
+                  path.startsWith('/api/v1/tennis') || path.startsWith('/api/v1/baseball')) {
+         response = await SportsRouter.handle(request, env, ctx);
+       } else if (path.startsWith('/api/v1/monitoring')) {
+         response = await SystemMonitoringRouter.handle(request, env, ctx);
+       } else if (path.startsWith('/api/v1/feed')) {
+         response = await MarketFeedRouter.handle(request, env, ctx);
+       } else {
         response = new Response(
           JSON.stringify({ error: 'Not Found' }),
           { status: 404, headers: { 'Content-Type': 'application/json' } }

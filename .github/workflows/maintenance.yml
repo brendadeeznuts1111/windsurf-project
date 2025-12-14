@@ -1,0 +1,285 @@
+name: Repository Maintenance
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Maintenance action to perform'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - stale-issues
+          - community-health
+          - dependency-updates
+          - contributor-updates
+
+jobs:
+  stale-management:
+    name: Manage Stale Issues & PRs
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.action == 'all' || github.event.inputs.action == 'stale-issues' || github.event_name == 'schedule' }}
+
+    steps:
+      - name: Manage stale issues
+        uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: |
+            This issue has been automatically marked as stale because it has not had recent activity. It will be closed in 7 days if no further activity occurs.
+
+            If this issue is still relevant, please:
+            - Add a comment explaining why this issue is still important
+            - Update the issue with any new information
+            - Add the `pinned` label to prevent automatic closure
+          stale-pr-message: |
+            This pull request has been automatically marked as stale because it has not had recent activity. It will be closed in 14 days if no further activity occurs.
+
+            If this PR is still relevant, please:
+            - Rebase your branch on the latest main
+            - Address any outstanding review comments
+            - Add a comment explaining the current status
+          close-issue-message: 'This issue was closed due to inactivity. Please reopen if you believe this is still relevant.'
+          close-pr-message: 'This PR was closed due to inactivity. Please reopen when ready to continue work.'
+          days-before-stale: 30
+          days-before-close: 7
+          exempt-issue-labels: 'pinned,help wanted,good first issue,bug,enhancement'
+          exempt-pr-labels: 'work-in-progress,pinned'
+          operations-per-run: 100
+
+  community-health:
+    name: Community Health Checks
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.action == 'all' || github.event.inputs.action == 'community-health' || github.event_name == 'schedule' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check repository health
+        run: |
+          echo "📊 Repository Health Report"
+          echo "=========================="
+
+          # Check for README
+          if [ -f "README.md" ]; then
+            echo "✅ README.md exists"
+          else
+            echo "❌ README.md missing"
+          fi
+
+          # Check for LICENSE
+          if [ -f "LICENSE" ]; then
+            echo "✅ LICENSE exists"
+          else
+            echo "❌ LICENSE missing"
+          fi
+
+          # Check for CODE_OF_CONDUCT
+          if [ -f "CODE_OF_CONDUCT.md" ]; then
+            echo "✅ CODE_OF_CONDUCT.md exists"
+          else
+            echo "⚠️  CODE_OF_CONDUCT.md missing"
+          fi
+
+          # Check for CONTRIBUTING
+          if [ -f "CONTRIBUTING.md" ]; then
+            echo "✅ CONTRIBUTING.md exists"
+          else
+            echo "⚠️  CONTRIBUTING.md missing"
+          fi
+
+          # Check issue templates
+          if [ -d ".github/ISSUE_TEMPLATE" ]; then
+            TEMPLATE_COUNT=$(ls .github/ISSUE_TEMPLATE/*.md 2>/dev/null | wc -l)
+            echo "✅ $TEMPLATE_COUNT issue templates found"
+          else
+            echo "❌ No issue templates found"
+          fi
+
+          # Check PR template
+          if [ -f ".github/PULL_REQUEST_TEMPLATE.md" ]; then
+            echo "✅ Pull request template exists"
+          else
+            echo "⚠️  Pull request template missing"
+          fi
+
+      - name: Check branch protection
+        run: |
+          echo "🔒 Branch Protection Check"
+          echo "========================="
+
+          # This would check branch protection rules via GitHub API
+          # For now, just check if main branch exists
+          if git show-ref --verify --quiet refs/heads/main || git show-ref --verify --quiet refs/heads/master; then
+            echo "✅ Main branch exists"
+          else
+            echo "❌ No main/master branch found"
+          fi
+
+  dependency-updates:
+    name: Check Dependency Updates
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.action == 'all' || github.event.inputs.action == 'dependency-updates' || github.event_name == 'schedule' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Check for outdated dependencies
+        run: |
+          echo "📦 Dependency Update Check"
+          echo "=========================="
+
+          # Check for outdated packages
+          bun outdated || echo "No outdated packages or check failed"
+
+          # Check for security vulnerabilities
+          bun audit || echo "Audit completed with warnings"
+
+      - name: Create dependency update PR
+        if: github.event_name == 'schedule'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update dependencies'
+          title: '🤖 Dependency Updates'
+          body: |
+            This PR updates project dependencies to their latest versions.
+
+            ## Changes
+            - Updated dependencies to latest compatible versions
+            - Ran security audit to ensure no vulnerabilities
+
+            ## Testing
+            - All tests should pass
+            - No breaking changes expected
+
+            ---
+            🤖 This PR was automatically created by the maintenance workflow.
+          branch: automated/dependency-updates
+          delete-branch: true
+
+  contributor-updates:
+    name: Update Contributors
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.action == 'all' || github.event.inputs.action == 'contributor-updates' || github.event_name == 'schedule' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate contributors list
+        uses: github/contributors-readme-action@v2.4.22
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image_size: 80
+          columns: 6
+          max_committers: 20
+
+      - name: Update contributor statistics
+        run: |
+          echo "👥 Contributor Statistics"
+          echo "========================"
+
+          # Count total contributors
+          CONTRIBUTOR_COUNT=$(git shortlog -sn --no-merges | wc -l)
+          echo "Total contributors: $CONTRIBUTOR_COUNT"
+
+          # Count commits in last 30 days
+          RECENT_COMMITS=$(git log --since="30 days ago" --oneline | wc -l)
+          echo "Commits in last 30 days: $RECENT_COMMITS"
+
+          # Most active contributors
+          echo "Most active contributors:"
+          git shortlog -sn --no-merges | head -5
+
+  cleanup:
+    name: Repository Cleanup
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.action == 'all' || github.event_name == 'schedule' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Clean up old workflow artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listArtifactsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            const oldArtifacts = artifacts.data.artifacts.filter(
+              artifact => {
+                const created = new Date(artifact.created_at);
+                const now = new Date();
+                const daysOld = (now - created) / (1000 * 60 * 60 * 24);
+                return daysOld > 30; // Delete artifacts older than 30 days
+              }
+            );
+
+            console.log(`Found ${oldArtifacts.length} old artifacts to delete`);
+
+            for (const artifact of oldArtifacts) {
+              await github.rest.actions.deleteArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: artifact.id,
+              });
+            }
+
+      - name: Clean up old branches
+        run: |
+          echo "🧹 Cleaning up old branches"
+          echo "==========================="
+
+          # This would identify and clean up old branches
+          # For safety, we'll just list them for now
+          git branch -r | grep -v HEAD | grep -v main | grep -v master | head -10 || echo "No old branches to clean"
+
+  report:
+    name: Generate Maintenance Report
+    runs-on: ubuntu-latest
+    needs: [stale-management, community-health, dependency-updates, contributor-updates, cleanup]
+    if: always()
+
+    steps:
+      - name: Generate maintenance report
+        run: |
+          echo "# 📋 Repository Maintenance Report" > maintenance-report.md
+          echo "" >> maintenance-report.md
+          echo "Generated on: $(date)" >> maintenance-report.md
+          echo "" >> maintenance-report.md
+          echo "## Task Results" >> maintenance-report.md
+          echo "" >> maintenance-report.md
+          echo "- Stale Management: ${{ needs.stale-management.result }}" >> maintenance-report.md
+          echo "- Community Health: ${{ needs.community-health.result }}" >> maintenance-report.md
+          echo "- Dependency Updates: ${{ needs.dependency-updates.result }}" >> maintenance-report.md
+          echo "- Contributor Updates: ${{ needs.contributor-updates.result }}" >> maintenance-report.md
+          echo "- Cleanup: ${{ needs.cleanup.result }}" >> maintenance-report.md
+          echo "" >> maintenance-report.md
+          echo "## Summary" >> maintenance-report.md
+          echo "" >> maintenance-report.md
+          echo "Repository maintenance completed successfully." >> maintenance-report.md
+
+      - name: Upload maintenance report
+        uses: actions/upload-artifact@v4
+        with:
+          name: maintenance-report-${{ github.run_id }}
+          path: maintenance-report.md

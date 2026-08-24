@@ -166,7 +166,7 @@ jobs:
           category: "/language:javascript-typescript"
 
       - name: Dependency Review
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@v5
         if: github.event_name == 'pull_request'
 
       - name: Run Trivy vulnerability scanner
